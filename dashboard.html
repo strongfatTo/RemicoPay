@@ -1,0 +1,855 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PayFlow • Logged-in Dashboard</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind & Icons -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-geist { font-family: 'Geist', sans-serif !important; }
+        .font-bricolage { font-family: 'Bricolage Grotesque', sans-serif !important; }
+
+        @keyframes fade-slide {
+            0% { opacity: 0; transform: translateY(24px) scale(.96); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .fade-slide { animation: fade-slide .7s both; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        select option {
+            background-color: white;
+            color: #1f2937;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-950 text-gray-100 min-h-screen overflow-x-hidden">
+    <!-- Background -->
+    <div class="fixed inset-0 -z-10 opacity-70 pointer-events-none">
+        <iframe src="https://my.spline.design/glasswave-6HLEnvJfCRsq1aKT2xqlgme7" frameborder="0" width="100%" height="100%" class="w-full h-full"></iframe>
+    </div>
+
+    <!-- Navigation -->
+    <header class="fixed left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] sm:w-[calc(100%-3rem)] lg:w-[calc(100%-4rem)] max-w-7xl top-0 sm:top-4 lg:top-6 z-50 flex sm:px-6 lg:px-8 ring-1 ring-white/10 shadow-black/20 bg-slate-900/80 border-white/10 border rounded-2xl pt-4 pr-4 pb-4 pl-4 shadow-lg backdrop-blur-xl items-center justify-between">
+        <div class="w-full max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="flex flex-col">
+                    <span class="text-lg font-bold tracking-tight text-white font-geist">FPS-Stable</span>
+                    <span class="text-xs text-gray-300 font-medium font-geist">Cross-Border Rail</span>
+                </div>
+                <span class="hidden md:inline-flex items-center text-xs text-emerald-200 bg-emerald-500/10 border border-emerald-400/20 px-3 py-1 rounded-lg font-geist">Logged in</span>
+            </div>
+
+            <nav class="hidden lg:flex items-center space-x-2" aria-label="Primary">
+                <a href="#" class="flex items-center space-x-2 px-4 py-2 text-sm rounded-lg hover:bg-white/10 hover:ring-1 hover:ring-white/15 transition text-gray-200">
+                    <i data-lucide="layout-dashboard" class="h-4 w-4"></i><span class="font-geist">Overview</span>
+                </a>
+            </nav>
+
+            <div class="hidden sm:flex items-center space-x-3">
+                <button id="headerNewTransfer" class="flex items-center space-x-2 px-4 py-2 text-sm rounded-lg bg-gradient-to-r from-blue-400 to-emerald-400 text-white shadow-lg shadow-blue-900/30 hover:-translate-y-0.5 transition">
+                    <i data-lucide="plus" class="h-4 w-4"></i>
+                    <span class="font-geist">New Transfer</span>
+                </button>
+                <div class="flex items-center space-x-2 border border-white/10 rounded-xl px-3 py-1.5">
+                    <div class="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center text-sm font-semibold">JT</div>
+                    <div class="hidden md:block">
+                        <p class="text-sm text-white font-geist">Janet Tam</p>
+                    </div>
+                </div>
+                <button id="signOutBtn" class="flex items-center space-x-2 px-4 py-2 text-sm rounded-lg border border-white/15 bg-white/5 text-gray-100 hover:bg-white/10 transition">
+                    <i data-lucide="log-out" class="h-4 w-4"></i>
+                    <span class="font-geist">Sign out</span>
+                </button>
+            </div>
+
+            <button id="mobileToggle" class="relative z-30 flex h-10 w-10 items-center justify-center rounded-lg border border-white/15 bg-white/10 text-white sm:hidden hover:bg-white/15" aria-expanded="false">
+                <i data-lucide="menu" class="h-5 w-5"></i>
+            </button>
+        </div>
+    </header>
+
+    <nav id="mobileNav" aria-label="Mobile" class="absolute inset-x-0 top-0 z-40 hidden flex-col space-y-2 bg-slate-900/95 px-4 pb-8 pt-24 backdrop-blur-xl border-b border-white/10 sm:hidden">
+        <a href="#" class="flex items-center space-x-3 rounded-lg px-4 py-3 text-gray-100 hover:bg-white/10 transition"><i data-lucide="layout-dashboard" class="h-5 w-5"></i><span class="font-geist">Overview</span></a>
+        <button id="mobileSignOutBtn" class="flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 py-3 text-gray-100 hover:bg-white/10 transition mt-2">
+            <i data-lucide="log-out" class="h-5 w-5"></i>
+            <span class="font-geist">Sign out</span>
+        </button>
+    </nav>
+
+    <!-- Main -->
+    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20 space-y-12">
+        <!-- Welcome -->
+        <section class="fade-slide rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 backdrop-blur-xl shadow-2xl">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+                <div class="space-y-4">
+                    <p class="inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-400/10 px-3 py-1 text-xs text-blue-100 font-geist">
+                        <span class="h-2 w-2 rounded-full bg-emerald-300 animate-pulse"></span>
+                        Session active · FPS sandbox
+                    </p>
+                    <h1 class="text-4xl sm:text-5xl font-light text-white font-bricolage">Good morning, <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">Janet</span>!</h1>
+                    <p class="text-lg text-gray-300 font-geist max-w-2xl">
+                        You currently have 4 remittances in transit. All logins, KYC, and reminders are ready. The real-time KPIs below will tell you the next step.
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <button id="summaryNewTransfer" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-400 to-emerald-400 px-5 py-3 text-sm font-medium text-white shadow-lg shadow-blue-900/30">
+                            <i data-lucide="send" class="h-4 w-4"></i> Initiate New Remittance
+                        </button>
+                        <button class="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-medium text-gray-100 hover:bg-white/10">
+                            <i data-lucide="calendar-clock" class="h-4 w-4"></i> View Schedule
+                        </button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 min-w-[280px]">
+                    <div class="rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-4">
+                        <p class="text-xs text-emerald-200 font-geist uppercase tracking-widest">Settled This Month</p>
+                        <p class="text-3xl text-white font-bricolage font-light mt-1">HKD 248K</p>
+                        <p class="text-xs text-gray-300 mt-2">Compared to last month +18%</p>
+                    </div>
+                    <div class="rounded-2xl border border-purple-400/20 bg-purple-500/10 p-4">
+                        <p class="text-xs text-purple-200 font-geist uppercase tracking-widest">Average Arrival</p>
+                        <p class="text-3xl text-white font-bricolage font-light mt-1">12 min</p>
+                        <p class="text-xs text-gray-300 mt-2">Target ≤15 minutes</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats -->
+        <section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+            <div class="rounded-2xl border border-blue-400/20 bg-gradient-to-br from-blue-900/20 to-black p-6 backdrop-blur-xl fade-slide" style="animation-delay:.05s">
+                <div class="flex items-center justify-between">
+                    <div class="h-10 w-10 rounded-xl bg-blue-500/15 flex items-center justify-center"><i data-lucide="wallet" class="text-blue-300 h-5 w-5"></i></div>
+                    <span class="text-xs text-blue-200 bg-blue-500/15 px-2 py-1 rounded-lg font-geist">+12%</span>
+                </div>
+                <p class="text-sm text-gray-400 mt-4 font-geist">Monthly Accumulated Remittance</p>
+                <p class="text-3xl text-white font-bricolage font-light">HKD 125,890</p>
+                <p class="text-xs text-gray-400 mt-2">Monthly limit 500K</p>
+            </div>
+            <div class="rounded-2xl border border-emerald-400/20 bg-gradient-to-br from-emerald-900/20 to-black p-6 backdrop-blur-xl fade-slide" style="animation-delay:.1s">
+                <div class="flex items-center justify-between">
+                    <div class="h-10 w-10 rounded-xl bg-emerald-500/15 flex items-center justify-center"><i data-lucide="check-circle-2" class="text-emerald-300 h-5 w-5"></i></div>
+                    <span class="text-xs text-emerald-200 bg-emerald-500/15 px-2 py-1 rounded-lg font-geist">47 transactions</span>
+                </div>
+                <p class="text-sm text-gray-400 mt-4 font-geist">Successful Transactions</p>
+                <p class="text-3xl text-white font-bricolage font-light">98.4%</p>
+                <p class="text-xs text-gray-400 mt-2">Automated reminders increased by 24%</p>
+            </div>
+            <div class="rounded-2xl border border-amber-400/20 bg-gradient-to-br from-amber-900/20 to-black p-6 backdrop-blur-xl fade-slide" style="animation-delay:.15s">
+                <div class="flex items-center justify-between">
+                    <div class="h-10 w-10 rounded-xl bg-amber-500/15 flex items-center justify-center"><i data-lucide="clock" class="text-amber-300 h-5 w-5"></i></div>
+                    <span class="text-xs text-amber-200 font-geist">12m avg</span>
+                </div>
+                <p class="text-sm text-gray-400 mt-4 font-geist">Average Completion Time</p>
+                <p class="text-3xl text-white font-bricolage font-light">-18%</p>
+                <p class="text-xs text-gray-400 mt-2">FPS + Stablecoin pipeline</p>
+            </div>
+            <div class="rounded-2xl border border-purple-400/20 bg-gradient-to-br from-purple-900/20 to-black p-6 backdrop-blur-xl fade-slide" style="animation-delay:.2s">
+                <div class="flex items-center justify-between">
+                    <div class="h-10 w-10 rounded-xl bg-purple-500/15 flex items-center justify-center"><i data-lucide="shield" class="text-purple-300 h-5 w-5"></i></div>
+                    <span class="text-xs text-purple-200 bg-purple-500/15 px-2 py-1 rounded-lg font-geist">Level 2</span>
+                </div>
+                <p class="text-sm text-gray-400 mt-4 font-geist">KYC / AML</p>
+                <p class="text-3xl text-white font-bricolage font-light">100%</p>
+                <p class="text-xs text-gray-400 mt-2">Audit passed, next level to be expanded</p>
+            </div>
+        </section>
+
+        <!-- Quick Actions + Send Money -->
+        <section class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <div class="xl:col-span-2 rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8 backdrop-blur-xl fade-slide" style="animation-delay:.15s">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center">
+                            <span class="text-white font-bold text-lg font-geist">$</span>
+                        </div>
+                        <div>
+                            <p class="text-xs uppercase tracking-[0.3em] text-blue-200 font-geist">Quick Actions</p>
+                            <h2 class="text-2xl text-white font-bricolage font-light mt-2">What do you want to do next?</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <button id="sendMoneyBtn" class="rounded-2xl border border-blue-400/20 bg-blue-500/10 p-5 text-left hover:border-blue-400/40 transition">
+                        <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center mb-4">
+                            <span class="text-white font-bold text-lg font-geist">$</span>
+                        </div>
+                        <p class="text-white font-semibold font-geist">Send Money</p>
+                        <p class="text-xs text-gray-300 mt-1">4 recipients pre-approved</p>
+                    </button>
+                    <button id="addRecipientBtn" class="rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-5 text-left hover:border-emerald-400/40 transition">
+                        <div class="h-10 w-10 rounded-xl bg-emerald-500/15 flex items-center justify-center mb-4"><i data-lucide="user-plus" class="text-emerald-300 h-5 w-5"></i></div>
+                        <p class="text-white font-semibold font-geist">Add Recipient</p>
+                        <p class="text-xs text-gray-300 mt-1">KYC lite in 60s</p>
+                    </button>
+                    <button id="downloadReceiptBtn" class="rounded-2xl border border-purple-400/20 bg-purple-500/10 p-5 text-left hover:border-purple-400/40 transition">
+                        <div class="h-10 w-10 rounded-xl bg-purple-500/15 flex items-center justify-center mb-4"><i data-lucide="receipt" class="text-purple-300 h-5 w-5"></i></div>
+                        <p class="text-white font-semibold font-geist">Download Receipt</p>
+                        <p class="text-xs text-gray-300 mt-1">Latest 3 transactions ready</p>
+                    </button>
+                </div>
+            </div>
+
+            <div id="transferWorkflow" class="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl fade-slide" style="animation-delay:.2s">
+                <p class="text-xs uppercase tracking-[0.3em] text-emerald-200 font-geist">New Transfer</p>
+                <h3 class="text-xl text-white font-semibold font-geist mt-2 mb-4">HKD 1,000 ➜ PH Bank</h3>
+                <div class="space-y-4 text-sm text-gray-200 font-geist">
+                    <div class="flex items-start gap-3 bg-white/5 border border-white/10 rounded-xl p-3">
+                        <span class="h-8 w-8 flex items-center justify-center rounded-lg bg-blue-500/15 text-blue-200 font-semibold">1</span>
+                        <p>User scans FPS QR code, enters recipient details, and transfers HKD 1,000 to our FPS account.</p>
+                    </div>
+                    <div class="flex items-start gap-3 bg-white/5 border border-white/10 rounded-xl p-3">
+                        <span class="h-8 w-8 flex items-center justify-center rounded-lg bg-purple-500/15 text-purple-200 font-semibold">2</span>
+                        <p>After receiving the funds, we purchase equivalent HKMA-compliant HKD stablecoin.</p>
+                    </div>
+                    <div class="flex items-start gap-3 bg-white/5 border border-white/10 rounded-xl p-3">
+                        <span class="h-8 w-8 flex items-center justify-center rounded-lg bg-pink-500/15 text-pink-200 font-semibold">3</span>
+                        <p>HKD stablecoin is instantly converted to PHPC, establishing cross-border liquidity.</p>
+                    </div>
+                    <div class="flex items-start gap-3 bg-white/5 border border-white/10 rounded-xl p-3">
+                        <span class="h-8 w-8 flex items-center justify-center rounded-lg bg-amber-500/15 text-amber-200 font-semibold">4</span>
+                        <p>In cooperation with authorized Philippine banks/exchanges, PHPC is converted to PHP and credited to the recipient bank.</p>
+                    </div>
+                    <div class="rounded-xl bg-gradient-to-br from-blue-900/20 to-black/40 border border-blue-400/20 p-4 text-xs text-gray-300">
+                        Workflow is real-time synchronized; any node delay will trigger notifications and manual intervention.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline + Transactions -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8 backdrop-blur-xl fade-slide" style="animation-delay:.15s">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <p class="text-xs uppercase tracking-[0.3em] text-amber-200 font-geist">Live Status</p>
+                        <h2 class="text-2xl text-white font-bricolage font-light mt-2">Transaction Progress</h2>
+                    </div>
+                </div>
+                <div class="space-y-6">
+                    <div class="flex items-start gap-4">
+                        <div class="relative">
+                            <span class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/15 border border-emerald-400/30 text-emerald-200"><i data-lucide="check" class="h-4 w-4"></i></span>
+                            <span class="absolute left-1/2 top-10 -translate-x-1/2 h-16 w-px bg-gradient-to-b from-emerald-400/40 to-transparent"></span>
+                        </div>
+                        <div>
+                            <p class="text-sm text-white font-semibold font-geist">FPS Payment Completed</p>
+                            <p class="text-xs text-gray-400">14:30 · Bank of China</p>
+                            <p class="text-xs text-gray-300 mt-2">Email double-confirm sent to john@example.com</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="relative">
+                            <span class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500/15 border border-blue-400/30 text-blue-200"><i data-lucide="refresh-ccw" class="h-4 w-4"></i></span>
+                            <span class="absolute left-1/2 top-10 -translate-x-1/2 h-16 w-px bg-gradient-to-b from-blue-400/40 to-transparent"></span>
+                        </div>
+                        <div>
+                            <p class="text-sm text-white font-semibold font-geist">HKD → Stablecoin</p>
+                            <p class="text-xs text-gray-400">14:31 · Smart contract #221</p>
+                            <p class="text-xs text-gray-300 mt-2">Deterministic FX 7.056, volatility monitoring normal.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div>
+                            <span class="flex h-10 w-10 items-center justify-center rounded-full bg-purple-500/15 border border-purple-400/30 text-purple-200"><i data-lucide="send" class="h-4 w-4"></i></span>
+                        </div>
+                        <div>
+                            <p class="text-sm text-white font-semibold font-geist">PH Disbursement</p>
+                            <p class="text-xs text-gray-400">Waiting for BPI confirmation · SLA 15 min</p>
+                            <p class="text-xs text-gray-300 mt-2">If overdue, Email + SMS will automatically remind.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl fade-slide" style="animation-delay:.2s">
+                <p class="text-xs uppercase tracking-[0.3em] text-purple-200 font-geist">Recent Activity</p>
+                <h3 class="text-xl text-white font-semibold font-geist mt-2 mb-4">Recent Three Transactions</h3>
+                <div class="space-y-4">
+                    <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-white font-geist">TX20251029001</p>
+                                <p class="text-xs text-gray-400">Maria Santos · PHP 35,250</p>
+                            </div>
+                            <span class="text-xs text-emerald-200 flex items-center gap-1"><i data-lucide="check-circle-2" class="h-3 w-3"></i>Completed</span>
+                        </div>
+                    </div>
+                    <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-white font-geist">TX20251028002</p>
+                                <p class="text-xs text-gray-400">Somchai Wong · THB 15,925</p>
+                            </div>
+                            <span class="text-xs text-amber-200 flex items-center gap-1"><i data-lucide="loader" class="h-3 w-3 animate-spin"></i>Processing</span>
+                        </div>
+                    </div>
+                    <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-white font-geist">TX20251026004</p>
+                                <p class="text-xs text-gray-400">Li Wei · CNY 1,820</p>
+                            </div>
+                            <span class="text-xs text-rose-200 flex items-center gap-1"><i data-lucide="alert-octagon" class="h-3 w-3"></i>Failed</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-2">Reason: Receiving bank rejected, suggest resubmitting documents.</p>
+                    </div>
+                </div>
+                <button class="w-full mt-5 text-sm text-blue-200 hover:text-white font-geist">View full history →</button>
+            </div>
+        </section>
+
+        <!-- Recipients -->
+        <section class="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8 backdrop-blur-xl fade-slide" style="animation-delay:.2s">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                    <p class="text-xs uppercase tracking-[0.3em] text-blue-200 font-geist">Recipients</p>
+                    <h2 class="text-2xl text-white font-bricolage font-light">Frequent Recipients</h2>
+                </div>
+                <button id="recipientsAddNewBtn" class="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm text-gray-100 hover:bg-white/10">
+                    <i data-lucide="plus" class="h-4 w-4"></i> Add New
+                </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="h-10 w-10 rounded-full bg-blue-500/15 flex items-center justify-center text-blue-200 font-semibold">M</div>
+                        <span class="text-xs text-gray-400">PH</span>
+                    </div>
+                    <p class="text-white font-geist">Maria Santos</p>
+                    <p class="text-xs text-gray-400">BPI • ****1234</p>
+                    <button onclick="openSendMoneyModal()" class="mt-4 w-full rounded-lg bg-gradient-to-r from-blue-400 to-emerald-400 py-2 text-xs font-semibold">Send</button>
+                </div>
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="h-10 w-10 rounded-full bg-emerald-500/15 flex items-center justify-center text-emerald-200 font-semibold">S</div>
+                        <span class="text-xs text-gray-400">TH</span>
+                    </div>
+                    <p class="text-white font-geist">Somchai Wong</p>
+                    <p class="text-xs text-gray-400">Bangkok Bank • ****5678</p>
+                    <button onclick="openSendMoneyModal()" class="mt-4 w-full rounded-lg border border-white/15 py-2 text-xs font-semibold text-gray-100 hover:bg-white/10">Send</button>
+                </div>
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="h-10 w-10 rounded-full bg-purple-500/15 flex items-center justify-center text-purple-200 font-semibold">R</div>
+                        <span class="text-xs text-gray-400">ID</span>
+                    </div>
+                    <p class="text-white font-geist">Rina Wijaya</p>
+                    <p class="text-xs text-gray-400">Mandiri • ****4321</p>
+                    <button onclick="openSendMoneyModal()" class="mt-4 w-full rounded-lg border border-white/15 py-2 text-xs font-semibold text-gray-100 hover:bg-white/10">Send</button>
+                </div>
+                <div class="rounded-2xl border border-dashed border-white/20 bg-white/5 p-4 flex flex-col items-center justify-center text-center hover:border-white/40 transition">
+                    <i data-lucide="user-plus" class="h-8 w-8 text-gray-400 mb-3"></i>
+                    <p class="text-sm text-white font-semibold font-geist">Add New Recipient</p>
+                    <p class="text-xs text-gray-400 mt-1">Email Verification + KYC</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-white/10 py-8 text-center text-sm text-gray-400 font-geist">
+        Logged in via Email · Google SSO available · © 2025 PayFlow Prototype
+    </footer>
+
+    <!-- Send Money Modal -->
+    <div id="sendMoneyModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div class="relative w-full max-w-2xl mx-4 rounded-3xl border border-white/10 bg-slate-900/95 p-8 backdrop-blur-xl shadow-2xl">
+            <button id="closeSendMoney" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i data-lucide="x" class="h-6 w-6"></i>
+            </button>
+            <h3 class="text-2xl text-white font-bricolage font-light mb-6">Send Money Flow</h3>
+            
+            <!-- Step 1 -->
+            <div id="step1" class="step-content">
+                <div class="flex items-start gap-3 bg-white/5 border border-blue-400/30 rounded-xl p-4 mb-4">
+                    <span class="h-8 w-8 flex items-center justify-center rounded-lg bg-blue-500/15 text-blue-200 font-semibold">1</span>
+                    <div class="flex-1">
+                        <p class="font-semibold text-white mb-2">Enter Recipient Details</p>
+                        <p class="text-sm text-gray-300 mb-4">Enter recipient information and transfer amount</p>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">Recipient Name</label>
+                                <input type="text" id="step1Recipient" placeholder="e.g., Maria Santos" class="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white placeholder-gray-500 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">Amount (HKD)</label>
+                                <input type="number" id="step1Amount" placeholder="e.g., 1000" class="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white placeholder-gray-500 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="nextToStep2" class="w-full rounded-xl bg-gradient-to-r from-blue-400 to-emerald-400 px-6 py-3 text-white font-semibold font-geist hover:shadow-lg shadow-blue-900/30 transition">
+                    Next: Purchase Stablecoin →
+                </button>
+            </div>
+
+            <!-- Step 2 -->
+            <div id="step2" class="step-content hidden">
+                <div class="flex items-start gap-3 bg-white/5 border border-purple-400/30 rounded-xl p-4 mb-4">
+                    <span class="h-8 w-8 flex items-center justify-center rounded-lg bg-purple-500/15 text-purple-200 font-semibold">2</span>
+                    <div class="flex-1">
+                        <p class="font-semibold text-white mb-2">Purchase Stablecoin</p>
+                        <p class="text-sm text-gray-300 mb-4">Converting HKD to HKMA-compliant stablecoin</p>
+                        <div class="space-y-3">
+                            <div class="bg-white/5 rounded-lg p-3">
+                                <p class="text-xs text-gray-400 mb-1">Amount Received</p>
+                                <p class="text-white font-semibold" id="step2Amount">HKD 0</p>
+                            </div>
+                            <div class="bg-white/5 rounded-lg p-3">
+                                <p class="text-xs text-gray-400 mb-1">Stablecoin Rate</p>
+                                <p class="text-white font-semibold">1 HKD = 1 HKD Stablecoin</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="nextToStep3" class="w-full rounded-xl bg-gradient-to-r from-blue-400 to-emerald-400 px-6 py-3 text-white font-semibold font-geist hover:shadow-lg shadow-blue-900/30 transition">
+                    Next: Convert to PHPC →
+                </button>
+            </div>
+
+            <!-- Step 3 -->
+            <div id="step3" class="step-content hidden">
+                <div class="flex items-start gap-3 bg-white/5 border border-pink-400/30 rounded-xl p-4 mb-4">
+                    <span class="h-8 w-8 flex items-center justify-center rounded-lg bg-pink-500/15 text-pink-200 font-semibold">3</span>
+                    <div class="flex-1">
+                        <p class="font-semibold text-white mb-2">Convert to PHPC</p>
+                        <p class="text-sm text-gray-300 mb-4">Establishing cross-border liquidity</p>
+                        <div class="space-y-3">
+                            <div class="bg-white/5 rounded-lg p-3">
+                                <p class="text-xs text-gray-400 mb-1">HKD Stablecoin</p>
+                                <p class="text-white font-semibold" id="step3Stablecoin">0 HKD Stablecoin</p>
+                            </div>
+                            <div class="bg-white/5 rounded-lg p-3">
+                                <p class="text-xs text-gray-400 mb-1">PHPC Exchange Rate</p>
+                                <p class="text-white font-semibold">1 HKD Stablecoin = 7.056 PHPC</p>
+                            </div>
+                            <div class="bg-white/5 rounded-lg p-3">
+                                <p class="text-xs text-gray-400 mb-1">PHPC Amount</p>
+                                <p class="text-white font-semibold" id="step3PHPC">0 PHPC</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="nextToStep4" class="w-full rounded-xl bg-gradient-to-r from-blue-400 to-emerald-400 px-6 py-3 text-white font-semibold font-geist hover:shadow-lg shadow-blue-900/30 transition">
+                    Next: Deposit to Recipient →
+                </button>
+            </div>
+
+            <!-- Step 4 -->
+            <div id="step4" class="step-content hidden">
+                <div class="flex items-start gap-3 bg-white/5 border border-amber-400/30 rounded-xl p-4 mb-4">
+                    <span class="h-8 w-8 flex items-center justify-center rounded-lg bg-amber-500/15 text-amber-200 font-semibold">4</span>
+                    <div class="flex-1">
+                        <p class="font-semibold text-white mb-2">Scan FPS QR Code to Send Money</p>
+                        <p class="text-sm text-gray-300 mb-4">Scan the QR code below with your bank app to complete the FPS payment</p>
+                        <div class="flex flex-col md:flex-row gap-4 mb-4">
+                            <div class="flex-1 space-y-3">
+                                <div class="bg-white/5 rounded-lg p-3">
+                                    <p class="text-xs text-gray-400 mb-1">Recipient</p>
+                                    <p class="text-white font-semibold" id="step4Recipient">-</p>
+                                </div>
+                                <div class="bg-white/5 rounded-lg p-3">
+                                    <p class="text-xs text-gray-400 mb-1">PHPC Amount</p>
+                                    <p class="text-white font-semibold" id="step4PHPC">0 PHPC</p>
+                                </div>
+                                <div class="bg-white/5 rounded-lg p-3">
+                                    <p class="text-xs text-gray-400 mb-1">PHP Exchange Rate</p>
+                                    <p class="text-white font-semibold">1 PHPC = 0.1417 PHP</p>
+                                </div>
+                                <div class="bg-emerald-500/10 border border-emerald-400/30 rounded-lg p-3">
+                                    <p class="text-xs text-emerald-300 mb-1">Final Amount</p>
+                                    <p class="text-emerald-200 font-semibold text-lg" id="step4Final">PHP 0</p>
+                                </div>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <div class="bg-white rounded-lg p-4 flex items-center justify-center">
+                                    <div class="text-center">
+                                        <div class="w-32 h-32 bg-white rounded-lg flex items-center justify-center border-2 border-gray-300 mb-2 relative">
+                                            <!-- QR Code Pattern -->
+                                            <div class="absolute inset-2 grid grid-cols-8 grid-rows-8 gap-0.5">
+                                                <div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div>
+                                                <div class="bg-black"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-black"></div>
+                                                <div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div><div class="bg-black"></div>
+                                                <div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div>
+                                                <div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div>
+                                                <div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div>
+                                                <div class="bg-black"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-black"></div>
+                                                <div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div>
+                                            </div>
+                                        </div>
+                                        <p class="text-xs text-gray-600 font-geist">FPS QR Code</p>
+                                        <p class="text-xs text-gray-500 font-geist mt-1">Scan with bank app</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <button id="restartFlow" class="flex-1 rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-white font-semibold font-geist hover:bg-white/10 transition">
+                        Start Over
+                    </button>
+                    <button id="completeFlow" class="flex-1 rounded-xl bg-gradient-to-r from-emerald-400 to-blue-400 px-6 py-3 text-white font-semibold font-geist hover:shadow-lg shadow-emerald-900/30 transition">
+                        Complete Transfer ✓
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Recipient Modal -->
+    <div id="addRecipientModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div class="relative w-full max-w-2xl mx-4 rounded-3xl border border-white/10 bg-slate-900/95 p-8 backdrop-blur-xl shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button id="closeAddRecipient" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i data-lucide="x" class="h-6 w-6"></i>
+            </button>
+            <h3 class="text-2xl text-white font-bricolage font-light mb-6">Add New Recipient</h3>
+            <form id="recipientForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm text-gray-300 font-geist mb-2">Full Name</label>
+                    <input type="text" id="recipientName" required class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-500 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-300 font-geist mb-2">Country</label>
+                    <select id="recipientCountry" required class="w-full rounded-xl border border-white/10 bg-white px-4 py-3 text-gray-900 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20">
+                        <option value="">Select Country</option>
+                        <option value="PH">Philippines</option>
+                        <option value="TH">Thailand</option>
+                        <option value="ID">Indonesia</option>
+                        <option value="VN">Vietnam</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-300 font-geist mb-2">Bank Name</label>
+                    <input type="text" id="recipientBank" required class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-500 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-300 font-geist mb-2">Account Number</label>
+                    <input type="text" id="recipientAccount" required class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-500 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-300 font-geist mb-2">Email (Optional)</label>
+                    <input type="email" id="recipientEmail" class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-500 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-300 font-geist mb-2">Phone Number (Optional)</label>
+                    <input type="tel" id="recipientPhone" class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-500 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20">
+                </div>
+                <button type="submit" class="w-full rounded-xl bg-gradient-to-r from-blue-400 to-emerald-400 px-6 py-3 text-white font-semibold font-geist hover:shadow-lg shadow-blue-900/30 transition">
+                    Add Recipient
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Download Receipt Modal -->
+    <div id="downloadReceiptModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div class="relative w-full max-w-3xl mx-4 rounded-3xl border border-white/10 bg-slate-900/95 p-8 backdrop-blur-xl shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button id="closeDownloadReceipt" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i data-lucide="x" class="h-6 w-6"></i>
+            </button>
+            <h3 class="text-2xl text-white font-bricolage font-light mb-6">Transaction History</h3>
+            <div id="transactionList" class="space-y-4">
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center flex-shrink-0">
+                                <span class="text-white font-bold text-sm font-geist">$</span>
+                            </div>
+                            <div>
+                                <p class="text-white font-geist font-semibold">TX20251029001</p>
+                                <p class="text-xs text-gray-400 mt-1">Maria Santos · PHP 35,250 · Oct 29, 2025</p>
+                            </div>
+                        </div>
+                        <span class="text-xs text-emerald-200 flex items-center gap-1"><i data-lucide="check-circle-2" class="h-3 w-3"></i>Completed</span>
+                    </div>
+                    <button onclick="downloadReceipt('TX20251029001')" class="mt-3 w-full rounded-lg bg-gradient-to-r from-blue-400 to-emerald-400 px-4 py-2 text-sm font-semibold text-white hover:shadow-lg shadow-blue-900/30 transition">
+                        <i data-lucide="download" class="h-4 w-4 inline mr-2"></i>Download PDF
+                    </button>
+                </div>
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center flex-shrink-0">
+                                <span class="text-white font-bold text-sm font-geist">$</span>
+                            </div>
+                            <div>
+                                <p class="text-white font-geist font-semibold">TX20251028002</p>
+                                <p class="text-xs text-gray-400 mt-1">Somchai Wong · THB 15,925 · Oct 28, 2025</p>
+                            </div>
+                        </div>
+                        <span class="text-xs text-emerald-200 flex items-center gap-1"><i data-lucide="check-circle-2" class="h-3 w-3"></i>Completed</span>
+                    </div>
+                    <button onclick="downloadReceipt('TX20251028002')" class="mt-3 w-full rounded-lg bg-gradient-to-r from-blue-400 to-emerald-400 px-4 py-2 text-sm font-semibold text-white hover:shadow-lg shadow-blue-900/30 transition">
+                        <i data-lucide="download" class="h-4 w-4 inline mr-2"></i>Download PDF
+                    </button>
+                </div>
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center flex-shrink-0">
+                                <span class="text-white font-bold text-sm font-geist">$</span>
+                            </div>
+                            <div>
+                                <p class="text-white font-geist font-semibold">TX20251026004</p>
+                                <p class="text-xs text-gray-400 mt-1">Li Wei · CNY 1,820 · Oct 26, 2025</p>
+                            </div>
+                        </div>
+                        <span class="text-xs text-emerald-200 flex items-center gap-1"><i data-lucide="check-circle-2" class="h-3 w-3"></i>Completed</span>
+                    </div>
+                    <button onclick="downloadReceipt('TX20251026004')" class="mt-3 w-full rounded-lg bg-gradient-to-r from-blue-400 to-emerald-400 px-4 py-2 text-sm font-semibold text-white hover:shadow-lg shadow-blue-900/30 transition">
+                        <i data-lucide="download" class="h-4 w-4 inline mr-2"></i>Download PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        const toggle = document.getElementById('mobileToggle');
+        const nav = document.getElementById('mobileNav');
+        toggle?.addEventListener('click', () => {
+            const hidden = nav.classList.contains('hidden');
+            nav.classList.toggle('hidden');
+            nav.classList.toggle('flex', hidden);
+            nav.setAttribute('aria-hidden', hidden ? 'false' : 'true');
+            toggle.setAttribute('aria-expanded', hidden ? 'true' : 'false');
+        });
+
+        const workflowSection = document.getElementById('transferWorkflow');
+        const headerTransferBtn = document.getElementById('headerNewTransfer');
+        const summaryTransferBtn = document.getElementById('summaryNewTransfer');
+        function scrollToWorkflow() {
+            workflowSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        headerTransferBtn?.addEventListener('click', scrollToWorkflow);
+        summaryTransferBtn?.addEventListener('click', scrollToWorkflow);
+
+        const signOutBtn = document.getElementById('signOutBtn');
+        const mobileSignOutBtn = document.getElementById('mobileSignOutBtn');
+        function signOut() {
+            window.location.href = 'index.html';
+        }
+        signOutBtn?.addEventListener('click', signOut);
+        mobileSignOutBtn?.addEventListener('click', signOut);
+
+        // Send Money Modal
+        const sendMoneyBtn = document.getElementById('sendMoneyBtn');
+        const sendMoneyModal = document.getElementById('sendMoneyModal');
+        const closeSendMoney = document.getElementById('closeSendMoney');
+        
+        // Reset flow when opening modal
+        function resetSendMoneyFlow() {
+            document.getElementById('step1').classList.remove('hidden');
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.add('hidden');
+            document.getElementById('step4').classList.add('hidden');
+            document.getElementById('step1Recipient').value = '';
+            document.getElementById('step1Amount').value = '';
+        }
+
+        sendMoneyBtn?.addEventListener('click', () => {
+            resetSendMoneyFlow();
+            sendMoneyModal?.classList.remove('hidden');
+            sendMoneyModal?.classList.add('flex');
+            lucide.createIcons();
+        });
+        
+        closeSendMoney?.addEventListener('click', () => {
+            resetSendMoneyFlow();
+            sendMoneyModal?.classList.add('hidden');
+            sendMoneyModal?.classList.remove('flex');
+        });
+        
+        sendMoneyModal?.addEventListener('click', (e) => {
+            if (e.target === sendMoneyModal) {
+                resetSendMoneyFlow();
+                sendMoneyModal.classList.add('hidden');
+                sendMoneyModal.classList.remove('flex');
+            }
+        });
+
+        // Step-by-step flow navigation
+        const nextToStep2 = document.getElementById('nextToStep2');
+        const nextToStep3 = document.getElementById('nextToStep3');
+        const nextToStep4 = document.getElementById('nextToStep4');
+        const restartFlow = document.getElementById('restartFlow');
+        const completeFlow = document.getElementById('completeFlow');
+
+        nextToStep2?.addEventListener('click', () => {
+            const recipient = document.getElementById('step1Recipient').value;
+            const amount = document.getElementById('step1Amount').value;
+            
+            if (!recipient || !amount) {
+                alert('Please fill in recipient name and amount');
+                return;
+            }
+            
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+            document.getElementById('step2Amount').textContent = `HKD ${amount}`;
+            lucide.createIcons();
+        });
+
+        nextToStep3?.addEventListener('click', () => {
+            const amount = document.getElementById('step1Amount').value;
+            const stablecoin = amount;
+            const phpc = (parseFloat(amount) * 7.056).toFixed(2);
+            
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.remove('hidden');
+            document.getElementById('step3Stablecoin').textContent = `${stablecoin} HKD Stablecoin`;
+            document.getElementById('step3PHPC').textContent = `${phpc} PHPC`;
+            lucide.createIcons();
+        });
+
+        nextToStep4?.addEventListener('click', () => {
+            const recipient = document.getElementById('step1Recipient').value;
+            const amount = document.getElementById('step1Amount').value;
+            const phpc = (parseFloat(amount) * 7.056).toFixed(2);
+            const php = (parseFloat(phpc) * 0.1417).toFixed(2);
+            
+            document.getElementById('step3').classList.add('hidden');
+            document.getElementById('step4').classList.remove('hidden');
+            document.getElementById('step4Recipient').textContent = recipient;
+            document.getElementById('step4PHPC').textContent = `${phpc} PHPC`;
+            document.getElementById('step4Final').textContent = `PHP ${php}`;
+            lucide.createIcons();
+        });
+
+        restartFlow?.addEventListener('click', () => {
+            resetSendMoneyFlow();
+            lucide.createIcons();
+        });
+
+        completeFlow?.addEventListener('click', () => {
+            const recipient = document.getElementById('step1Recipient').value;
+            const amount = document.getElementById('step1Amount').value;
+            const php = (parseFloat(amount) * 7.056 * 0.1417).toFixed(2);
+            
+            alert(`Transfer completed successfully!\n\nRecipient: ${recipient}\nAmount: HKD ${amount}\nFinal Amount: PHP ${php}\n\nTransaction ID: TX${Date.now()}`);
+            resetSendMoneyFlow();
+            sendMoneyModal.classList.add('hidden');
+            sendMoneyModal.classList.remove('flex');
+        });
+
+        // Add Recipient Modal
+        const addRecipientBtn = document.getElementById('addRecipientBtn');
+        const recipientsAddNewBtn = document.getElementById('recipientsAddNewBtn');
+        const addRecipientModal = document.getElementById('addRecipientModal');
+        const closeAddRecipient = document.getElementById('closeAddRecipient');
+        const recipientForm = document.getElementById('recipientForm');
+        
+        function openAddRecipientModal() {
+            addRecipientModal?.classList.remove('hidden');
+            addRecipientModal?.classList.add('flex');
+            lucide.createIcons();
+        }
+        
+        addRecipientBtn?.addEventListener('click', openAddRecipientModal);
+        recipientsAddNewBtn?.addEventListener('click', openAddRecipientModal);
+        
+        closeAddRecipient?.addEventListener('click', () => {
+            addRecipientModal?.classList.add('hidden');
+            addRecipientModal?.classList.remove('flex');
+        });
+        
+        addRecipientModal?.addEventListener('click', (e) => {
+            if (e.target === addRecipientModal) {
+                addRecipientModal.classList.add('hidden');
+                addRecipientModal.classList.remove('flex');
+            }
+        });
+        
+        recipientForm?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('recipientName').value;
+            const country = document.getElementById('recipientCountry').value;
+            const bank = document.getElementById('recipientBank').value;
+            const account = document.getElementById('recipientAccount').value;
+            
+            alert(`Recipient added successfully!\n\nName: ${name}\nCountry: ${country}\nBank: ${bank}\nAccount: ${account}`);
+            recipientForm.reset();
+            addRecipientModal.classList.add('hidden');
+            addRecipientModal.classList.remove('flex');
+        });
+
+        // Download Receipt Modal
+        const downloadReceiptBtn = document.getElementById('downloadReceiptBtn');
+        const downloadReceiptModal = document.getElementById('downloadReceiptModal');
+        const closeDownloadReceipt = document.getElementById('closeDownloadReceipt');
+        
+        downloadReceiptBtn?.addEventListener('click', () => {
+            downloadReceiptModal?.classList.remove('hidden');
+            downloadReceiptModal?.classList.add('flex');
+            lucide.createIcons();
+        });
+        
+        closeDownloadReceipt?.addEventListener('click', () => {
+            downloadReceiptModal?.classList.add('hidden');
+            downloadReceiptModal?.classList.remove('flex');
+        });
+        
+        downloadReceiptModal?.addEventListener('click', (e) => {
+            if (e.target === downloadReceiptModal) {
+                downloadReceiptModal.classList.add('hidden');
+                downloadReceiptModal.classList.remove('flex');
+            }
+        });
+
+        // Open Send Money Modal function
+        window.openSendMoneyModal = function() {
+            resetSendMoneyFlow();
+            sendMoneyModal?.classList.remove('hidden');
+            sendMoneyModal?.classList.add('flex');
+            lucide.createIcons();
+        };
+
+        // Download Receipt Function
+        window.downloadReceipt = function(txId) {
+            // Create a simple PDF-like content
+            const receiptContent = `
+                FPS-Stable Transaction Receipt
+                ==============================
+                
+                Transaction ID: ${txId}
+                Date: ${new Date().toLocaleDateString()}
+                Status: Completed
+                
+                This is a demo receipt for transaction ${txId}.
+                In a production environment, this would generate
+                a proper PDF file with all transaction details.
+            `;
+            
+            // Create a blob and download
+            const blob = new Blob([receiptContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${txId}_receipt.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert(`Receipt for ${txId} downloaded successfully!`);
+        };
+    </script>
+</body>
+</html>
+

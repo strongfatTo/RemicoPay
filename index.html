@@ -2,34 +2,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PayFlow – Invoice & Payment Management Platform</title>
+    <title>FPS-Stable – Cross-Border Remittance Service</title>
     
-    <!-- Fonts -->
+    <!-- Custom Fonts: Inter (default), Geist (secondary), Bricolage Grotesque (headings) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Tailwind & Icons -->
+    <!-- Tailwind CSS and Lucide Icons -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
+        /* Base styles and custom fonts */
         body { font-family: 'Inter', sans-serif; }
         .font-geist { font-family: 'Geist', sans-serif !important; }
         .font-bricolage { font-family: 'Bricolage Grotesque', sans-serif !important; }
         
+        /* Custom animations */
         @keyframes fade-slide {
             0% { opacity: 0; transform: translateY(20px) scale(.98); }
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
         .fade-slide { animation: fade-slide .7s both; }
-        
-        @keyframes pulse-slow {
-            0%, 100% { opacity: 1; }
-            50% { opacity: .7; }
-        }
-        .pulse-slow { animation: pulse-slow 2s infinite; }
         
         /* Custom scrollbar for better aesthetics */
         ::-webkit-scrollbar {
@@ -49,165 +45,163 @@
 </head>
 
 <body class="bg-slate-950 text-gray-100 min-h-screen overflow-x-hidden">
-    <!-- 3D Background -->
+    <!-- Background Spline 3D Scene (Glass Wave) -->
     <div class="spline-container fixed top-0 w-full h-screen -z-10 opacity-60 pointer-events-none">
         <iframe src="https://my.spline.design/glasswave-6HLEnvJfCRsq1aKT2xqlgme7" frameborder="0" width="100%" height="100%" id="aura-spline"></iframe>
     </div>
 
-    <!-- Navigation -->
+    <!-- Fixed Header / Navigation Bar -->
     <header class="fixed left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] sm:w-[calc(100%-3rem)] lg:w-[calc(100%-4rem)] max-w-7xl top-0 sm:top-4 lg:top-6 z-50 flex sm:px-6 lg:px-8 ring-1 ring-white/10 shadow-black/20 bg-slate-900/80 border-white/10 border rounded-2xl border-b pt-4 pr-4 pb-4 pl-4 shadow-lg backdrop-blur-xl items-center justify-between">
         <div class="w-full max-w-7xl mx-auto flex items-center justify-between">
-            <!-- Brand -->
             <div class="flex space-x-3 items-center">
                 <div class="flex flex-col">
-                    <span class="text-lg font-bold tracking-tight text-white font-geist">PayFlow</span>
-                    <span class="hidden sm:block text-xs text-gray-300 font-medium font-geist">Invoice Management</span>
+                    <span class="text-lg font-bold tracking-tight text-white font-geist">FPS-Stable</span>
+                    <span class="hidden sm:block text-xs text-gray-300 font-medium font-geist">Cross-Border Remittance (HK ➜ PH)</span>
                 </div>
             </div>
 
-            <!-- Desktop Links -->
+            <!-- Desktop Navigation -->
             <nav aria-label="Primary" class="hidden lg:flex items-center space-x-2">
                 <a href="#" class="flex items-center space-x-2 px-4 py-2 text-sm rounded-lg hover:bg-white/10 hover:ring-1 hover:ring-white/15 transition text-gray-200">
-                    <i data-lucide="layout-dashboard" class="h-4 w-4"></i>
-                    <span class="font-geist">Dashboard</span>
+                    <i data-lucide="send" class="h-4 w-4"></i>
+                    <span class="font-geist">Send Money</span>
                 </a>
                 <a href="#" class="flex items-center space-x-2 px-4 py-2 text-sm rounded-lg hover:bg-white/10 hover:ring-1 hover:ring-white/15 transition text-gray-200">
-                    <i data-lucide="file-text" class="h-4 w-4"></i>
-                    <span class="font-geist">Invoices</span>
+                    <i data-lucide="history" class="h-4 w-4"></i>
+                    <span class="font-geist">History</span>
                 </a>
                 <a href="#" class="flex items-center space-x-2 px-4 py-2 text-sm rounded-lg hover:bg-white/10 hover:ring-1 hover:ring-white/15 transition text-gray-200">
-                    <i data-lucide="users" class="h-4 w-4"></i>
-                    <span class="font-geist">Clients</span>
+                    <i data-lucide="shield" class="h-4 w-4"></i>
+                    <span class="font-geist">Compliance</span>
                 </a>
                 <a href="#" class="flex items-center space-x-2 px-4 py-2 text-sm rounded-lg hover:bg-white/10 hover:ring-1 hover:ring-white/15 transition text-gray-200">
                     <i data-lucide="bar-chart-3" class="h-4 w-4"></i>
-                    <span class="font-geist">Analytics</span>
+                    <span class="font-geist">FX Rates</span>
                 </a>
             </nav>
 
-            <!-- Actions -->
+            <!-- Desktop Actions -->
             <div class="hidden sm:flex items-center space-x-3">
                 <button class="flex items-center space-x-2 px-4 py-2 text-sm rounded-lg border border-white/15 bg-white/5 hover:bg-white/10 hover:border-white/20 hover:-translate-y-0.5 transition text-gray-100">
                     <i data-lucide="bell" class="h-4 w-4"></i>
                     <span class="hidden md:block font-geist">Notifications</span>
                 </button>
-                <button class="flex hover:bg-blue-600 transition shadow-blue-900/30 hover:-translate-y-0.5 text-sm text-white bg-gradient-to-r from-blue-400 to-emerald-400 rounded-lg pt-2 pr-4 pb-2 pl-4 shadow-lg space-x-2 items-center">
-                    <i data-lucide="plus" class="h-4 w-4"></i>
-                    <span class="font-geist">New Invoice</span>
+                <button id="remittanceLoginBtn" class="flex hover:bg-blue-600 transition shadow-blue-900/30 hover:-translate-y-0.5 text-sm text-white bg-gradient-to-r from-blue-400 to-emerald-400 rounded-lg pt-2 pr-4 pb-2 pl-4 shadow-lg space-x-2 items-center">
+                    <i data-lucide="log-in" class="h-4 w-4"></i>
+                    <span class="font-geist">Login / Register</span>
                 </button>
             </div>
 
-            <!-- Mobile toggle -->
+            <!-- Mobile Toggle Button -->
             <button id="mobileToggle" class="relative z-30 flex h-10 w-10 items-center justify-center rounded-lg border border-white/15 bg-white/10 text-white sm:hidden hover:bg-white/15" aria-expanded="false">
                 <i data-lucide="menu" class="h-5 w-5"></i>
             </button>
         </div>
     </header>
 
-    <!-- Mobile Drawer -->
+    <!-- Mobile Navigation Menu -->
     <nav id="mobileNav" aria-label="Mobile" class="absolute inset-x-0 top-0 z-40 hidden flex-col space-y-2 bg-slate-900/95 px-4 pb-8 pt-24 backdrop-blur-xl border-b border-white/10 sm:hidden transition-all duration-300">
         <a href="#" class="flex items-center space-x-3 rounded-lg px-4 py-3 text-gray-100 hover:bg-white/10 hover:ring-1 hover:ring-white/10 transition">
-            <i data-lucide="layout-dashboard" class="h-5 w-5"></i>
-            <span class="font-geist">Dashboard</span>
+            <i data-lucide="send" class="h-5 w-5"></i>
+            <span class="font-geist">Send Money</span>
         </a>
         <a href="#" class="flex items-center space-x-3 rounded-lg px-4 py-3 text-gray-100 hover:bg-white/10 hover:ring-1 hover:ring-white/10 transition">
-            <i data-lucide="file-text" class="h-5 w-5"></i>
-            <span class="font-geist">Invoices</span>
+            <i data-lucide="history" class="h-5 w-5"></i>
+            <span class="font-geist">History</span>
         </a>
         <a href="#" class="flex items-center space-x-3 rounded-lg px-4 py-3 text-gray-100 hover:bg-white/10 hover:ring-1 hover:ring-white/10 transition">
-            <i data-lucide="users" class="h-5 w-5"></i>
-            <span class="font-geist">Clients</span>
+            <i data-lucide="shield" class="h-5 w-5"></i>
+            <span class="font-geist">Compliance</span>
         </a>
         <a href="#" class="flex items-center space-x-3 rounded-lg px-4 py-3 text-gray-100 hover:bg-white/10 hover:ring-1 hover:ring-white/10 transition">
             <i data-lucide="bar-chart-3" class="h-5 w-5"></i>
-            <span class="font-geist">Analytics</span>
+            <span class="font-geist">FX Rates</span>
         </a>
         <div class="border-t border-white/10 pt-4">
-            <button class="flex w-full items-center justify-center space-x-2 rounded-lg bg-blue-600/80 px-4 py-3 text-white hover:bg-blue-600 transition">
-                <i data-lucide="plus" class="h-4 w-4"></i>
-                <span class="font-geist">New Invoice</span>
+            <button id="mobileRemittanceLoginBtn" class="flex w-full items-center justify-center space-x-2 rounded-lg bg-blue-600/80 px-4 py-3 text-white hover:bg-blue-600 transition">
+                <i data-lucide="log-in" class="h-4 w-4"></i>
+                <span class="font-geist">Login / Register</span>
             </button>
         </div>
     </nav>
 
-    <!-- Main -->
     <main class="relative z-10 min-h-screen">
-        <!-- Hero -->
+        <!-- Hero Section -->
         <section class="sm:px-6 lg:px-8 sm:pt-12 lg:pt-16 pt-8 pr-4 pl-4">
             <div class="max-w-7xl mx-auto">
                 <div class="grid gap-8 lg:grid-cols-5 lg:gap-12 pt-20 pb-20 sm:pt-24 sm:pb-24 lg:pt-32 lg:pb-32 items-center">
-                    <!-- Copy -->
+                    <!-- Hero Content -->
                     <div class="lg:col-span-3 fade-slide" style="animation-delay:.1s">
                         <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl tracking-tight text-white mb-8 font-bricolage font-light leading-tight">
-                            Track every payment,<br class="hidden sm:block">
-                            manage every client<br class="hidden sm:block">
-                            <span class="font-light bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400 font-bricolage">seamlessly</span>
+                            Send money HK ➜ PH<br class="hidden sm:block">
+                            in minutes, not days<br class="hidden sm:block">
+                            <span class="font-light bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">transparently</span>
                         </h1>
 
                         <p class="text-lg sm:text-xl text-gray-300 mb-10 max-w-2xl font-geist">
-                            Real-time invoice tracking, automated payment reminders, and comprehensive financial insights.
-                            Email / Google 註冊 30 秒完成，登入後即可啟動 KYC、AML、以及 FPS→PHPC 模擬流程。
+                            Fast, low-cost cross-border remittance leveraging **regulated stablecoins**. See exactly what your family receives with 1-2% fees.
                         </p>
 
                         <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
                             <button class="flex hover:bg-blue-600 transition shadow-blue-900/30 hover:-translate-y-0.5 text-white bg-gradient-to-r from-blue-400 to-emerald-400 rounded-xl pt-4 pr-8 pb-4 pl-8 shadow-lg space-x-2 items-center">
-                                <i data-lucide="play" class="h-5 w-5"></i>
-                                <span class="font-medium font-geist">Start Free Trial</span>
+                                <i data-lucide="send" class="h-5 w-5"></i>
+                                <span class="font-medium font-geist">Calculate Rate Now</span>
                             </button>
                             <button class="flex items-center space-x-2 rounded-xl border border-white/15 bg-white/5 px-8 py-4 text-gray-100 hover:bg-white/10 hover:border-white/20 transition">
-                                <i data-lucide="calendar" class="h-5 w-5"></i>
-                                <span class="font-medium font-geist">Schedule Demo</span>
+                                <i data-lucide="shield-check" class="h-5 w-5"></i>
+                                <span class="font-medium font-geist">Compliance & Security</span>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Onboarding Card -->
+                    <!-- Login/Registration Card -->
                     <div class="lg:col-span-2 fade-slide" style="animation-delay:.25s">
                         <div class="space-y-6">
                             <div class="bg-gradient-to-br from-blue-900/30 to-slate-900/70 border border-blue-500/30 rounded-2xl p-6 backdrop-blur-xl shadow-2xl">
                                 <div class="flex items-center justify-between mb-4">
                                     <div>
                                         <p class="text-xs text-blue-200 uppercase tracking-[0.4em] font-geist">FR-1 Onboarding</p>
-                                        <h3 class="text-2xl text-white font-semibold font-geist mt-1">Email 註冊 / Login</h3>
+                                        <h3 class="text-2xl text-white font-semibold font-geist mt-1">Email / Phone Registration</h3>
                                     </div>
                                     <span class="inline-flex items-center gap-1 text-xs text-emerald-200 bg-emerald-500/15 border border-emerald-400/20 px-2.5 py-1 rounded-lg font-geist">
-                                        <i data-lucide="shield" class="h-3.5 w-3.5"></i> KYC Ready
+                                        <i data-lucide="check-check" class="h-3.5 w-3.5"></i> KYC Mandatory
                                     </span>
                                 </div>
-                                <form class="space-y-4">
+                                <form class="space-y-4" id="emailLoginForm">
                                     <div>
-                                        <label for="email" class="text-xs uppercase text-gray-300 font-semibold font-geist tracking-wide">企業 Email</label>
-                                        <input id="email" type="email" placeholder="finance@payflow.com" class="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40 transition">
+                                        <label for="email" class="text-xs uppercase text-gray-300 font-semibold font-geist tracking-wide">Email</label>
+                                        <input id="email" type="email" placeholder="maria@example.com" class="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40 transition">
                                     </div>
                                     <div>
                                         <label for="password" class="text-xs uppercase text-gray-300 font-semibold font-geist tracking-wide">密碼</label>
                                         <input id="password" type="password" placeholder="••••••••" class="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40 transition">
                                     </div>
-                                    <button type="button" class="w-full inline-flex justify-center items-center gap-2 bg-gradient-to-r from-blue-400 to-emerald-400 text-white font-medium font-geist rounded-xl py-3 shadow-lg shadow-blue-900/40 hover:-translate-y-0.5 transition">
+                                    <button type="button" id="emailLoginButton" class="w-full inline-flex justify-center items-center gap-2 bg-gradient-to-r from-blue-400 to-emerald-400 text-white font-medium font-geist rounded-xl py-3 shadow-lg shadow-blue-900/40 hover:-translate-y-0.5 transition">
                                         <i data-lucide="mail" class="h-4 w-4"></i>
                                         Email 註冊 / 登入
                                     </button>
+                                    <p id="loginError" class="hidden text-xs text-rose-200 bg-rose-500/10 border border-rose-400/20 rounded-xl px-3 py-2 font-geist">登入失敗，請檢查 Email 或密碼。</p>
                                 </form>
                                 <div class="mt-4">
-                                    <button class="w-full inline-flex justify-center items-center gap-3 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-gray-100 hover:bg-white/10 hover:border-white/30 transition">
+                                    <button id="googleLoginButton" class="w-full inline-flex justify-center items-center gap-3 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-gray-100 hover:bg-white/10 hover:border-white/30 transition">
                                         <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google icon" class="h-4 w-4">
                                         使用 Google 登入
                                     </button>
                                     <p class="text-xs text-gray-400 font-geist mt-3">
-                                        * 與 Supabase Auth 對接，支援 Email OTP 以及 Google OAuth。註冊後自動觸發 KYC 任務並追蹤 AML 狀態。
+                                        * **MVP Scope:** 註冊後將引導至 **HKID / Passport** 驗證流程，以符合 **KYC/AML** 要求。
                                     </p>
                                 </div>
                             </div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="rounded-2xl border border-purple-400/20 bg-gradient-to-br from-purple-900/30 to-black/60 p-4">
                                     <p class="text-xs text-purple-200">Step 1</p>
-                                    <p class="text-lg text-white font-semibold mt-1">Email 驗證</p>
-                                    <p class="text-xs text-gray-400">OTP / Magic Link</p>
+                                    <p class="text-lg text-white font-semibold mt-1">身份驗證 (KYC)</p>
+                                    <p class="text-xs text-gray-400">HKID / Passport</p>
                                 </div>
                                 <div class="rounded-2xl border border-emerald-400/20 bg-gradient-to-br from-emerald-900/30 to-black/60 p-4">
                                     <p class="text-xs text-emerald-200">Step 2</p>
-                                    <p class="text-lg text-white font-semibold mt-1">Google OAuth</p>
-                                    <p class="text-xs text-gray-400">即時同步公司網域</p>
+                                    <p class="text-lg text-white font-semibold mt-1">AML 篩選</p>
+                                    <p class="text-xs text-gray-400">自動比對制裁名單</p>
                                 </div>
                             </div>
                         </div>
@@ -216,141 +210,59 @@
             </div>
         </section>
 
-        <!-- Dashboard -->
+        <!-- Transaction Snapshot Section -->
         <section class="sm:px-6 lg:px-8 sm:pb-20 sm:pt-16 lg:pt-20 pt-12 pr-4 pb-12 pl-4">
             <div class="max-w-7xl mx-auto">
-                <h2 class="sr-only font-geist">Invoice management dashboard</h2>
+                <h2 class="sr-only font-geist">Remittance dashboard overview</h2>
                 <div class="grid gap-8 lg:grid-cols-12 xl:gap-10 border-0 rounded-3xl pt-4 pr-4 pb-4 pl-4 space-x-0">
                     <div class="lg:col-span-12 xl:col-span-12 fade-slide" style="animation-delay:.45s">
                         <div class="text-center max-w-3xl mx-auto mb-16">
                             <h2 class="text-4xl sm:text-5xl font-light tracking-tight text-white font-bricolage mb-6">
-                                <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">Invoice</span> management
+                                The stablecoin remittance <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">advantage</span>
                             </h2>
-                            <p class="text-xl text-gray-300 font-geist font-light">Real-time invoice tracking with comprehensive financial insights and automated payment workflows.</p>
-                            <div class="inline-flex items-center gap-2 rounded-xl border border-blue-400/20 bg-blue-400/10 px-3 py-2 mt-4">
-                                <i data-lucide="monitor" class="h-4 w-4 text-blue-300"></i>
-                                <span class="text-sm text-blue-200 font-geist">Live demo</span>
-                            </div>
+                            <p class="text-xl text-gray-300 font-geist font-light">
+                                FPS + 受監管穩定幣，15 分鐘內完成、費用低於 1%。
+                            </p>
                         </div>
 
-                        <article class="overflow-hidden hover:border-white/40 transition-all duration-300 h-auto min-h-fit bg-gradient-to-br from-blue-900/20 to-black border border-blue-400/20 rounded-2xl shadow-sm backdrop-blur-xl">
+                        <article class="overflow-hidden hover:border-white/40 transition-all duration-300 bg-gradient-to-br from-blue-900/20 to-black border border-blue-400/20 rounded-2xl shadow-sm backdrop-blur-xl">
                             <header class="flex items-center justify-between p-8 border-b border-blue-400/20">
                                 <div class="flex items-center space-x-3">
                                     <div class="h-12 w-12 rounded-xl bg-blue-500/15 flex items-center justify-center">
-                                        <i data-lucide="file-text" class="h-5 w-5 text-blue-300"></i>
+                                        <i data-lucide="send" class="h-5 w-5 text-blue-300"></i>
                                     </div>
-                                    <h3 class="text-xl font-semibold text-white font-geist">Invoice Details</h3>
+                                    <div>
+                                        <p class="text-sm text-blue-200 font-geist">TX-20250129-PH</p>
+                                        <h3 class="text-xl font-semibold text-white font-geist">Transaction Snapshot</h3>
                                 </div>
-                                <span class="inline-flex items-center rounded-lg bg-amber-500/15 px-3 py-1 text-xs font-medium text-amber-200 font-geist border border-amber-400/20">
-                                    <i data-lucide="clock" class="mr-1 h-3 w-3"></i>
-                                    Pending
+                                </div>
+                                <span class="inline-flex items-center rounded-lg bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-200 font-geist border border-emerald-400/20">
+                                    HKD 1,000 → PHP 7,056
                                 </span>
                             </header>
-                            <div class="pt-8 pr-8 pb-8 pl-8 space-y-6">
-                                <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                                    <div class="">
-                                        <div class="flex items-center space-x-3 mb-2">
-                                            <span class="inline-flex items-center rounded-lg bg-blue-500/15 px-3 py-1 text-sm font-semibold text-blue-200 font-geist border border-blue-400/20">
-                                                <i data-lucide="hash" class="mr-1 h-3 w-3"></i>
-                                                INV-2024-0342
-                                            </span>
-                                            <span class="text-sm text-gray-300 font-geist">Due: March 15, 2024</span>
-                                        </div>
-                                        <h4 class="text-xl font-semibold text-white mb-1 font-geist">TechFlow Solutions Ltd</h4>
-                                        <p class="text-sm text-gray-300 font-geist font-light">Web Development & Consulting Services</p>
-                                    </div>
-                                    <div class="text-left sm:text-right">
-                                        <p class="text-sm text-gray-300 mb-1 font-geist">Total Amount</p>
-                                        <p class="text-3xl text-white font-bricolage font-light">$12,450</p>
-                                        <p class="text-sm text-gray-400 font-geist">USD</p>
-                                    </div>
-                                </div>
-
+                            <div class="p-8 space-y-6 text-sm font-geist">
                                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                    <div class="rounded-xl bg-gradient-to-br from-blue-900/30 to-black/50 p-4 border border-blue-400/30">
-                                        <div class="flex items-center space-x-2 mb-2">
-                                            <i data-lucide="calendar" class="h-4 w-4 text-blue-300"></i>
-                                            <span class="text-sm font-medium text-blue-200 font-geist">Issue date</span>
+                                    <div class="rounded-xl border border-blue-400/30 bg-blue-500/10 p-4">
+                                        <p class="text-gray-300 mb-1">You send</p>
+                                        <p class="text-2xl text-white font-bricolage font-light">HKD 1,000</p>
                                         </div>
-                                        <p class="text-base text-white font-geist">Mar 1, 2024</p>
-                                        <p class="text-xs text-gray-400 font-geist">Net 15</p>
+                                    <div class="rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-4">
+                                        <p class="text-gray-300 mb-1">They receive</p>
+                                        <p class="text-2xl text-white font-bricolage font-light">PHP 7,056</p>
                                     </div>
-                                    <div class="rounded-xl bg-gradient-to-br from-emerald-900/30 to-black/50 p-4 border border-emerald-400/30">
-                                        <div class="flex items-center space-x-2 mb-2">
-                                            <i data-lucide="wallet" class="h-4 w-4 text-emerald-300"></i>
-                                            <span class="text-sm font-medium text-emerald-200 font-geist">Balance due</span>
+                                    <div class="rounded-xl border border-purple-400/30 bg-purple-500/10 p-4">
+                                        <p class="text-gray-300 mb-1">Time &amp; Fee</p>
+                                        <p class="text-base text-white">15 mins · &lt;1%</p>
                                         </div>
-                                        <p class="text-base text-white font-geist">$4,250</p>
-                                        <p class="text-xs text-emerald-300 font-geist">$8,200 paid</p>
                                     </div>
-                                    <div class="rounded-xl bg-gradient-to-br from-purple-900/30 to-black/50 p-4 border border-purple-400/30">
-                                        <div class="flex items-center space-x-2 mb-2">
-                                            <i data-lucide="shield-check" class="h-4 w-4 text-purple-300"></i>
-                                            <span class="text-sm font-medium text-purple-200 font-geist">Payment terms</span>
+                                <div class="flex flex-wrap gap-4 text-xs text-gray-300">
+                                    <!-- Placeholder icons for the flow -->
+                                    <img src="https://img.icons8.com/fluency/64/qr-code.png" alt="FPS QR" class="h-12 w-12 rounded-xl border border-white/10 bg-white/5 p-2">
+                                    <img src="https://img.icons8.com/fluency/64/blockchain-new-logo.png" alt="Stablecoin conversion" class="h-12 w-12 rounded-xl border border-white/10 bg-white/5 p-2">
+                                    <img src="https://img.icons8.com/fluency/64/bank.png" alt="Bank payout" class="h-12 w-12 rounded-xl border border-white/10 bg-white/5 p-2">
                                         </div>
-                                        <p class="text-base text-white font-geist">Net 15</p>
-                                        <p class="text-xs text-gray-400 font-geist">1.5% late fee</p>
-                                    </div>
-                                </div>
-
-                                <div class="overflow-x-auto rounded-xl border border-blue-400/20 bg-gradient-to-br from-blue-900/20 to-black/60">
-                                    <table class="min-w-full divide-y divide-blue-400/20">
-                                        <thead class="bg-gradient-to-br from-blue-900/30 to-black/60">
-                                            <tr>
-                                                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-blue-200 font-geist">Item</th>
-                                                <th scope="col" class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-blue-200 font-geist">Qty</th>
-                                                <th scope="col" class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-blue-200 font-geist">Rate</th>
-                                                <th scope="col" class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-blue-200 font-geist">Amount</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="divide-y divide-blue-400/20">
-                                            <tr class="hover:bg-blue-900/20 transition">
-                                                <td class="px-6 py-4">
-                                                    <p class="text-sm text-white font-geist">Frontend Development</p>
-                                                    <p class="text-xs text-gray-400 font-geist">React components & UI integration</p>
-                                                </td>
-                                                <td class="px-6 py-4 text-right text-sm text-gray-200 font-geist">64</td>
-                                                <td class="px-6 py-4 text-right text-sm text-gray-200 font-geist">$120.00</td>
-                                                <td class="px-6 py-4 text-right text-sm text-white font-geist">$7,680.00</td>
-                                            </tr>
-                                            <tr class="hover:bg-blue-900/20 transition">
-                                                <td class="px-6 py-4">
-                                                    <p class="text-sm text-white font-geist">Backend API</p>
-                                                    <p class="text-xs text-gray-400 font-geist">Node services & integrations</p>
-                                                </td>
-                                                <td class="px-6 py-4 text-right text-sm text-gray-200 font-geist">28</td>
-                                                <td class="px-6 py-4 text-right text-sm text-gray-200 font-geist">$135.00</td>
-                                                <td class="px-6 py-4 text-right text-sm text-white font-geist">$3,780.00</td>
-                                            </tr>
-                                            <tr class="hover:bg-blue-900/20 transition">
-                                                <td class="px-6 py-4">
-                                                    <p class="text-sm text-white font-geist">Cloud Hosting</p>
-                                                    <p class="text-xs text-gray-400 font-geist">Production & staging resources</p>
-                                                </td>
-                                                <td class="px-6 py-4 text-right text-sm text-gray-200 font-geist">1</td>
-                                                <td class="px-6 py-4 text-right text-sm text-gray-200 font-geist">$990.00</td>
-                                                <td class="px-6 py-4 text-right text-sm text-white font-geist">$990.00</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <div class="flex flex-wrap items-center gap-3">
-                                    <button class="inline-flex hover:bg-blue-600 transition shadow-blue-900/30 text-sm text-white bg-gradient-to-r from-blue-400 to-emerald-400 rounded-xl pt-3 pr-6 pb-3 pl-6 shadow-lg space-x-2 items-center font-medium">
-                                        <i data-lucide="check-circle-2" class="h-4 w-4"></i>
-                                        <span class="font-geist">Record Payment</span>
-                                    </button>
-                                    <button class="inline-flex items-center space-x-2 rounded-xl border border-blue-400/20 bg-gradient-to-br from-blue-900/20 to-black/40 px-6 py-3 text-sm text-blue-100 hover:bg-blue-900/30 hover:border-blue-400/30 transition-all">
-                                        <i data-lucide="send" class="h-4 w-4"></i>
-                                        <span class="font-geist font-medium">Send Reminder</span>
-                                    </button>
-                                </div>
-
-                                <div class="rounded-xl border border-amber-400/20 bg-gradient-to-br from-amber-900/20 to-black/40 p-6 flex items-start space-x-3">
-                                    <i data-lucide="bell-ring" class="h-4 w-4 text-amber-300 mt-0.5"></i>
-                                    <p class="text-sm text-amber-100 font-geist font-light">
-                                        Auto-reminder scheduled 3 days before due date. You can adjust reminders in Settings.
-                                    </p>
+                                <div class="rounded-xl border border-amber-400/20 bg-gradient-to-br from-amber-900/20 to-black/40 p-5 text-sm text-amber-100">
+                                    MVP 金額鎖定 HKD 1,000；迭代後開放變動金額與更多國家。
                                 </div>
                             </div>
                         </article>
@@ -359,122 +271,92 @@
             </div>
         </section>
 
-        <!-- How it works - Bento Grid Style -->
+        <!-- 4-Step Flow Section (Icons updated in previous step) -->
         <section class="sm:px-6 lg:px-8 sm:pt-16 lg:pt-20 pt-12 pr-4 pb-16 pl-4">
             <div class="max-w-7xl mr-auto ml-auto">
                 <div class="text-center max-w-3xl mx-auto mb-16">
                     <h2 class="text-4xl sm:text-5xl font-light tracking-tight text-white font-bricolage mb-6">
-                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">How it</span> works
+                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">Our</span> 4-step stablecoin flow
                     </h2>
-                    <p class="text-xl text-gray-300 font-geist font-light">From setup to cash in days. A fast, guided flow your team can launch over lunch.</p>
-                    <div class="inline-flex items-center gap-2 rounded-xl border border-blue-400/20 bg-blue-400/10 px-3 py-2 mt-4">
-                        <i data-lucide="timer" class="h-4 w-4 text-blue-300"></i>
-                        <span class="text-sm text-blue-200 font-geist">Avg setup: 12 minutes</span>
-                    </div>
+                    <p class="text-xl text-gray-300 font-geist font-light">Seamless HKD-to-PHP transfer leveraging compliant stablecoins and local payment rails.</p>
                 </div>
 
-                <!-- Bento Grid Steps -->
                 <div class="space-y-8">
-                    <!-- Row 1 -->
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 xl:gap-8">
-                        <!-- Step 1 -->
+                        <!-- Step 1: HKD Collection via FPS -->
                         <div class="fade-slide bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border border-blue-400/20 rounded-2xl p-8 hover:border-blue-400/40 transition-all duration-300 backdrop-blur-xl" style="animation-delay:.15s">
                             <div class="h-12 w-12 rounded-xl bg-blue-500/15 flex items-center justify-center mb-6">
                                 <span class="text-xl font-semibold text-blue-200 font-geist">1</span>
                             </div>
-                            <h3 class="text-xl font-semibold text-white font-geist mb-3">Connect your stack</h3>
-                            <p class="text-gray-300 font-geist font-light mb-4">Securely link banks and accounting. We sync charts, customers, and invoices in real time.</p>
-                            <div class="flex flex-wrap gap-2 text-xs text-gray-400 font-geist">
-                                <span class="inline-flex items-center gap-1 bg-white/5 border border-white/10 px-2 py-1 rounded-md">
-                                    <i data-lucide="shield" class="text-emerald-400 w-3 h-3"></i>
-                                    OAuth & read-only
-                                </span>
-                                <span class="inline-flex items-center gap-1 bg-white/5 border border-white/10 px-2 py-1 rounded-md">
-                                    <i data-lucide="link" class="text-indigo-400 w-3 h-3"></i>
-                                    Webhooks enabled
-                                </span>
-                            </div>
+                            <h3 class="text-xl font-semibold text-white font-geist mb-3">HKD Collection via FPS</h3>
+                            <p class="text-gray-300 font-geist font-light mb-4">Scan a one-time FPS QR and pay from your HK bank instantly.</p>
+                            <img src="https://img.icons8.com/fluency/96/qr-code.png" alt="FPS QR" class="h-16 w-16 rounded-2xl bg-white/5 border border-white/10 p-2">
                         </div>
 
-                        <!-- Step 2 -->
+                        <!-- Step 2: Stablecoin Liquidity & Conversion -->
                         <div class="fade-slide lg:col-span-2 bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-400/20 rounded-2xl p-8 hover:border-purple-400/40 transition-all duration-300 backdrop-blur-xl" style="animation-delay:.2s">
                             <div class="flex flex-col md:flex-row md:items-center">
                                 <div class="md:w-1/2 mb-6 md:mb-0">
                                     <div class="h-12 w-12 rounded-xl bg-purple-500/15 flex items-center justify-center mb-6">
                                         <span class="text-xl font-semibold text-purple-200 font-geist">2</span>
                                     </div>
-                                    <h3 class="text-xl font-semibold text-white font-geist mb-3">Create or import invoices</h3>
-                                    <p class="text-gray-300 font-geist font-light">Spin up branded invoices or pull existing ones—taxes, terms, and line items included.</p>
+                                    <h3 class="text-xl font-semibold text-white font-geist mb-3">Stablecoin Liquidity & Conversion</h3>
+                                    <p class="text-gray-300 font-geist font-light">Funds are converted: HKD $\rightarrow$ HKD Stablecoin $\rightarrow$ PHPC. This is the core FX step.</p>
                                 </div>
-                                <div class="md:w-1/2 md:pl-8">
-                                    <div class="grid grid-cols-2 gap-3">
-                                        <div class="bg-white/5 border border-white/10 rounded-lg p-3">
-                                            <div class="flex items-center justify-between mb-2">
-                                                <span class="text-xs text-gray-300 font-geist">Template</span>
-                                                <span class="text-xs text-emerald-300 font-geist">Brand-ready</span>
+                                <div class="md:w-1/2 md:pl-8 flex items-center gap-4">
+                                    <!-- Icon 1: Stablecoin/Compliance -->
+                                    <div class="h-16 w-16 rounded-2xl bg-white/5 border border-white/10 p-2 flex items-center justify-center">
+                                        <i data-lucide="shield-half" class="h-8 w-8 text-purple-300"></i>
                                             </div>
-                                            <p class="text-sm text-white font-geist">INV-2024-0342</p>
+                                    <!-- Icon 2: Conversion/FX -->
+                                    <div class="h-16 w-16 rounded-2xl bg-white/5 border border-white/10 p-2 flex items-center justify-center">
+                                        <i data-lucide="repeat" class="h-8 w-8 text-pink-300"></i>
                                         </div>
-                                        <div class="bg-white/5 border border-white/10 rounded-lg p-3">
-                                            <div class="flex items-center justify-between mb-2">
-                                                <span class="text-xs text-gray-300 font-geist">Terms</span>
-                                                <span class="text-xs text-blue-300 font-geist">Net 15</span>
-                                            </div>
-                                            <p class="text-sm text-white font-geist">Late fee 1.5%</p>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Row 2 -->
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 xl:gap-8">
-                        <!-- Step 3 -->
+                        <!-- Step 3: PHP Payout to Recipient Bank -->
                         <div class="fade-slide lg:col-span-2 bg-gradient-to-br from-amber-900/20 to-orange-900/20 border border-amber-400/20 rounded-2xl p-8 hover:border-amber-400/40 transition-all duration-300 backdrop-blur-xl" style="animation-delay:.25s">
                             <div class="flex flex-col md:flex-row md:items-center">
                                 <div class="md:w-1/2 mb-6 md:mb-0">
                                     <div class="h-12 w-12 rounded-xl bg-amber-500/15 flex items-center justify-center mb-6">
                                         <span class="text-xl font-semibold text-amber-200 font-geist">3</span>
                                     </div>
-                                    <h3 class="text-xl font-semibold text-white font-geist mb-3">Automate reminders</h3>
-                                    <p class="text-gray-300 font-geist font-light">Personalized nudges by timezone and behavior—no spam, just results.</p>
+                                    <h3 class="text-xl font-semibold text-white font-geist mb-3">PHP Payout to Recipient Bank</h3>
+                                    <p class="text-gray-300 font-geist font-light">The PHPC is converted to PHP and deposited instantly into the recipient's bank account.</p>
                                 </div>
-                                <div class="md:w-1/2 md:pl-8">
-                                    <div class="space-y-3">
-                                        <div class="bg-gradient-to-r from-amber-900/30 to-black/50 p-3 rounded-lg border border-amber-400/30">
-                                            <div class="flex items-center justify-between">
-                                                <span class="text-sm text-gray-300 font-geist">Faster Payment</span>
-                                                <span class="text-amber-300 font-semibold">+18%</span>
+                                <div class="md:w-1/2 md:pl-8 flex items-center gap-4">
+                                    <!-- Icon 1: Payout/Transfer -->
+                                    <div class="h-16 w-16 rounded-2xl bg-white/5 border border-white/10 p-2 flex items-center justify-center">
+                                        <i data-lucide="banknote" class="h-8 w-8 text-amber-300"></i>
                                             </div>
-                                        </div>
-                                        <div class="bg-gradient-to-r from-amber-900/30 to-black/50 p-3 rounded-lg border border-amber-400/30">
-                                            <div class="flex items-center justify-between">
-                                                <span class="text-sm text-gray-300 font-geist">Smart Windows</span>
-                                                <span class="text-amber-300 font-semibold">Active</span>
-                                            </div>
-                                        </div>
+                                    <!-- Icon 2: Recipient Account -->
+                                    <div class="h-16 w-16 rounded-2xl bg-white/5 border border-white/10 p-2 flex items-center justify-center">
+                                        <i data-lucide="wallet" class="h-8 w-8 text-orange-300"></i>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Step 4 -->
+                        <!-- Step 4: Real-time Tracking & Notifications -->
                         <div class="fade-slide bg-gradient-to-br from-emerald-900/20 to-green-900/20 border border-emerald-400/20 rounded-2xl p-8 hover:border-emerald-400/40 transition-all duration-300 backdrop-blur-xl" style="animation-delay:.3s">
                             <div class="h-12 w-12 rounded-xl bg-emerald-500/15 flex items-center justify-center mb-6">
                                 <span class="text-xl font-semibold text-emerald-200 font-geist">4</span>
                             </div>
-                            <h3 class="text-xl font-semibold text-white font-geist mb-3">Get paid & auto-reconcile</h3>
-                            <p class="text-gray-300 font-geist font-light mb-4">Funds settle to your account while ML rules match payments to invoices.</p>
-                            <div class="flex flex-wrap gap-2 text-xs text-gray-400 font-geist">
-                                <span class="inline-flex items-center gap-1 bg-white/5 border border-white/10 px-2 py-1 rounded-md">
-                                    <i data-lucide="zap" class="text-emerald-400 w-3 h-3"></i>
-                                    92% auto-match
-                                </span>
-                                <span class="inline-flex items-center gap-1 bg-white/5 border border-white/10 px-2 py-1 rounded-md">
-                                    <i data-lucide="credit-card" class="text-purple-400 w-3 h-3"></i>
-                                    SCA checkout
-                                </span>
+                            <h3 class="text-xl font-semibold text-white font-geist mb-3">Real-time Tracking & Notifications</h3>
+                            <p class="text-gray-300 font-geist font-light mb-4">Live status + alerts keep sender和 recipient in sync.</p>
+                            <div class="flex items-center gap-4">
+                                <!-- Icon 1: History/Tracking -->
+                                <div class="h-16 w-16 rounded-2xl bg-white/5 border border-white/10 p-2 flex items-center justify-center">
+                                    <i data-lucide="activity" class="h-8 w-8 text-emerald-300"></i>
+                                </div>
+                                <!-- Icon 2: Alert/Notifications -->
+                                <div class="h-16 w-16 rounded-2xl bg-white/5 border border-white/10 p-2 flex items-center justify-center">
+                                    <i data-lucide="bell" class="h-8 w-8 text-green-300"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -484,63 +366,46 @@
             </div>
         </section>
 
-        <!-- Features -->
+        <!-- Core Features Section (UPDATED TITLE) -->
         <section class="sm:px-6 lg:px-8 sm:pt-16 lg:pt-20 pt-12 pr-4 pb-16 pl-4" data-billing="monthly">
             <div class="max-w-7xl mx-auto">
                 <div class="text-center max-w-3xl mx-auto mb-16">
                     <h2 class="text-4xl sm:text-5xl font-light tracking-tight text-white font-bricolage mb-6">
-                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">Platform</span> features
+                        Core features
                     </h2>
-                    <p class="text-xl text-gray-300 font-geist font-light">Automate the busywork, reduce DSO, and keep your cash flow predictable—without leaving your dashboard.</p>
+                    <p class="text-xl text-gray-300 font-geist font-light">Fully compliant framework that ensures transparency, security, and low cost for every transaction.</p>
+                    <!-- UPDATED TARGET FEE -->
                     <div class="inline-flex items-center gap-2 rounded-xl border border-emerald-400/20 bg-emerald-400/10 px-3 py-2 mt-4">
-                        <i data-lucide="sparkles" class="h-4 w-4 text-emerald-300"></i>
-                        <span class="text-sm text-emerald-200 font-geist">New: Smart Reconciliation</span>
+                        <i data-lucide="trending-up" class="h-4 w-4 text-emerald-300"></i>
+                        <span class="text-sm text-emerald-200 font-geist">Target Fee: Below 1% (vs. 3-7%)</span>
                     </div>
                 </div>
 
                 <div class="space-y-8">
-                    <!-- Row 1 -->
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 xl:gap-8">
-                        <div class="fade-slide bg-gradient-to-br from-blue-900/20 to-black border border-blue-400/20 rounded-2xl p-8 hover:border-blue-400/40 transition-all duration-300 backdrop-blur-xl" style="animation-delay:.15s">
-                            <div class="h-12 w-12 rounded-xl bg-blue-500/15 flex items-center justify-center mb-6">
-                                <i data-lucide="bell" class="h-6 w-6 text-blue-300"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold text-white font-geist mb-3">Automated Reminders</h3>
-                            <p class="text-gray-300 font-geist font-light">Schedule and personalize reminders by client behavior with throttling and smart send windows.</p>
-                            <div class="mt-4 flex items-center gap-3 text-xs text-gray-400 font-geist">
-                                <span class="inline-flex items-center">
-                                    <i data-lucide="clock" class="mr-1 w-3 h-3 text-blue-300"></i>
-                                    Timezone-aware
-                                </span>
-                                <span class="inline-flex items-center">
-                                    <i data-lucide="message-square" class="mr-1 w-3 h-3 text-blue-300"></i>
-                                    AI copy
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="fade-slide lg:col-span-2 bg-gradient-to-br from-emerald-900/20 to-black border border-emerald-400/20 rounded-2xl p-8 hover:border-emerald-400/40 transition-all duration-300 backdrop-blur-xl" style="animation-delay:.2s">
-                            <div class="flex flex-col md:flex-row md:items-center">
-                                <div class="md:w-1/2 mb-6 md:mb-0">
+                        
+                        <!-- Feature 1: Speed and Accessibility -->
+                        <div class="fade-slide lg:col-span-1 bg-gradient-to-br from-emerald-900/20 to-black border border-emerald-400/20 rounded-2xl p-8 hover:border-emerald-400/40 transition-all duration-300 backdrop-blur-xl" style="animation-delay:.2s">
+                            <div class="flex flex-col">
+                                <div class="mb-6">
                                     <div class="h-12 w-12 rounded-xl bg-emerald-500/15 flex items-center justify-center mb-6">
-                                        <i data-lucide="shield-check" class="h-6 w-6 text-emerald-300"></i>
+                                        <i data-lucide="zap" class="h-6 w-6 text-emerald-300"></i>
                                     </div>
-                                    <h3 class="text-xl font-semibold text-white font-geist mb-3">Payment Assurance</h3>
-                                    <p class="text-gray-300 font-geist font-light">Secure checkout links, fraud screening, and automatic retries to lift your collection rates.</p>
+                                    <h3 class="text-xl font-semibold text-white font-geist mb-3">Instant Speed</h3>
+                                    <p class="text-gray-300 font-geist font-light">24/7 access with deposits guaranteed in minutes, not days.</p>
                                 </div>
-                                <div class="md:w-1/2 md:pl-8 flex justify-center">
+                                <div class="flex justify-center mt-4">
                                     <div class="relative">
                                         <div class="absolute inset-0 bg-emerald-500/20 blur-2xl rounded-full"></div>
                                         <div class="relative z-10 bg-gradient-to-br from-emerald-900/40 to-black/60 p-4 rounded-xl border border-emerald-500/30">
-                                            <div class="w-full h-32 flex flex-col items-center justify-center space-y-2">
+                                            <div class="w-full h-20 flex flex-col items-center justify-center space-y-2">
                                                 <div class="flex items-center gap-2 text-emerald-300">
-                                                    <i data-lucide="lock" class="w-4 h-4"></i>
-                                                    <span class="text-sm font-geist">SCA Support</span>
+                                                    <i data-lucide="clock-5" class="w-4 h-4"></i>
+                                                    <span class="text-sm font-geist">P95 &lt; 30 min (NFR-1)</span>
                                                 </div>
                                                 <div class="flex items-center gap-2 text-emerald-300">
-                                                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-                                                    <span class="text-sm font-geist">Smart Retries</span>
-                                                </div>
+                                                    <i data-lucide="globe" class="w-4 h-4"></i>
+                                                    <span class="text-sm font-geist">24/7 Availability</span>
                                             </div>
                                         </div>
                                     </div>
@@ -549,108 +414,49 @@
                         </div>
                     </div>
 
-                    <!-- Row 2 -->
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 xl:gap-8">
-                        <div class="fade-slide lg:col-span-2 bg-gradient-to-br from-purple-900/20 to-black border border-purple-400/20 rounded-2xl p-8 hover:border-purple-400/40 transition-all duration-300 backdrop-blur-xl" style="animation-delay:.25s">
-                            <div class="flex flex-col md:flex-row md:items-center">
-                                <div class="md:w-1/2 mb-6 md:mb-0">
+
+                        <!-- Feature 2: Pricing Transparency -->
+                        <div class="fade-slide lg:col-span-1 bg-gradient-to-br from-purple-900/20 to-black border border-purple-400/20 rounded-2xl p-8 hover:border-purple-400/40 transition-all duration-300 backdrop-blur-xl" style="animation-delay:.25s">
+                            <div class="flex flex-col">
+                                <div class="mb-6">
                                     <div class="h-12 w-12 rounded-xl bg-purple-500/15 flex items-center justify-center mb-6">
-                                        <i data-lucide="layers" class="h-6 w-6 text-purple-300"></i>
+                                        <i data-lucide="eye" class="h-6 w-6 text-purple-300"></i>
                                     </div>
-                                    <h3 class="text-xl font-semibold text-white font-geist mb-3">Smart Reconciliation</h3>
-                                    <p class="text-gray-300 font-geist font-light">Auto-match bank transactions to invoices using enriched descriptors and ML-powered rules.</p>
+                                    <h3 class="text-xl font-semibold text-white font-geist mb-3">Pricing Transparency</h3>
+                                    <p class="text-gray-300 font-geist font-light">See the exact exchange rate and total fee up-front. No hidden costs.</p>
                                 </div>
-                                <div class="md:w-1/2 md:pl-8">
-                                    <div class="space-y-3">
-                                        <div class="bg-gradient-to-r from-purple-900/30 to-black/50 p-3 rounded-lg border border-purple-400/30">
-                                            <div class="flex items-center justify-between">
-                                                <span class="text-sm text-gray-300 font-geist">Auto-match Rate</span>
-                                                <span class="text-purple-300 font-semibold">92%</span>
+                                <div class="flex justify-center mt-4">
+                                    <div class="space-y-3 w-full">
+                                        <!-- Simplified Pricing Display -->
+                                        <div class="bg-gradient-to-r from-purple-900/30 to-black/50 p-3 rounded-lg border border-purple-400/30 flex justify-between items-center">
+                                            <span class="text-sm text-gray-300 font-geist">Guaranteed Payout</span>
+                                            <i data-lucide="check" class="w-4 h-4 text-purple-300"></i>
                                             </div>
-                                        </div>
-                                        <div class="bg-gradient-to-r from-purple-900/30 to-black/50 p-3 rounded-lg border border-purple-400/30">
-                                            <div class="flex items-center justify-between">
-                                                <span class="text-sm text-gray-300 font-geist">Processing Time</span>
-                                                <span class="text-purple-300 font-semibold">&lt; 1s</span>
-                                            </div>
+                                        <div class="bg-gradient-to-r from-purple-900/30 to-black/50 p-3 rounded-lg border border-purple-400/30 flex justify-between items-center">
+                                            <span class="text-sm text-gray-300 font-geist">Hidden Fees</span>
+                                            <span class="text-purple-300 font-semibold">Zero</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="fade-slide bg-gradient-to-br from-amber-900/20 to-black border border-amber-400/20 rounded-2xl p-8 hover:border-amber-400/40 transition-all duration-300 backdrop-blur-xl" style="animation-delay:.3s">
+                        <!-- Feature 3: Mobile-First Usability -->
+                        <div class="fade-slide lg:col-span-1 bg-gradient-to-br from-amber-900/20 to-black border border-amber-400/20 rounded-2xl p-8 hover:border-amber-400/40 transition-all duration-300 backdrop-blur-xl" style="animation-delay:.3s">
                             <div class="h-12 w-12 rounded-xl bg-amber-500/15 flex items-center justify-center mb-6">
-                                <i data-lucide="globe" class="h-6 w-6 text-amber-300"></i>
+                                <i data-lucide="smartphone" class="h-6 w-6 text-amber-300"></i>
                             </div>
-                            <h3 class="text-xl font-semibold text-white font-geist mb-3">Multi-currency & FX</h3>
-                            <p class="text-gray-300 font-geist font-light">Invoice and settle in 135+ currencies with automatic conversions and rounding controls.</p>
+                            <h3 class="text-xl font-semibold text-white font-geist mb-3">Mobile-First Design</h3>
+                            <p class="text-gray-300 font-geist font-light">Intuitive flow optimized for smartphones, supporting Tagalog and Cantonese.</p>
                             <div class="mt-4 flex items-center gap-3 text-xs text-gray-400 font-geist">
                                 <span class="inline-flex items-center">
-                                    <i data-lucide="trending-up" class="mr-1 w-3 h-3 text-amber-300"></i>
-                                    Live rates
+                                    <i data-lucide="check-check" class="mr-1 w-3 h-3 text-amber-300"></i>
+                                    Fully Responsive
                                 </span>
                                 <span class="inline-flex items-center">
-                                    <i data-lucide="landmark" class="mr-1 w-3 h-3 text-amber-300"></i>
-                                    Local rails
+                                    <i data-lucide="speech" class="mr-1 w-3 h-3 text-amber-300"></i>
+                                    Multi-language
                                 </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Row 3 -->
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 xl:gap-8">
-                        <div class="fade-slide bg-gradient-to-br from-rose-900/20 to-black border border-rose-400/20 rounded-2xl p-8 hover:border-rose-400/40 transition-all duration-300 backdrop-blur-xl" style="animation-delay:.35s">
-                            <div class="h-12 w-12 rounded-xl bg-rose-500/15 flex items-center justify-center mb-6">
-                                <i data-lucide="users-2" class="h-6 w-6 text-rose-300"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold text-white font-geist mb-3">Roles & Approvals</h3>
-                            <p class="text-gray-300 font-geist font-light">Granular permissions and multi-step approvals to keep your workflows compliant.</p>
-                            <div class="mt-4 flex items-center gap-3 text-xs text-gray-400 font-geist">
-                                <span class="inline-flex items-center">
-                                    <i data-lucide="key" class="mr-1 w-3 h-3 text-rose-300"></i>
-                                    SSO / SAML
-                                </span>
-                                <span class="inline-flex items-center">
-                                    <i data-lucide="file-check" class="mr-1 w-3 h-3 text-rose-300"></i>
-                                    Audit trail
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="fade-slide lg:col-span-2 bg-gradient-to-br from-indigo-900/20 to-black border border-indigo-400/20 rounded-2xl p-8 hover:border-indigo-400/40 transition-all duration-300 backdrop-blur-xl" style="animation-delay:.4s">
-                            <div class="flex flex-col md:flex-row md:items-center">
-                                <div class="md:w-1/2 mb-6 md:mb-0">
-                                    <div class="h-12 w-12 rounded-xl bg-indigo-500/15 flex items-center justify-center mb-6">
-                                        <i data-lucide="blocks" class="h-6 w-6 text-indigo-300"></i>
-                                    </div>
-                                    <h3 class="text-xl font-semibold text-white font-geist mb-3">Seamless Integrations</h3>
-                                    <p class="text-gray-300 font-geist font-light">Syncs with your accounting stack for real-time ledgers, taxes, and reporting with powerful API access.</p>
-                                </div>
-                                <div class="md:w-1/2 md:pl-8">
-                                    <div class="relative">
-                                        <div class="absolute inset-0 bg-indigo-500/20 blur-2xl rounded-full"></div>
-                                        <div class="relative z-10 bg-gradient-to-br from-indigo-900/40 to-black/60 p-4 rounded-xl border border-indigo-500/30">
-                                            <div class="flex flex-col space-y-2">
-                                                <div class="flex items-center space-x-2">
-                                                    <div class="w-3 h-3 rounded-full bg-indigo-400"></div>
-                                                    <div class="h-1 flex-grow bg-indigo-800/50 rounded"></div>
-                                                    <div class="w-3 h-3 rounded-full bg-blue-400"></div>
-                                                </div>
-                                                <div class="flex items-center space-x-2">
-                                                    <div class="w-3 h-3 rounded-full bg-blue-400"></div>
-                                                    <div class="h-1 flex-grow bg-blue-800/50 rounded"></div>
-                                                    <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
-                                                </div>
-                                                <div class="flex items-center space-x-2">
-                                                    <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
-                                                    <div class="h-1 flex-grow bg-emerald-800/50 rounded"></div>
-                                                    <div class="w-3 h-3 rounded-full bg-purple-400"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -660,461 +466,139 @@
             </div>
         </section>
 
-        <!-- Testimonials -->
-        <section class="sm:px-6 lg:px-8 sm:pt-16 lg:pt-20 pt-12 pr-4 pb-16 pl-4">
+        <!-- CTA Section (NO CHANGE) -->
+        <section class="sm:px-6 lg:px-8 pt-4 pr-4 pb-16 pl-4" data-billing="monthly">
             <div class="max-w-7xl mx-auto">
-                <div class="text-center max-w-3xl mx-auto mb-16">
-                    <h2 class="text-4xl sm:text-5xl font-light tracking-tight text-white font-bricolage mb-6">
-                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">What our customers</span> say
-                    </h2>
-                    <p class="text-xl text-gray-300 font-geist font-light">Loved by finance and operations teams that need predictable cash flow and clean books.</p>
-                    <div class="inline-flex items-center gap-2 rounded-xl border border-amber-400/20 bg-amber-400/10 px-3 py-2 mt-4">
-                        <i data-lucide="star" class="h-4 w-4 text-amber-300"></i>
-                        <span class="text-sm text-amber-200 font-geist">4.9/5 average rating</span>
-                    </div>
-                </div>
-
-                <div class="space-y-8">
-                    <!-- Grid -->
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 xl:gap-8">
-                        <div class="fade-slide bg-gradient-to-br from-blue-900/20 to-black border border-blue-400/20 rounded-2xl p-8 hover:border-blue-400/40 transition-all duration-300 backdrop-blur-xl" style="animation-delay:.15s">
-                            <div class="flex items-start justify-between mb-6">
-                                <div class="inline-flex items-center gap-2">
-                                    <span class="h-9 w-9 rounded-lg bg-blue-500/15 flex items-center justify-center">
-                                        <i data-lucide="message-square-text" class="h-4 w-4 text-blue-300"></i>
-                                    </span>
-                                    <span class="text-xs text-gray-300 font-geist">Finance Operations</span>
-                                </div>
-                                <div class="inline-flex items-center gap-0.5 text-amber-300">
-                                    <i data-lucide="star" class="h-4 w-4 fill-current"></i>
-                                    <i data-lucide="star" class="h-4 w-4 fill-current"></i>
-                                    <i data-lucide="star" class="h-4 w-4 fill-current"></i>
-                                    <i data-lucide="star" class="h-4 w-4 fill-current"></i>
-                                    <i data-lucide="star-half" class="h-4 w-4 text-amber-300/80"></i>
-                                </div>
-                            </div>
-                            <div class="space-y-3 mb-6">
-                                <div class="flex items-center gap-3 text-sm">
-                                    <span class="inline-flex items-center gap-1 text-emerald-300 bg-emerald-500/15 px-2 py-1 rounded-md">
-                                        <i data-lucide="trending-up" class="w-3 h-3"></i>
-                                        37% faster payments
-                                    </span>
-                                    <span class="inline-flex items-center gap-1 text-blue-300 bg-blue-500/15 px-2 py-1 rounded-md">
-                                        <i data-lucide="clock" class="w-3 h-3"></i>
-                                        15hrs saved/week
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <img src="https://images.unsplash.com/photo-1640906152676-dace6710d24b?w=240&q=80" alt="Portrait of customer" class="h-9 w-9 rounded-full ring-1 ring-white/10 object-cover">
-                                <div class="min-w-0">
-                                    <p class="text-sm text-white font-geist">Ava Thompson</p>
-                                    <p class="text-xs text-gray-400 font-geist">Controller • Meridian Corp</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="fade-slide bg-gradient-to-br from-emerald-900/20 to-black border border-emerald-400/20 rounded-2xl p-8 hover:border-emerald-400/40 transition-all duration-300 backdrop-blur-xl" style="animation-delay:.2s">
-                            <div class="flex items-start justify-between mb-6">
-                                <div class="inline-flex items-center gap-2">
-                                    <span class="h-9 w-9 rounded-lg bg-emerald-500/15 flex items-center justify-center">
-                                        <i data-lucide="shield-check" class="h-4 w-4 text-emerald-300"></i>
-                                    </span>
-                                    <span class="text-xs text-gray-300 font-geist">Collections Management</span>
-                                </div>
-                                <div class="inline-flex items-center gap-0.5 text-amber-300">
-                                    <i data-lucide="star" class="h-4 w-4 fill-current"></i>
-                                    <i data-lucide="star" class="h-4 w-4 fill-current"></i>
-                                    <i data-lucide="star" class="h-4 w-4 fill-current"></i>
-                                    <i data-lucide="star" class="h-4 w-4 fill-current"></i>
-                                    <i data-lucide="star" class="h-4 w-4 fill-current"></i>
-                                </div>
-                            </div>
-                            <div class="space-y-3 mb-6">
-                                <div class="flex items-center gap-3 text-sm">
-                                    <span class="inline-flex items-center gap-1 text-emerald-300 bg-emerald-500/15 px-2 py-1 rounded-md">
-                                        <i data-lucide="pie-chart" class="w-3 h-3"></i>
-                                        24% collection rate
-                                    </span>
-                                    <span class="inline-flex items-center gap-1 text-purple-300 bg-purple-500/15 px-2 py-1 rounded-md">
-                                        <i data-lucide="zap" class="w-3 h-3"></i>
-                                        98% automation
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <img src="https://images.unsplash.com/photo-1629946832022-c327f74956e0?w=240&q=80" alt="Portrait of customer" class="h-9 w-9 rounded-full ring-1 ring-white/10 object-cover">
-                                <div class="min-w-0">
-                                    <p class="text-sm text-white font-geist">Miguel Alvarez</p>
-                                    <p class="text-xs text-gray-400 font-geist">Head of AR • Apex Digital</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="fade-slide bg-gradient-to-br from-purple-900/20 to-black border border-purple-400/20 rounded-2xl p-8 hover:border-purple-400/40 transition-all duration-300 backdrop-blur-xl" style="animation-delay:.25s">
-                            <div class="flex items-start justify-between mb-6">
-                                <div class="inline-flex items-center gap-2">
-                                    <span class="h-9 w-9 rounded-lg bg-purple-500/15 flex items-center justify-center">
-                                        <i data-lucide="bot" class="h-4 w-4 text-purple-300"></i>
-                                    </span>
-                                    <span class="text-xs text-gray-300 font-geist">Accounting Automation</span>
-                                </div>
-                                <div class="inline-flex items-center gap-0.5 text-amber-300">
-                                    <i data-lucide="star" class="h-4 w-4 fill-current"></i>
-                                    <i data-lucide="star" class="h-4 w-4 fill-current"></i>
-                                    <i data-lucide="star" class="h-4 w-4 fill-current"></i>
-                                    <i data-lucide="star" class="h-4 w-4 fill-current"></i>
-                                    <i data-lucide="star" class="h-4 w-4 fill-current"></i>
-                                </div>
-                            </div>
-                            <div class="space-y-3 mb-6">
-                                <div class="flex items-center gap-3 text-sm">
-                                    <span class="inline-flex items-center gap-1 text-purple-300 bg-purple-500/15 px-2 py-1 rounded-md">
-                                        <i data-lucide="check" class="w-3 h-3"></i>
-                                        94% accuracy
-                                    </span>
-                                    <span class="inline-flex items-center gap-1 text-blue-300 bg-blue-500/15 px-2 py-1 rounded-md">
-                                        <i data-lucide="calendar" class="w-3 h-3"></i>
-                                        5 days faster close
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <img src="https://images.unsplash.com/photo-1621619856624-42fd193a0661?w=1080&q=80" alt="Portrait of customer" class="h-9 w-9 rounded-full ring-1 ring-white/10 object-cover">
-                                <div class="min-w-0">
-                                    <p class="text-sm text-white font-geist">Priya Narayan</p>
-                                    <p class="text-xs text-gray-400 font-geist">VP Finance • TechFlow Solutions</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-16"></div>
-            </div>
-        </section>
-
-        <!-- Pricing -->
-        <section class="sm:px-6 lg:px-8 sm:pt-16 lg:pt-20 pt-12 pr-4 pb-16 pl-4" data-billing="monthly">
-            <div class="max-w-7xl mx-auto">
-                <div class="text-center max-w-3xl mx-auto mb-16">
-                    <h2 class="text-4xl sm:text-5xl font-light tracking-tight text-white font-bricolage mb-6">
-                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">Simple, predictable</span> pricing
-                    </h2>
-                    <p class="text-xl text-gray-300 font-geist font-light">Start free for 14 days. No credit card required, cancel anytime.</p>
-                    <div class="flex items-center justify-center gap-6 mt-8">
-                        <div class="flex items-center gap-3">
-                            <div class="inline-flex items-center rounded-xl border border-white/10 bg-white/5 p-1" role="group" aria-label="Billing cycle">
-                                <button id="pf-bill-monthly" type="button" aria-pressed="true" class="px-3 py-1.5 text-xs rounded-lg bg-white/10 text-white font-geist transition-all duration-200">Monthly</button>
-                                <button id="pf-bill-annual" type="button" aria-pressed="false" class="px-3 py-1.5 text-xs rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200 font-geist">Annual</button>
-                            </div>
-                        </div>
-                        <span class="inline-flex items-center gap-1 rounded-xl border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1">
-                            <i data-lucide="sparkles" class="h-3.5 w-3.5 text-emerald-300"></i>
-                            <span class="text-xs text-emerald-200 font-geist">Save 25% annually</span>
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Pricing Cards -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 xl:gap-8">
-                    <!-- Starter Plan -->
-                    <div class="fade-slide bg-gradient-to-br from-blue-900/20 to-black border border-blue-400/20 rounded-2xl p-8 hover:border-blue-400/40 transition-all duration-300 backdrop-blur-xl" style="animation-delay:.15s">
-                        <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-xl font-semibold text-white font-geist">Starter</h3>
-                            <span class="inline-flex items-center gap-1 rounded-lg border border-blue-400/20 bg-blue-400/10 px-2 py-1">
-                                <i data-lucide="zap" class="h-3 w-3 text-blue-300"></i>
-                                <span class="text-xs text-blue-200 font-geist">Most popular</span>
-                            </span>
-                        </div>
-                        
-                        <div class="mb-8">
-                            <div class="flex items-baseline gap-2">
-                                <span class="text-4xl font-light text-white font-bricolage">$29</span>
-                                <span class="text-gray-400 font-geist">/month</span>
-                            </div>
-                            <p class="text-sm text-gray-300 font-geist mt-2">Perfect for small teams getting started</p>
-                        </div>
-
-                        <ul class="space-y-3 mb-8">
-                            <li class="flex items-center gap-3 text-gray-300">
-                                <i data-lucide="check" class="h-4 w-4 text-blue-400"></i>
-                                <span class="font-geist">Up to 100 invoices/month</span>
-                            </li>
-                            <li class="flex items-center gap-3 text-gray-300">
-                                <i data-lucide="check" class="h-4 w-4 text-blue-400"></i>
-                                <span class="font-geist">Automated reminders</span>
-                            </li>
-                            <li class="flex items-center gap-3 text-gray-300">
-                                <i data-lucide="check" class="h-4 w-4 text-blue-400"></i>
-                                <span class="font-geist">Basic reporting</span>
-                            </li>
-                            <li class="flex items-center gap-3 text-gray-300">
-                                <i data-lucide="check" class="h-4 w-4 text-blue-400"></i>
-                                <span class="font-geist">Email support</span>
-                            </li>
-                        </ul>
-
-                        <button class="w-full bg-blue-600/80 text-white font-geist font-medium rounded-xl px-6 py-3 hover:bg-blue-600 transition-all shadow-lg shadow-blue-900/30">
-                            Start free trial
-                        </button>
-                    </div>
-
-                    <!-- Professional Plan -->
-                    <div class="fade-slide bg-gradient-to-br from-emerald-900/20 to-black border border-emerald-400/20 rounded-2xl p-8 hover:border-emerald-400/40 transition-all duration-300 backdrop-blur-xl relative" style="animation-delay:.2s">
-                        <div class="absolute -top-3 left-1/2 -translate-x-1/2">
-                            <span class="inline-flex items-center gap-1 rounded-lg border border-emerald-400/30 bg-emerald-400/20 px-3 py-1">
-                                <i data-lucide="thumbs-up" class="h-3 w-3 text-emerald-300"></i>
-                                <span class="text-xs text-emerald-200 font-geist">Recommended</span>
-                            </span>
-                        </div>
-                        
-                        <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-xl font-semibold text-white font-geist">Professional</h3>
-                        </div>
-                        
-                        <div class="mb-8">
-                            <div class="flex items-baseline gap-2">
-                                <span class="text-4xl font-light text-white font-bricolage">$79</span>
-                                <span class="text-gray-400 font-geist">/month</span>
-                            </div>
-                            <p class="text-sm text-gray-300 font-geist mt-2">For growing businesses that need more power</p>
-                        </div>
-
-                        <ul class="space-y-3 mb-8">
-                            <li class="flex items-center gap-3 text-gray-300">
-                                <i data-lucide="check" class="h-4 w-4 text-emerald-400"></i>
-                                <span class="font-geist">Unlimited invoices</span>
-                            </li>
-                            <li class="flex items-center gap-3 text-gray-300">
-                                <i data-lucide="check" class="h-4 w-4 text-emerald-400"></i>
-                                <span class="font-geist">Smart reconciliation</span>
-                            </li>
-                            <li class="flex items-center gap-3 text-gray-300">
-                                <i data-lucide="check" class="h-4 w-4 text-emerald-400"></i>
-                                <span class="font-geist">Advanced analytics</span>
-                            </li>
-                            <li class="flex items-center gap-3 text-gray-300">
-                                <i data-lucide="check" class="h-4 w-4 text-emerald-400"></i>
-                                <span class="font-geist">Multi-currency support</span>
-                            </li>
-                            <li class="flex items-center gap-3 text-gray-300">
-                                <i data-lucide="check" class="h-4 w-4 text-emerald-400"></i>
-                                <span class="font-geist">Priority support</span>
-                            </li>
-                        </ul>
-
-                        <button class="w-full bg-emerald-600/80 text-white font-geist font-medium rounded-xl px-6 py-3 hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-900/30">
-                            Start free trial
-                        </button>
-                    </div>
-
-                    <!-- Enterprise Plan -->
-                    <div class="fade-slide bg-gradient-to-br from-purple-900/20 to-black border border-purple-400/20 rounded-2xl p-8 hover:border-purple-400/40 transition-all duration-300 backdrop-blur-xl" style="animation-delay:.25s">
-                        <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-xl font-semibold text-white font-geist">Enterprise</h3>
-                            <span class="inline-flex items-center gap-1 rounded-lg border border-purple-400/20 bg-purple-400/10 px-2 py-1">
-                                <i data-lucide="building-2" class="h-3 w-3 text-purple-300"></i>
-                                <span class="text-xs text-purple-200 font-geist">Enterprise</span>
-                            </span>
-                        </div>
-                        
-                        <div class="mb-8">
-                            <div class="flex items-baseline gap-2">
-                                <span class="text-4xl font-light text-white font-bricolage">Custom</span>
-                            </div>
-                            <p class="text-sm text-gray-300 font-geist mt-2">Tailored solutions for large organizations</p>
-                        </div>
-
-                        <ul class="space-y-3 mb-8">
-                            <li class="flex items-center gap-3 text-gray-300">
-                                <i data-lucide="check" class="h-4 w-4 text-purple-400"></i>
-                                <span class="font-geist">Everything in Professional</span>
-                            </li>
-                            <li class="flex items-center gap-3 text-gray-300">
-                                <i data-lucide="check" class="h-4 w-4 text-purple-400"></i>
-                                <span class="font-geist">SSO & SAML integration</span>
-                            </li>
-                            <li class="flex items-center gap-3 text-gray-300">
-                                <i data-lucide="check" class="h-4 w-4 text-purple-400"></i>
-                                <span class="font-geist">Advanced approvals</span>
-                            </li>
-                            <li class="flex items-center gap-3 text-gray-300">
-                                <i data-lucide="check" class="h-4 w-4 text-purple-400"></i>
-                                <span class="font-geist">Dedicated support</span>
-                            </li>
-                            <li class="flex items-center gap-3 text-gray-300">
-                                <i data-lucide="check" class="h-4 w-4 text-purple-400"></i>
-                                <span class="font-geist">Custom integrations</span>
-                            </li>
-                        </ul>
-
-                        <button class="w-full bg-transparent border border-white/20 text-white font-geist font-medium rounded-xl px-6 py-3 hover:bg-white/5 transition-all">
-                            Contact sales
-                        </button>
-                    </div>
-                </div>
-
-                <div class="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-16"></div>
-                
                 <div class="text-center fade-slide" style="animation-delay:.3s">
                     <h3 class="text-3xl md:text-4xl font-light text-white font-bricolage mb-6">
-                        Ready to <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">transform</span> your cash flow?
+                        Ready to send money to the Philippines <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">faster</span>?
                     </h3>
                     <p class="text-gray-300 font-geist font-light max-w-2xl mx-auto mb-8">
-                        Join thousands of finance teams already accelerating their collections with PayFlow.
+                        Join Filipino expats using the secure, low-cost stablecoin remittance rail.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center">
                         <button class="hover:bg-blue-600 transition-all shadow-blue-900/30 font-medium text-white font-geist bg-gradient-to-r from-blue-400 to-emerald-400 rounded-xl pt-4 pr-8 pb-4 pl-8 shadow-lg">
-                            Start 14-day free trial
+                            Get Started Now
                         </button>
                         <button class="bg-transparent border border-white/20 text-white font-geist font-medium rounded-xl px-8 py-4 hover:bg-white/5 transition-all">
-                            Schedule a demo
+                            View Live FX Rates
                         </button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Footer -->
+        <!-- Footer Section (NO CHANGE) -->
         <footer class="sm:px-6 lg:px-8 sm:pt-16 pt-12 pr-4 pb-8 pl-4 border-t border-white/10">
             <div class="max-w-7xl mx-auto">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-                    <!-- Brand -->
                     <div class="col-span-2 md:col-span-1">
                         <div class="flex flex-col mb-6">
-                            <span class="text-xl font-bold tracking-tight text-white font-geist">PayFlow</span>
-                            <span class="text-sm text-gray-300 font-medium font-geist">Invoice Management</span>
+                            <span class="text-xl font-bold tracking-tight text-white font-geist">FPS-Stable</span>
+                            <span class="text-sm text-gray-300 font-medium font-geist">Cross-Border Remittance</span>
                         </div>
                         <p class="text-gray-400 font-geist font-light text-sm mb-6">
-                            Streamline your invoice management and accelerate cash flow with intelligent automation.
+                            Secure, low-cost HK ➜ PH transfers powered by stablecoins and FPS.
                         </p>
-                        <div class="flex items-center space-x-4">
-                            <a href="#" class="text-gray-400 hover:text-white transition">
-                                <i data-lucide="twitter" class="w-5 h-5"></i>
-                            </a>
-                            <a href="#" class="text-gray-400 hover:text-white transition">
-                                <i data-lucide="github" class="w-5 h-5"></i>
-                            </a>
-                            <a href="#" class="text-gray-400 hover:text-white transition">
-                                <i data-lucide="linkedin" class="w-5 h-5"></i>
-                            </a>
-                        </div>
                     </div>
 
-                    <!-- Product -->
                     <div>
                         <h4 class="text-white font-semibold font-geist mb-4">Product</h4>
                         <ul class="space-y-3">
-                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">Features</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">Pricing</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">Integrations</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">API</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">Security</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">Send Money Flow</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">History & Receipts</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">FX Rates & Fees</a></li>
                         </ul>
                     </div>
 
-                    <!-- Solutions -->
                     <div>
-                        <h4 class="text-white font-semibold font-geist mb-4">Solutions</h4>
+                        <h4 class="text-white font-semibold font-geist mb-4">Company</h4>
                         <ul class="space-y-3">
-                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">Small Business</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">Enterprise</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">Accounting Firms</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">Freelancers</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">Agencies</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">About Us</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">Careers</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">Partnerships</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">Press</a></li>
                         </ul>
                     </div>
 
-                    <!-- Support -->
-                    <div>
-                        <h4 class="text-white font-semibold font-geist mb-4">Support</h4>
-                        <ul class="space-y-3">
-                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">Help Center</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">Documentation</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">Contact Us</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">System Status</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">Community</a></li>
-                        </ul>
                     </div>
-                </div>
-
-                <!-- Bottom -->
-                <div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/10">
-                    <p class="text-gray-400 font-geist text-sm">
-                        © 2024 PayFlow. All rights reserved.
-                    </p>
-                    <div class="flex items-center space-x-6 mt-4 md:mt-0">
-                        <a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">Privacy Policy</a>
-                        <a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">Terms of Service</a>
-                        <a href="#" class="text-gray-400 hover:text-white transition font-geist text-sm">Cookie Policy</a>
-                    </div>
+                <div class="mt-8 pt-6 border-t border-white/10 text-center text-gray-500 font-geist text-sm">
+                    &copy; 2025 FPS-Stable. All rights reserved.
                 </div>
             </div>
         </footer>
+
     </main>
 
-    <!-- JavaScript for interactivity -->
+    <!-- JavaScript for Mobile Menu and Login Demo -->
     <script>
         // Initialize Lucide icons
+        if (typeof lucide !== "undefined") {
         lucide.createIcons();
+        }
 
-        // Mobile navigation toggle
-        document.getElementById('mobileToggle').addEventListener('click', function() {
-            const nav = document.getElementById('mobileNav');
-            const isHidden = nav.classList.contains('hidden');
-            
-            if (isHidden) {
-                nav.classList.remove('hidden');
-                nav.classList.add('flex');
-                nav.setAttribute('aria-hidden', 'false');
-                this.setAttribute('aria-expanded', 'true');
+        // Mobile Menu Toggle Logic
+        const mobileToggle = document.getElementById("mobileToggle");
+        const mobileNav = document.getElementById("mobileNav");
+        mobileToggle?.addEventListener('click', () => {
+            const isHidden = mobileNav.classList.contains('hidden');
+            mobileNav.classList.toggle('hidden');
+            mobileNav.classList.toggle('flex', isHidden);
+            mobileNav.setAttribute('aria-hidden', isHidden ? 'false' : 'true');
+            mobileToggle.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+        });
+
+        // Hardcoded Login Demo Logic
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const loginButton = document.getElementById('emailLoginButton');
+        const loginError = document.getElementById('loginError');
+        const googleButton = document.getElementById('googleLoginButton');
+
+        function handleLogin(email, password) {
+            // Hardcoded credentials for demo purposes
+            if (email === 'test@gmail.com' && password === '123') {
+                loginError?.classList.add('hidden');
+                window.location.href = 'dashboard.html';
             } else {
-                nav.classList.add('hidden');
-                nav.classList.remove('flex');
-                nav.setAttribute('aria-hidden', 'true');
-                this.setAttribute('aria-expanded', 'false');
+                if (loginError) {
+                    // Update error message to clearly state the demo credentials
+                    loginError.textContent = '登入失敗，請輸入 test@gmail.com / 123。';
+                    loginError.classList.remove('hidden');
+                    loginError.classList.remove('text-emerald-200', 'bg-emerald-500/10', 'border-emerald-400/20');
+                    loginError.classList.add('text-rose-200', 'bg-rose-500/10', 'border-rose-400/20');
+                }
+            }
+        }
+
+        loginButton?.addEventListener('click', () => {
+            handleLogin(emailInput.value.trim(), passwordInput.value.trim());
+        });
+
+        googleButton?.addEventListener('click', () => {
+            // Treat Google login as the successful demo login
+            handleLogin('test@gmail.com', '123');
+        });
+        
+        // Ensure Lucide icons are re-rendered on mobile toggle click if needed (though createIcons should handle it)
+        mobileToggle?.addEventListener('click', () => {
+            if (typeof lucide !== "undefined") {
+                lucide.createIcons();
             }
         });
 
-        // Billing toggle functionality
-        const monthlyBtn = document.getElementById('pf-bill-monthly');
-        const annualBtn = document.getElementById('pf-bill-annual');
-        const section = document.querySelector('[data-billing]');
-
-        monthlyBtn.addEventListener('click', function() {
-            monthlyBtn.setAttribute('aria-pressed', 'true');
-            annualBtn.setAttribute('aria-pressed', 'false');
-            monthlyBtn.classList.add('bg-white/10', 'text-white');
-            monthlyBtn.classList.remove('text-gray-300', 'hover:text-white', 'hover:bg-white/10');
-            annualBtn.classList.remove('bg-white/10', 'text-white');
-            annualBtn.classList.add('text-gray-300', 'hover:text-white', 'hover:bg-white/10');
-            section.setAttribute('data-billing', 'monthly');
+        // Handle the login button in the fixed header
+        document.getElementById('remittanceLoginBtn')?.addEventListener('click', () => {
+             // Scroll to the login section
+             document.getElementById('emailLoginForm')?.scrollIntoView({ behavior: 'smooth' });
         });
 
-        annualBtn.addEventListener('click', function() {
-            annualBtn.setAttribute('aria-pressed', 'true');
-            monthlyBtn.setAttribute('aria-pressed', 'false');
-            annualBtn.classList.add('bg-white/10', 'text-white');
-            annualBtn.classList.remove('text-gray-300', 'hover:text-white', 'hover:bg-white/10');
-            monthlyBtn.classList.remove('bg-white/10', 'text-white');
-            monthlyBtn.classList.add('text-gray-300', 'hover:text-white', 'hover:bg-white/10');
-            section.setAttribute('data-billing', 'annual');
+        document.getElementById('mobileRemittanceLoginBtn')?.addEventListener('click', () => {
+             mobileNav.classList.add('hidden'); // Close mobile menu first
+             mobileNav.classList.remove('flex');
+             document.getElementById('emailLoginForm')?.scrollIntoView({ behavior: 'smooth' });
         });
 
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
     </script>
 </body>
 </html>
