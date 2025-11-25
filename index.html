@@ -584,6 +584,15 @@
             if (event === 'SIGNED_IN') {
                 window.location.href = 'dashboard.html';
             }
+            if (event === 'TOKEN_REFRESHED') {
+                const s = session;
+                if (!s) return;
+                const now = Math.floor(Date.now() / 1000);
+                const exp = s.expires_at || 0;
+                if (exp && exp < now) {
+                    showError('會話已過期，請重新登入。');
+                }
+            }
         });
 
         function showError(text, isError = true) {
@@ -598,6 +607,8 @@
                 loginError.classList.add('text-emerald-200', 'bg-emerald-500/10', 'border-emerald-400/20');
             }
         }
+        function mapAuthError(e){ const msg=(e?.message||e||'').toLowerCase(); if(msg.includes('network')) return '網絡錯誤，請稍後重試'; if(msg.includes('access_denied')||msg.includes('consent')) return '已取消授權或拒絕訪問'; if(msg.includes('redirect_uri')) return '重定向地址不正確，請檢查配置'; if(msg.includes('invalid_client')) return '客戶端配置錯誤，請檢查 Client ID/Secret'; return '登入失敗，請重試' }
+        const sp = new URLSearchParams(window.location.search); if(sp.has('error')){ showError(mapAuthError(sp.get('error'))) }
 
         loginButton?.addEventListener('click', async () => {
             const email = emailInput.value.trim();
@@ -640,8 +651,18 @@
                 showError('缺少 Supabase 設定。請在 <meta> 填入 URL/Key 或 localStorage 設定 SUPABASE_URL / SUPABASE_ANON_KEY。');
                 return;
             }
-            const redirectTo = window.location.origin + '/dashboard.html';
-            await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo } });
+            try {
+                const redirectTo = window.location.origin + '/dashboard.html';
+                await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo,
+                        scopes: 'openid profile email'
+                    }
+                });
+            } catch (e) {
+                showError('Google 登入失敗，請重試或使用 Email。');
+            }
         });
 
         document.getElementById('remittanceLoginBtn')?.addEventListener('click', () => {

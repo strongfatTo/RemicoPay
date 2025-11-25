@@ -3,6 +3,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PayFlow • Logged-in Dashboard</title>
+    <meta name="supabase-url" content="https://wgzrajebtwsjruhcefdq.supabase.co">
+    <meta name="supabase-anon-key" content="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndnenJhamVidHdzanJ1aGNlZmRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5OTI3ODYsImV4cCI6MjA3OTU2ODc4Nn0.TJooqLjsyTL1aNO65KHce46eI4eiCSJlpS0VWyQeaG8">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -619,7 +621,19 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+        const supabaseUrl = document.querySelector('meta[name="supabase-url"]')?.content?.trim() || localStorage.getItem('SUPABASE_URL') || 'https://wgzrajebtwsjruhcefdq.supabase.co'
+        const supabaseAnonKey = document.querySelector('meta[name="supabase-anon-key"]')?.content?.trim() || localStorage.getItem('SUPABASE_ANON_KEY') || ''
+        const supabase = supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null
+        function decodeJwt(token) { const parts = token?.split('.') || []; if (parts.length !== 3) return {}; try { return JSON.parse(atob(parts[1])); } catch { return {} } }
+        async function getSessionSafe() { if (!supabase) return null; const { data: { session } } = await supabase.auth.getSession(); if (!session) return null; const payload = decodeJwt(session.access_token); const now = Math.floor(Date.now() / 1000); if (payload?.exp && payload.exp < now) { const { data, error } = await supabase.auth.refreshSession(); if (error) return null; return data.session; } return session }
+        function extractName(u) { const m = u?.user_metadata || {}; return m.name || m.full_name || m.preferred_username || m.user_name || (u?.email ? u.email.split('@')[0] : '') }
+        function extractAvatar(u) { const m = u?.user_metadata || {}; return m.avatar_url || m.picture || '' }
+        function isGoogle(u) { return u?.app_metadata?.provider === 'google' }
+        async function renderUser() { lucide.createIcons(); const userBadge = document.querySelector('.hidden.md\:inline-flex.items-center.text-xs.text-emerald-200'); const avatar = document.querySelector('.flex.items-center.space-x-2.border.border-white\/10.rounded-xl.px-3.py-1\.5 .h-8.w-8'); const nameEl = document.querySelector('.flex.items-center.space-x-2.border.border-white\/10.rounded-xl.px-3.py-1\.5 .hidden.md\:block p'); const greetSpan = document.querySelector('h1 .bg-clip-text'); const session = await getSessionSafe(); if (!session) return; const user = session.user; const name = extractName(user); const avatarUrl = extractAvatar(user); if (userBadge) { userBadge.classList.remove('hidden'); userBadge.textContent = isGoogle(user) ? 'Google • Logged in' : 'Logged in' } if (avatar) { if (avatarUrl) { avatar.style.backgroundImage = `url('${avatarUrl}')`; avatar.style.backgroundSize = 'cover'; avatar.textContent = '' } else { const initials = name ? name.split(' ').map(s=>s[0]).join('').slice(0,2).toUpperCase() : 'U'; avatar.textContent = initials } } if (nameEl) { nameEl.textContent = name || 'User' } if (greetSpan) { greetSpan.textContent = (name || 'User') } }
+        async function signOut() { if (supabase) await supabase.auth.signOut(); window.location.href = 'index.html' }
+        supabase?.auth.onAuthStateChange((event, session) => { if (event === 'SIGNED_OUT') { window.location.href = 'index.html' } if (event === 'TOKEN_REFRESHED') { renderUser() } if (event === 'USER_UPDATED') { renderUser() } })
         lucide.createIcons();
         const toggle = document.getElementById('mobileToggle');
         const nav = document.getElementById('mobileNav');
@@ -642,11 +656,10 @@
 
         const signOutBtn = document.getElementById('signOutBtn');
         const mobileSignOutBtn = document.getElementById('mobileSignOutBtn');
-        function signOut() {
-            window.location.href = 'index.html';
-        }
-        signOutBtn?.addEventListener('click', signOut);
-        mobileSignOutBtn?.addEventListener('click', signOut);
+        function signOutLocal() { signOut() }
+        signOutBtn?.addEventListener('click', signOutLocal);
+        mobileSignOutBtn?.addEventListener('click', signOutLocal);
+        renderUser()
 
         // Send Money Modal
         const sendMoneyBtn = document.getElementById('sendMoneyBtn');
@@ -849,6 +862,11 @@
             
             alert(`Receipt for ${txId} downloaded successfully!`);
         };
+        function mapAuthError(e){ const msg = (e?.message||'').toLowerCase(); if(msg.includes('network')) return '網絡錯誤，請稍後重試'; if(msg.includes('access_denied')||msg.includes('consent')) return '已取消授權或拒絕訪問'; if(msg.includes('redirect_uri')) return '重定向地址不正確，請檢查配置'; if(msg.includes('invalid_client')) return '客戶端配置錯誤，請檢查 Client ID/Secret'; return '登入失敗，請重試' }
+        function testExtract(){ const cases=[{user_metadata:{name:'Jane Doe'}},{user_metadata:{full_name:'Juan Dela Cruz'}},{email:'maria@example.com'}]; const results=cases.map(c=>extractName(c)); console.assert(results[0]==='Jane Doe','name fail'); console.assert(results[1]==='Juan Dela Cruz','full_name fail'); console.assert(results[2]==='maria','email fail') }
+        function testErrors(){ const e1={message:'network error'}; const e2={message:'redirect_uri mismatch'}; const e3={message:'access_denied'}; console.assert(mapAuthError(e1)==='網絡錯誤，請稍後重試','net'); console.assert(mapAuthError(e2)==='重定向地址不正確，請檢查配置','redir'); console.assert(mapAuthError(e3)==='已取消授權或拒絕訪問','consent') }
+        async function testSession(){ const s = await getSessionSafe(); console.assert(!!s,'session missing') }
+        async function runAuthTests(){ await testSession(); testExtract(); testErrors(); console.log('Auth tests passed') }
     </script>
 </body>
 </html>
