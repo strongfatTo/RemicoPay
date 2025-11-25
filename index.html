@@ -3,6 +3,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>FPS-Stable – Cross-Border Remittance Service</title>
+    <meta name="supabase-url" content="">
+    <meta name="supabase-anon-key" content="">
     
     <!-- Custom Fonts: Inter (default), Geist (secondary), Bricolage Grotesque (headings) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -530,14 +532,13 @@
 
     </main>
 
-    <!-- JavaScript for Mobile Menu and Login Demo -->
-    <script>
-        // Initialize Lucide icons
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
         if (typeof lucide !== "undefined") {
-        lucide.createIcons();
+            lucide.createIcons();
         }
 
-        // Mobile Menu Toggle Logic
         const mobileToggle = document.getElementById("mobileToggle");
         const mobileNav = document.getElementById("mobileNav");
         mobileToggle?.addEventListener('click', () => {
@@ -546,59 +547,99 @@
             mobileNav.classList.toggle('flex', isHidden);
             mobileNav.setAttribute('aria-hidden', isHidden ? 'false' : 'true');
             mobileToggle.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+            if (typeof lucide !== "undefined") {
+                lucide.createIcons();
+            }
         });
 
-        // Hardcoded Login Demo Logic
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
         const loginButton = document.getElementById('emailLoginButton');
         const loginError = document.getElementById('loginError');
         const googleButton = document.getElementById('googleLoginButton');
 
-        function handleLogin(email, password) {
-            // Hardcoded credentials for demo purposes
-            if (email === 'test@gmail.com' && password === '123') {
-                loginError?.classList.add('hidden');
+        const supabaseUrl = document.querySelector('meta[name="supabase-url"]')?.content || '';
+        const supabaseAnonKey = document.querySelector('meta[name="supabase-anon-key"]')?.content || '';
+        const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
+
+        async function ensureSessionRedirect() {
+            if (!supabase) return;
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
                 window.location.href = 'dashboard.html';
-            } else {
-                if (loginError) {
-                    // Update error message to clearly state the demo credentials
-                    loginError.textContent = '登入失敗，請輸入 test@gmail.com / 123。';
-                    loginError.classList.remove('hidden');
-                    loginError.classList.remove('text-emerald-200', 'bg-emerald-500/10', 'border-emerald-400/20');
-                    loginError.classList.add('text-rose-200', 'bg-rose-500/10', 'border-rose-400/20');
-                }
             }
         }
 
-        loginButton?.addEventListener('click', () => {
-            handleLogin(emailInput.value.trim(), passwordInput.value.trim());
-        });
+        ensureSessionRedirect();
 
-        googleButton?.addEventListener('click', () => {
-            // Treat Google login as the successful demo login
-            handleLogin('test@gmail.com', '123');
-        });
-        
-        // Ensure Lucide icons are re-rendered on mobile toggle click if needed (though createIcons should handle it)
-        mobileToggle?.addEventListener('click', () => {
-            if (typeof lucide !== "undefined") {
-                lucide.createIcons();
+        supabase?.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN') {
+                window.location.href = 'dashboard.html';
             }
         });
 
-        // Handle the login button in the fixed header
+        function showError(text, isError = true) {
+            if (!loginError) return;
+            loginError.textContent = text;
+            loginError.classList.remove('hidden');
+            if (isError) {
+                loginError.classList.remove('text-emerald-200', 'bg-emerald-500/10', 'border-emerald-400/20');
+                loginError.classList.add('text-rose-200', 'bg-rose-500/10', 'border-rose-400/20');
+            } else {
+                loginError.classList.remove('text-rose-200', 'bg-rose-500/10', 'border-rose-400/20');
+                loginError.classList.add('text-emerald-200', 'bg-emerald-500/10', 'border-emerald-400/20');
+            }
+        }
+
+        loginButton?.addEventListener('click', async () => {
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+            if (!supabase) {
+                showError('缺少 Supabase 設定。請在 <meta> 標籤填入 URL 與 Key。');
+                return;
+            }
+            if (!email || !password) {
+                showError('請輸入 Email 與密碼。');
+                return;
+            }
+            const redirectTo = window.location.origin + '/dashboard.html';
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: { emailRedirectTo: redirectTo }
+            });
+            if (error) {
+                if (error.message && error.message.toLowerCase().includes('already registered')) {
+                    const { error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
+                    if (signInErr) {
+                        showError('登入失敗或尚未完成 Email 驗證。');
+                    }
+                } else {
+                    showError('註冊失敗：' + error.message);
+                }
+            } else {
+                showError('已寄出驗證信，請至信箱點擊連結完成驗證。', false);
+            }
+        });
+
+        googleButton?.addEventListener('click', async () => {
+            if (!supabase) {
+                showError('缺少 Supabase 設定。請在 <meta> 標籤填入 URL 與 Key。');
+                return;
+            }
+            const redirectTo = window.location.origin + '/dashboard.html';
+            await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo } });
+        });
+
         document.getElementById('remittanceLoginBtn')?.addEventListener('click', () => {
-             // Scroll to the login section
-             document.getElementById('emailLoginForm')?.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('emailLoginForm')?.scrollIntoView({ behavior: 'smooth' });
         });
 
         document.getElementById('mobileRemittanceLoginBtn')?.addEventListener('click', () => {
-             mobileNav.classList.add('hidden'); // Close mobile menu first
-             mobileNav.classList.remove('flex');
-             document.getElementById('emailLoginForm')?.scrollIntoView({ behavior: 'smooth' });
+            mobileNav.classList.add('hidden');
+            mobileNav.classList.remove('flex');
+            document.getElementById('emailLoginForm')?.scrollIntoView({ behavior: 'smooth' });
         });
-
     </script>
 </body>
 </html>
