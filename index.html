@@ -68,26 +68,10 @@
                     <i data-lucide="send" class="h-4 w-4"></i>
                     <span class="font-geist">Send Money</span>
                 </a>
-                <a href="#" class="flex items-center space-x-2 px-4 py-2 text-sm rounded-lg hover:bg-white/10 hover:ring-1 hover:ring-white/15 transition text-gray-200">
-                    <i data-lucide="history" class="h-4 w-4"></i>
-                    <span class="font-geist">History</span>
-                </a>
-                <a href="#" class="flex items-center space-x-2 px-4 py-2 text-sm rounded-lg hover:bg-white/10 hover:ring-1 hover:ring-white/15 transition text-gray-200">
-                    <i data-lucide="shield" class="h-4 w-4"></i>
-                    <span class="font-geist">Compliance</span>
-                </a>
-                <a href="#" class="flex items-center space-x-2 px-4 py-2 text-sm rounded-lg hover:bg-white/10 hover:ring-1 hover:ring-white/15 transition text-gray-200">
-                    <i data-lucide="bar-chart-3" class="h-4 w-4"></i>
-                    <span class="font-geist">FX Rates</span>
-                </a>
             </nav>
 
             <!-- Desktop Actions -->
             <div class="hidden sm:flex items-center space-x-3">
-                <button class="flex items-center space-x-2 px-4 py-2 text-sm rounded-lg border border-white/15 bg-white/5 hover:bg-white/10 hover:border-white/20 hover:-translate-y-0.5 transition text-gray-100">
-                    <i data-lucide="bell" class="h-4 w-4"></i>
-                    <span class="hidden md:block font-geist">Notifications</span>
-                </button>
                 <button id="remittanceLoginBtn" class="flex hover:bg-blue-600 transition shadow-blue-900/30 hover:-translate-y-0.5 text-sm text-white bg-gradient-to-r from-blue-400 to-emerald-400 rounded-lg pt-2 pr-4 pb-2 pl-4 shadow-lg space-x-2 items-center">
                     <i data-lucide="log-in" class="h-4 w-4"></i>
                     <span class="font-geist">Login / Register</span>
@@ -107,18 +91,7 @@
             <i data-lucide="send" class="h-5 w-5"></i>
             <span class="font-geist">Send Money</span>
         </a>
-        <a href="#" class="flex items-center space-x-3 rounded-lg px-4 py-3 text-gray-100 hover:bg-white/10 hover:ring-1 hover:ring-white/10 transition">
-            <i data-lucide="history" class="h-5 w-5"></i>
-            <span class="font-geist">History</span>
-        </a>
-        <a href="#" class="flex items-center space-x-3 rounded-lg px-4 py-3 text-gray-100 hover:bg-white/10 hover:ring-1 hover:ring-white/10 transition">
-            <i data-lucide="shield" class="h-5 w-5"></i>
-            <span class="font-geist">Compliance</span>
-        </a>
-        <a href="#" class="flex items-center space-x-3 rounded-lg px-4 py-3 text-gray-100 hover:bg-white/10 hover:ring-1 hover:ring-white/10 transition">
-            <i data-lucide="bar-chart-3" class="h-5 w-5"></i>
-            <span class="font-geist">FX Rates</span>
-        </a>
+        
         <div class="border-t border-white/10 pt-4">
             <button id="mobileRemittanceLoginBtn" class="flex w-full items-center justify-center space-x-2 rounded-lg bg-blue-600/80 px-4 py-3 text-white hover:bg-blue-600 transition">
                 <i data-lucide="log-in" class="h-4 w-4"></i>
@@ -144,66 +117,65 @@
                             Fast, low-cost cross-border remittance leveraging **regulated stablecoins**. See exactly what your family receives with 1-2% fees.
                         </p>
 
-                        <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
-                            <button class="flex hover:bg-blue-600 transition shadow-blue-900/30 hover:-translate-y-0.5 text-white bg-gradient-to-r from-blue-400 to-emerald-400 rounded-xl pt-4 pr-8 pb-4 pl-8 shadow-lg space-x-2 items-center">
-                                <i data-lucide="send" class="h-5 w-5"></i>
-                                <span class="font-medium font-geist">Calculate Rate Now</span>
-                            </button>
-                            <button class="flex items-center space-x-2 rounded-xl border border-white/15 bg-white/5 px-8 py-4 text-gray-100 hover:bg-white/10 hover:border-white/20 transition">
-                                <i data-lucide="shield-check" class="h-5 w-5"></i>
-                                <span class="font-medium font-geist">Compliance & Security</span>
-                            </button>
-                        </div>
+                        
                     </div>
 
                     <!-- Login/Registration Card -->
                     <div class="lg:col-span-2 fade-slide" style="animation-delay:.25s">
                         <div class="space-y-6">
                             <div class="bg-gradient-to-br from-blue-900/30 to-slate-900/70 border border-blue-500/30 rounded-2xl p-6 backdrop-blur-xl shadow-2xl">
-                                <div class="flex items-center justify-between mb-4">
+                                <div class="mb-6">
+                                    <p class="text-xs text-blue-200 uppercase tracking-[0.4em] font-geist">FR-1 Onboarding</p>
+                                    <h3 class="text-2xl text-white font-semibold font-geist mt-1">Create a new account</h3>
+                                    <p class="text-sm text-gray-300 font-geist mt-2">Register with your email to start the HK ➜ PH remittance flow.</p>
+                                </div>
+                                <form class="space-y-4" id="emailRegistrationForm">
                                     <div>
-                                        <p class="text-xs text-blue-200 uppercase tracking-[0.4em] font-geist">FR-1 Onboarding</p>
-                                        <h3 class="text-2xl text-white font-semibold font-geist mt-1">Email / Phone Registration</h3>
+                                        <label for="registerEmail" class="text-xs uppercase text-gray-300 font-semibold font-geist tracking-wide">Email</label>
+                                        <input id="registerEmail" type="email" placeholder="maria@example.com" class="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40 transition">
                                     </div>
-                                    <span class="inline-flex items-center gap-1 text-xs text-emerald-200 bg-emerald-500/15 border border-emerald-400/20 px-2.5 py-1 rounded-lg font-geist">
-                                        <i data-lucide="check-check" class="h-3.5 w-3.5"></i> KYC Mandatory
-                                    </span>
+                                    <div>
+                                        <label for="registerPassword" class="text-xs uppercase text-gray-300 font-semibold font-geist tracking-wide">Password</label>
+                                        <input id="registerPassword" type="password" placeholder="••••••••" class="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40 transition">
+                                    </div>
+                                    <button type="button" id="emailRegistrationButton" class="w-full inline-flex justify-center items-center gap-2 bg-gradient-to-r from-blue-400 to-emerald-400 text-white font-medium font-geist rounded-xl py-3 shadow-lg shadow-blue-900/40 hover:-translate-y-0.5 transition">
+                                        <i data-lucide="user-plus" class="h-4 w-4"></i>
+                                        Register with Email
+                                    </button>
+                                    <p id="registrationMessage" class="hidden text-xs text-rose-200 bg-rose-500/10 border border-rose-400/20 rounded-xl px-3 py-2 font-geist">Something went wrong. Please try again.</p>
+                                </form>
+                                <p class="text-xs text-gray-400 font-geist mt-4">
+                                    * MVP Scope: After creating an account you will be guided to HKID or passport verification to satisfy KYC/AML requirements.
+                                </p>
+                            </div>
+                            <div id="loginCard" class="bg-gradient-to-br from-blue-900/30 to-slate-900/70 border border-blue-500/30 rounded-2xl p-6 backdrop-blur-xl shadow-2xl">
+                                <div class="mb-6">
+                                    <h3 class="text-2xl text-white font-semibold font-geist">Already registered?</h3>
+                                    <p class="text-sm text-gray-300 font-geist mt-2">Log in with your verified email and continue where you left off.</p>
                                 </div>
                                 <form class="space-y-4" id="emailLoginForm">
                                     <div>
-                                        <label for="email" class="text-xs uppercase text-gray-300 font-semibold font-geist tracking-wide">Email</label>
-                                        <input id="email" type="email" placeholder="maria@example.com" class="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40 transition">
+                                        <label for="loginEmail" class="text-xs uppercase text-gray-300 font-semibold font-geist tracking-wide">Email</label>
+                                        <input id="loginEmail" type="email" placeholder="maria@example.com" class="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40 transition">
                                     </div>
                                     <div>
-                                        <label for="password" class="text-xs uppercase text-gray-300 font-semibold font-geist tracking-wide">密碼</label>
-                                        <input id="password" type="password" placeholder="••••••••" class="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40 transition">
+                                        <label for="loginPassword" class="text-xs uppercase text-gray-300 font-semibold font-geist tracking-wide">Password</label>
+                                        <input id="loginPassword" type="password" placeholder="••••••••" class="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40 transition">
                                     </div>
                                     <button type="button" id="emailLoginButton" class="w-full inline-flex justify-center items-center gap-2 bg-gradient-to-r from-blue-400 to-emerald-400 text-white font-medium font-geist rounded-xl py-3 shadow-lg shadow-blue-900/40 hover:-translate-y-0.5 transition">
-                                        <i data-lucide="mail" class="h-4 w-4"></i>
-                                        Email 註冊 / 登入
+                                        <i data-lucide="log-in" class="h-4 w-4"></i>
+                                        Log In with Email
                                     </button>
-                                    <p id="loginError" class="hidden text-xs text-rose-200 bg-rose-500/10 border border-rose-400/20 rounded-xl px-3 py-2 font-geist">登入失敗，請檢查 Email 或密碼。</p>
+                                    <p id="loginError" class="hidden text-xs text-rose-200 bg-rose-500/10 border border-rose-400/20 rounded-xl px-3 py-2 font-geist">Login failed. Check your email or password.</p>
                                 </form>
                                 <div class="mt-4">
                                     <button id="googleLoginButton" class="w-full inline-flex justify-center items-center gap-3 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-gray-100 hover:bg-white/10 hover:border-white/30 transition">
                                         <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google icon" class="h-4 w-4">
-                                        使用 Google 登入
+                                        Continue with Google
                                     </button>
                                     <p class="text-xs text-gray-400 font-geist mt-3">
-                                        * **MVP Scope:** 註冊後將引導至 **HKID / Passport** 驗證流程，以符合 **KYC/AML** 要求。
+                                        Use Google SSO if you prefer a passwordless experience.
                                     </p>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="rounded-2xl border border-purple-400/20 bg-gradient-to-br from-purple-900/30 to-black/60 p-4">
-                                    <p class="text-xs text-purple-200">Step 1</p>
-                                    <p class="text-lg text-white font-semibold mt-1">身份驗證 (KYC)</p>
-                                    <p class="text-xs text-gray-400">HKID / Passport</p>
-                                </div>
-                                <div class="rounded-2xl border border-emerald-400/20 bg-gradient-to-br from-emerald-900/30 to-black/60 p-4">
-                                    <p class="text-xs text-emerald-200">Step 2</p>
-                                    <p class="text-lg text-white font-semibold mt-1">AML 篩選</p>
-                                    <p class="text-xs text-gray-400">自動比對制裁名單</p>
                                 </div>
                             </div>
                         </div>
@@ -264,7 +236,7 @@
                                     <img src="https://img.icons8.com/fluency/64/bank.png" alt="Bank payout" class="h-12 w-12 rounded-xl border border-white/10 bg-white/5 p-2">
                                         </div>
                                 <div class="rounded-xl border border-amber-400/20 bg-gradient-to-br from-amber-900/20 to-black/40 p-5 text-sm text-amber-100">
-                                    MVP 金額鎖定 HKD 1,000；迭代後開放變動金額與更多國家。
+                                    MVP transfers are capped at HKD 1,000; future releases will unlock flexible amounts and additional corridors.
                                 </div>
                             </div>
                         </article>
@@ -349,7 +321,7 @@
                                 <span class="text-xl font-semibold text-emerald-200 font-geist">4</span>
                             </div>
                             <h3 class="text-xl font-semibold text-white font-geist mb-3">Real-time Tracking & Notifications</h3>
-                            <p class="text-gray-300 font-geist font-light mb-4">Live status + alerts keep sender和 recipient in sync.</p>
+                            <p class="text-gray-300 font-geist font-light mb-4">Live status plus alerts keep both sender and recipient in sync.</p>
                             <div class="flex items-center gap-4">
                                 <!-- Icon 1: History/Tracking -->
                                 <div class="h-16 w-16 rounded-2xl bg-white/5 border border-white/10 p-2 flex items-center justify-center">
@@ -552,8 +524,12 @@
             }
         });
 
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
+        const registerEmailInput = document.getElementById('registerEmail');
+        const registerPasswordInput = document.getElementById('registerPassword');
+        const registrationButton = document.getElementById('emailRegistrationButton');
+        const registrationMessage = document.getElementById('registrationMessage');
+        const loginEmailInput = document.getElementById('loginEmail');
+        const loginPasswordInput = document.getElementById('loginPassword');
         const loginButton = document.getElementById('emailLoginButton');
         const loginError = document.getElementById('loginError');
         const googleButton = document.getElementById('googleLoginButton');
@@ -590,65 +566,94 @@
                 const now = Math.floor(Date.now() / 1000);
                 const exp = s.expires_at || 0;
                 if (exp && exp < now) {
-                    showError('會話已過期，請重新登入。');
+                    showBanner(loginError, 'Session expired. Please sign in again.');
                 }
             }
         });
 
-        function showError(text, isError = true) {
-            if (!loginError) return;
-            loginError.textContent = text;
-            loginError.classList.remove('hidden');
-            if (isError) {
-                loginError.classList.remove('text-emerald-200', 'bg-emerald-500/10', 'border-emerald-400/20');
-                loginError.classList.add('text-rose-200', 'bg-rose-500/10', 'border-rose-400/20');
-            } else {
-                loginError.classList.remove('text-rose-200', 'bg-rose-500/10', 'border-rose-400/20');
-                loginError.classList.add('text-emerald-200', 'bg-emerald-500/10', 'border-emerald-400/20');
-            }
+        function showBanner(element, text, isError = true) {
+            if (!element) return;
+            element.textContent = text;
+            element.classList.remove('hidden');
+            const removeClasses = isError
+                ? ['text-emerald-200', 'bg-emerald-500/10', 'border-emerald-400/20']
+                : ['text-rose-200', 'bg-rose-500/10', 'border-rose-400/20'];
+            const addClasses = isError
+                ? ['text-rose-200', 'bg-rose-500/10', 'border-rose-400/20']
+                : ['text-emerald-200', 'bg-emerald-500/10', 'border-emerald-400/20'];
+            element.classList.remove(...removeClasses);
+            element.classList.add(...addClasses);
         }
-        function mapAuthError(e){ const msg=(e?.message||e||'').toLowerCase(); if(msg.includes('network')) return '網絡錯誤，請稍後重試'; if(msg.includes('access_denied')||msg.includes('consent')) return '已取消授權或拒絕訪問'; if(msg.includes('redirect_uri')) return '重定向地址不正確，請檢查配置'; if(msg.includes('invalid_client')) return '客戶端配置錯誤，請檢查 Client ID/Secret'; return '登入失敗，請重試' }
-        const sp = new URLSearchParams(window.location.search); if(sp.has('error')){ showError(mapAuthError(sp.get('error'))) }
 
-        loginButton?.addEventListener('click', async () => {
-            const email = emailInput.value.trim();
-            const password = passwordInput.value.trim();
-            if (email === 'test@gmail.com' && password === '123') {
-                loginError?.classList.add('hidden');
-                window.location.href = 'dashboard.html';
-                return;
-            }
+        function hideBanner(element) {
+            element?.classList.add('hidden');
+        }
+
+        function mapAuthError(e){
+            const msg=(e?.message||e||'').toLowerCase();
+            if(msg.includes('network')) return 'Network error. Please try again later.';
+            if(msg.includes('access_denied')||msg.includes('consent')) return 'Access cancelled or denied.';
+            if(msg.includes('redirect_uri')) return 'Redirect URI mismatch. Check the configuration.';
+            if(msg.includes('invalid_client')) return 'Client configuration error. Verify the Client ID/Secret.';
+            return 'Authentication failed. Please try again.';
+        }
+        const sp = new URLSearchParams(window.location.search);
+        if(sp.has('error')){
+            showBanner(loginError, mapAuthError(sp.get('error')));
+        }
+
+        registrationButton?.addEventListener('click', async () => {
+            const email = registerEmailInput.value.trim();
+            const password = registerPasswordInput.value.trim();
             if (!supabase) {
-                showError('缺少 Supabase 設定。請在 <meta> 填入 URL/Key 或 localStorage 設定 SUPABASE_URL / SUPABASE_ANON_KEY。');
+                showBanner(registrationMessage, 'Missing Supabase config. Add the URL/key via <meta> tags or localStorage.', true);
                 return;
             }
             if (!email || !password) {
-                showError('請輸入 Email 與密碼。');
+                showBanner(registrationMessage, 'Please enter both email and password.', true);
                 return;
             }
             const redirectTo = window.location.origin + '/dashboard.html';
-            const { data, error } = await supabase.auth.signUp({
+            const { error } = await supabase.auth.signUp({
                 email,
                 password,
                 options: { emailRedirectTo: redirectTo }
             });
             if (error) {
-                if (error.message && error.message.toLowerCase().includes('already registered')) {
-                    const { error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
-                    if (signInErr) {
-                        showError('登入失敗或尚未完成 Email 驗證。');
-                    }
-                } else {
-                    showError('註冊失敗：' + error.message);
-                }
+                showBanner(registrationMessage, 'Registration failed: ' + error.message, true);
             } else {
-                showError('已寄出驗證信，請至信箱點擊連結完成驗證。', false);
+                showBanner(registrationMessage, 'Verification email sent. Please confirm it before logging in.', false);
+            }
+        });
+
+        loginButton?.addEventListener('click', async () => {
+            const email = loginEmailInput.value.trim();
+            const password = loginPasswordInput.value.trim();
+            if (email === 'test@gmail.com' && password === '123') {
+                hideBanner(loginError);
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            if (!supabase) {
+                showBanner(loginError, 'Missing Supabase config. Add the URL/key via <meta> tags or localStorage.');
+                return;
+            }
+            if (!email || !password) {
+                showBanner(loginError, 'Please enter both email and password.');
+                return;
+            }
+            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) {
+                showBanner(loginError, 'Login failed: ' + error.message);
+            } else {
+                hideBanner(loginError);
+                window.location.href = 'dashboard.html';
             }
         });
 
         googleButton?.addEventListener('click', async () => {
             if (!supabase) {
-                showError('缺少 Supabase 設定。請在 <meta> 填入 URL/Key 或 localStorage 設定 SUPABASE_URL / SUPABASE_ANON_KEY。');
+                showBanner(loginError, 'Missing Supabase config. Add the URL/key via <meta> tags or localStorage.');
                 return;
             }
             try {
@@ -661,18 +666,18 @@
                     }
                 });
             } catch (e) {
-                showError('Google 登入失敗，請重試或使用 Email。');
+                showBanner(loginError, 'Google sign-in failed. Please try again or use email.');
             }
         });
 
         document.getElementById('remittanceLoginBtn')?.addEventListener('click', () => {
-            document.getElementById('emailLoginForm')?.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('loginCard')?.scrollIntoView({ behavior: 'smooth' });
         });
 
         document.getElementById('mobileRemittanceLoginBtn')?.addEventListener('click', () => {
             mobileNav.classList.add('hidden');
             mobileNav.classList.remove('flex');
-            document.getElementById('emailLoginForm')?.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('loginCard')?.scrollIntoView({ behavior: 'smooth' });
         });
     </script>
 </body>
