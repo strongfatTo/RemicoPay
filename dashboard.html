@@ -53,7 +53,7 @@
                     <span class="text-lg font-bold tracking-tight text-white font-geist">FPS-Stable</span>
                     <span class="text-xs text-gray-300 font-medium font-geist">Cross-Border Rail</span>
                 </div>
-                <span class="hidden md:inline-flex items-center text-xs text-emerald-200 bg-emerald-500/10 border border-emerald-400/20 px-3 py-1 rounded-lg font-geist">Logged in</span>
+                <span id="userBadge" class="hidden md:inline-flex items-center text-xs text-emerald-200 bg-emerald-500/10 border border-emerald-400/20 px-3 py-1 rounded-lg font-geist">Logged in</span>
             </div>
 
             <nav class="hidden lg:flex items-center space-x-2" aria-label="Primary">
@@ -68,9 +68,9 @@
                     <span class="font-geist">New Transfer</span>
                 </button>
                 <div class="flex items-center space-x-2 border border-white/10 rounded-xl px-3 py-1.5">
-                    <div class="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center text-sm font-semibold">U</div>
+                    <div id="userAvatar" class="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center text-sm font-semibold">U</div>
                     <div class="hidden md:block">
-                        <p class="text-sm text-white font-geist">User</p>
+                        <p id="userNameLabel" class="text-sm text-white font-geist">User</p>
                     </div>
                 </div>
                 <button id="signOutBtn" class="flex items-center space-x-2 px-4 py-2 text-sm rounded-lg border border-white/15 bg-white/5 text-gray-100 hover:bg-white/10 transition">
@@ -103,7 +103,7 @@
                         <span class="h-2 w-2 rounded-full bg-emerald-300 animate-pulse"></span>
                         Session active · FPS sandbox
                     </p>
-                    <h1 class="text-4xl sm:text-5xl font-light text-white font-bricolage">Good morning, <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">User</span>!</h1>
+                    <h1 class="text-4xl sm:text-5xl font-light text-white font-bricolage">Good morning, <span id="greetName" class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">User</span>!</h1>
                     <p class="text-lg text-gray-300 font-geist max-w-2xl">
                         You currently have 4 remittances in transit. All logins, KYC, and reminders are ready. The real-time KPIs below will tell you the next step.
                     </p>
@@ -631,7 +631,7 @@
         function extractName(u) { const m = u?.user_metadata || {}; return m.display_name || m.name || m.full_name || m.preferred_username || m.user_name || (u?.email ? u.email.split('@')[0] : '') }
         function extractAvatar(u) { const m = u?.user_metadata || {}; return m.avatar_url || m.picture || '' }
         function isGoogle(u) { return u?.app_metadata?.provider === 'google' }
-        async function renderUser() { lucide.createIcons(); const userBadge = document.querySelector('.hidden.md\:inline-flex.items-center.text-xs.text-emerald-200'); const avatar = document.querySelector('.flex.items-center.space-x-2.border.border-white\/10.rounded-xl.px-3.py-1\.5 .h-8.w-8'); const nameEl = document.querySelector('.flex.items-center.space-x-2.border.border-white\/10.rounded-xl.px-3.py-1\.5 .hidden.md\:block p'); const greetSpan = document.querySelector('h1 .bg-clip-text'); const session = await getSessionSafe(); if (!session) return; const user = session.user; const name = extractName(user); const avatarUrl = extractAvatar(user); if (userBadge) { userBadge.classList.remove('hidden'); userBadge.textContent = isGoogle(user) ? 'Google • Logged in' : 'Logged in' } if (avatar) { if (avatarUrl) { avatar.style.backgroundImage = `url('${avatarUrl}')`; avatar.style.backgroundSize = 'cover'; avatar.textContent = '' } else { const initials = name ? name.split(' ').map(s=>s[0]).join('').slice(0,2).toUpperCase() : 'U'; avatar.textContent = initials } } if (nameEl) { nameEl.textContent = name || 'User' } if (greetSpan) { greetSpan.textContent = (name || 'User') } }
+        async function renderUser() { lucide.createIcons(); const userBadge = document.getElementById('userBadge'); const avatar = document.getElementById('userAvatar'); const nameEl = document.getElementById('userNameLabel'); const greetSpan = document.getElementById('greetName'); const session = await getSessionSafe(); if (!session) return; const user = session.user; const name = extractName(user); const avatarUrl = extractAvatar(user); if (userBadge) { userBadge.classList.remove('hidden'); userBadge.textContent = isGoogle(user) ? 'Google • Logged in' : 'Logged in' } if (avatar) { if (avatarUrl) { avatar.style.backgroundImage = `url('${avatarUrl}')`; avatar.style.backgroundSize = 'cover'; avatar.textContent = '' } else { const initials = name ? name.split(' ').map(s=>s[0]).join('').slice(0,2).toUpperCase() : 'U'; avatar.textContent = initials } } if (nameEl) { nameEl.textContent = name || 'User' } if (greetSpan) { greetSpan.textContent = (name || 'User') } }
         async function signOut() { if (supabase) await supabase.auth.signOut(); window.location.href = 'index.html' }
         supabase?.auth.onAuthStateChange((event, session) => { if (event === 'SIGNED_OUT') { window.location.href = 'index.html' } if (event === 'TOKEN_REFRESHED') { renderUser() } if (event === 'USER_UPDATED') { renderUser() } })
         lucide.createIcons();
