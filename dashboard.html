@@ -36,7 +36,288 @@
             background-color: white;
             color: #1f2937;
         }
+
+        .flow-pill {
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            border-radius: 1rem;
+            padding: 0.9rem 1rem;
+            background: rgba(15, 23, 42, 0.5);
+            color: #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+        .flow-pill span {
+            width: 1.8rem;
+            height: 1.8rem;
+            border-radius: 999px;
+            background: rgba(59, 130, 246, 0.2);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .flow-pill p {
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .flow-pill.active {
+            border-color: rgba(79, 70, 229, 0.6);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(16, 185, 129, 0.2));
+        }
+        .flow-pill.completed {
+            border-color: rgba(16, 185, 129, 0.7);
+            color: #a7f3d0;
+        }
     </style>
+    
+    <!-- Initialize global state and functions BEFORE module script -->
+    <script>
+        // Display username from localStorage
+        (function() {
+            const userFullName = localStorage.getItem('userFullName');
+            if (userFullName) {
+                const greetName = document.getElementById('greetName');
+                if (greetName) {
+                    greetName.textContent = userFullName;
+                }
+            }
+        })();
+        
+        // Global state for send money flow
+        window.selectedRecipientId = null;
+        window.currentAmount = 0;
+        window.countdownInterval = null;
+        
+        // Recipients data
+        window.recipients = [
+            { id: 'rcp-maria', name: 'Maria Santos', country: 'PH', bank: 'BDO Unibank', account: '1234567890', avatar: 'M', accent: 'blue' },
+            { id: 'rcp-somchai', name: 'Somchai Wong', country: 'TH', bank: 'Bangkok Bank', account: '9876543210', avatar: 'S', accent: 'emerald' },
+            { id: 'rcp-rina', name: 'Rina Wijaya', country: 'ID', bank: 'Bank Mandiri', account: '4321098765', avatar: 'R', accent: 'purple' },
+            { id: 'rcp-liwei', name: 'Li Wei', country: 'VN', bank: 'Vietcombank', account: '8899776655', avatar: 'L', accent: 'amber' }
+        ];
+        
+        window.countryLabels = { 'PH': 'Philippines', 'TH': 'Thailand', 'ID': 'Indonesia', 'VN': 'Vietnam' };
+        
+        // Helper functions
+        window.maskAccount = function(account = '') {
+            if (!account) return '****';
+            if (account.startsWith('****')) return account;
+            return `****${account.slice(-4)}`;
+        };
+        
+        window.getSelectedRecipient = function() {
+            return window.recipients.find(r => r.id === window.selectedRecipientId);
+        };
+        
+        window.selectRecipient = function(recipientId) {
+            window.selectedRecipientId = recipientId;
+            window.updateStepControls();
+        };
+        
+        window.addNewRecipient = function(name, country, bank, account) {
+            const newRecipient = {
+                id: 'rcp-' + Date.now(),
+                name: name,
+                country: country,
+                bank: bank,
+                account: account,
+                avatar: name.charAt(0).toUpperCase(),
+                accent: ['blue', 'emerald', 'purple', 'amber'][Math.floor(Math.random() * 4)]
+            };
+            window.recipients.push(newRecipient);
+            window.renderModalRecipients();
+            return newRecipient;
+        };
+        
+        window.renderModalRecipients = function() {
+            const modalRecipientList = document.getElementById('modalRecipientList');
+            if (!modalRecipientList) return;
+            
+            modalRecipientList.innerHTML = window.recipients.map((recipient) => {
+                const isSelected = recipient.id === window.selectedRecipientId;
+                return `
+                    <button type="button" data-recipient-option="${recipient.id}" class="rounded-2xl border ${isSelected ? 'border-blue-400 ring-2 ring-blue-400/60' : 'border-white/10'} bg-white/5 p-4 text-left transition hover:border-white/40">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="h-10 w-10 rounded-full bg-blue-500/30 flex items-center justify-center text-blue-200 font-semibold">${recipient.avatar}</div>
+                            ${isSelected ? '<i data-lucide="check-circle-2" class="h-5 w-5 text-blue-400"></i>' : ''}
+                        </div>
+                        <p class="text-white font-semibold">${recipient.name}</p>
+                        <p class="text-xs text-gray-400">${recipient.bank} • ${window.maskAccount(recipient.account)}</p>
+                    </button>
+                `;
+            }).join('');
+            
+            modalRecipientList.querySelectorAll('[data-recipient-option]')?.forEach(card => {
+                card.addEventListener('click', () => {
+                    const recipientId = card.getAttribute('data-recipient-option');
+                    window.selectRecipient(recipientId);
+                    window.renderModalRecipients();
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                });
+            });
+            
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        };
+        
+        window.updateStepControls = function() {
+            const toStep2 = document.getElementById('toStep2');
+            const toStep3 = document.getElementById('toStep3');
+            const hasRecipient = !!window.selectedRecipientId;
+            const hasAmount = window.currentAmount > 0;
+            if (toStep2) toStep2.toggleAttribute('disabled', !hasRecipient);
+            if (toStep3) toStep3.toggleAttribute('disabled', !hasAmount);
+        };
+        
+        window.updateAmountPreviews = function() {
+            const sendAmountInput = document.getElementById('sendAmountInput');
+            const feePreview = document.getElementById('feePreview');
+            const receiveAmountPreview = document.getElementById('receiveAmountPreview');
+            const reviewSend = document.getElementById('reviewSend');
+            const reviewFee = document.getElementById('reviewFee');
+            const reviewReceive = document.getElementById('reviewReceive');
+            
+            const rawValue = parseFloat(sendAmountInput?.value || '0');
+            window.currentAmount = Number.isFinite(rawValue) && rawValue > 0 ? rawValue : 0;
+            const fee = window.currentAmount ? Math.max(window.currentAmount * 0.008, 8).toFixed(2) : '0.00';
+            const php = window.currentAmount ? (window.currentAmount * 6.5).toFixed(2) : '0.00';
+            
+            if (feePreview) feePreview.textContent = fee;
+            if (receiveAmountPreview) receiveAmountPreview.textContent = `PHP ${php}`;
+            if (reviewSend) reviewSend.textContent = `HKD ${window.currentAmount.toFixed(2)}`;
+            if (reviewFee) reviewFee.textContent = fee;
+            if (reviewReceive) reviewReceive.textContent = `PHP ${php}`;
+            window.updateStepControls();
+        };
+        
+        // Flow step navigation
+        window.showFlowStep = function(index) {
+            const flowSteps = ['flowStep1','flowStep2','flowStep3','flowStep4'].map(id => document.getElementById(id));
+            const flowPills = Array.from(document.querySelectorAll('#sendFlowProgress .flow-pill'));
+            
+            flowSteps.forEach((step, i) => {
+                if (!step) return;
+                if (i === index) step.classList.remove('hidden');
+                else step.classList.add('hidden');
+            });
+            
+            flowPills.forEach((pill, i) => {
+                pill.classList.toggle('active', i === index);
+                pill.classList.toggle('completed', i < index);
+            });
+            
+            if (index !== 3) {
+                window.resetCountdown();
+            }
+        };
+        
+        window.resetCountdown = function() {
+            if (window.countdownInterval) {
+                clearInterval(window.countdownInterval);
+            }
+            const fpsCountdown = document.getElementById('fpsCountdown');
+            if (fpsCountdown) fpsCountdown.textContent = '15:00';
+        };
+        
+        window.startCountdown = function() {
+            window.resetCountdown();
+            let remaining = 15 * 60;
+            window.countdownInterval = setInterval(() => {
+                remaining -= 1;
+                if (remaining <= 0) {
+                    window.resetCountdown();
+                    return;
+                }
+                const minutes = String(Math.floor(remaining / 60)).padStart(2, '0');
+                const seconds = String(remaining % 60).padStart(2, '0');
+                const fpsCountdown = document.getElementById('fpsCountdown');
+                if (fpsCountdown) fpsCountdown.textContent = `${minutes}:${seconds}`;
+            }, 1000);
+        };
+        
+        window.resetSendMoneyFlow = function() {
+            window.selectedRecipientId = null;
+            window.currentAmount = 0;
+            const sendAmountInput = document.getElementById('sendAmountInput');
+            if (sendAmountInput) sendAmountInput.value = '';
+            
+            const feePreview = document.getElementById('feePreview');
+            const receiveAmountPreview = document.getElementById('receiveAmountPreview');
+            const reviewSend = document.getElementById('reviewSend');
+            const reviewFee = document.getElementById('reviewFee');
+            const reviewReceive = document.getElementById('reviewReceive');
+            const reviewRecipientName = document.getElementById('reviewRecipientName');
+            const reviewRecipientBank = document.getElementById('reviewRecipientBank');
+            const fpsRecipient = document.getElementById('fpsRecipient');
+            const fpsBank = document.getElementById('fpsBank');
+            const fpsReference = document.getElementById('fpsReference');
+            const fpsExactAmount = document.getElementById('fpsExactAmount');
+            
+            if (feePreview) feePreview.textContent = '0.00';
+            if (receiveAmountPreview) receiveAmountPreview.textContent = 'PHP 0.00';
+            if (reviewSend) reviewSend.textContent = 'HKD 0';
+            if (reviewFee) reviewFee.textContent = '0';
+            if (reviewReceive) reviewReceive.textContent = 'PHP 0';
+            if (reviewRecipientName) reviewRecipientName.textContent = '-';
+            if (reviewRecipientBank) reviewRecipientBank.textContent = '-';
+            if (fpsRecipient) fpsRecipient.textContent = '-';
+            if (fpsBank) fpsBank.textContent = '-';
+            if (fpsReference) fpsReference.textContent = 'TX0000000000';
+            if (fpsExactAmount) fpsExactAmount.textContent = 'HKD 0.00';
+            
+            window.renderModalRecipients();
+            window.showFlowStep(0);
+            window.updateStepControls();
+        };
+        
+        window.populateReviewRecipient = function() {
+            const recipient = window.getSelectedRecipient();
+            if (!recipient) return;
+            const reviewRecipientName = document.getElementById('reviewRecipientName');
+            const reviewRecipientBank = document.getElementById('reviewRecipientBank');
+            if (reviewRecipientName) reviewRecipientName.textContent = recipient.name;
+            if (reviewRecipientBank) reviewRecipientBank.textContent = `${recipient.bank} • ${window.maskAccount(recipient.account)}`;
+        };
+        
+        window.populateFpsSection = function() {
+            const recipient = window.getSelectedRecipient();
+            if (!recipient) return;
+            const php = (window.currentAmount * 6.5).toFixed(2);
+            const txId = `TX${Date.now()}`;
+            
+            const fpsRecipient = document.getElementById('fpsRecipient');
+            const fpsBank = document.getElementById('fpsBank');
+            const fpsReference = document.getElementById('fpsReference');
+            const fpsExactAmount = document.getElementById('fpsExactAmount');
+            const feePreview = document.getElementById('feePreview');
+            
+            if (fpsRecipient) fpsRecipient.textContent = recipient.name;
+            if (fpsBank) fpsBank.textContent = `${recipient.bank} (${window.countryLabels[recipient.country] || recipient.country})`;
+            if (fpsReference) fpsReference.textContent = txId;
+            if (fpsExactAmount) fpsExactAmount.textContent = `HKD ${(window.currentAmount + parseFloat(feePreview?.textContent || '0')).toFixed(2)}`;
+            
+            const fpsFinalPhp = document.getElementById('fpsFinalPhp');
+            if (fpsFinalPhp) fpsFinalPhp.textContent = `PHP ${php}`;
+        };
+        
+        window.signOut = function() {
+            // Clear localStorage to remove session data
+            localStorage.removeItem('userFullName');
+            localStorage.removeItem('supabase.auth.token');
+            localStorage.removeItem('sb-wgzrajebtwsjruhcefdq-auth-token');
+            // Clear all localStorage items that might contain session data
+            Object.keys(localStorage).forEach(key => {
+                if (key.includes('supabase') || key.includes('auth')) {
+                    localStorage.removeItem(key);
+                }
+            });
+            // Redirect to index
+            window.location.href = 'index.html';
+        };
+    </script>
 </head>
 
 <body class="bg-slate-950 text-gray-100 min-h-screen overflow-x-hidden">
@@ -191,7 +472,7 @@
                             <span class="text-white font-bold text-lg font-geist">$</span>
                         </div>
                         <p class="text-white font-semibold font-geist">Send Money</p>
-                        <p class="text-xs text-gray-300 mt-1">4 recipients pre-approved</p>
+                        <p class="text-xs text-gray-300 mt-1"><span id="recipientCountLabel">0</span> recipients ready</p>
                     </button>
                     <button id="addRecipientBtn" class="rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-5 text-left hover:border-emerald-400/40 transition">
                         <div class="h-10 w-10 rounded-xl bg-emerald-500/15 flex items-center justify-center mb-4"><i data-lucide="user-plus" class="text-emerald-300 h-5 w-5"></i></div>
@@ -326,40 +607,7 @@
                     <i data-lucide="plus" class="h-4 w-4"></i> Add New
                 </button>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="h-10 w-10 rounded-full bg-blue-500/15 flex items-center justify-center text-blue-200 font-semibold">M</div>
-                        <span class="text-xs text-gray-400">PH</span>
-                    </div>
-                    <p class="text-white font-geist">Maria Santos</p>
-                    <p class="text-xs text-gray-400">BPI • ****1234</p>
-                    <button onclick="openSendMoneyModal()" class="mt-4 w-full rounded-lg bg-gradient-to-r from-blue-400 to-emerald-400 py-2 text-xs font-semibold">Send</button>
-                </div>
-                <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="h-10 w-10 rounded-full bg-emerald-500/15 flex items-center justify-center text-emerald-200 font-semibold">S</div>
-                        <span class="text-xs text-gray-400">TH</span>
-                    </div>
-                    <p class="text-white font-geist">Somchai Wong</p>
-                    <p class="text-xs text-gray-400">Bangkok Bank • ****5678</p>
-                    <button onclick="openSendMoneyModal()" class="mt-4 w-full rounded-lg border border-white/15 py-2 text-xs font-semibold text-gray-100 hover:bg-white/10">Send</button>
-                </div>
-                <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="h-10 w-10 rounded-full bg-purple-500/15 flex items-center justify-center text-purple-200 font-semibold">R</div>
-                        <span class="text-xs text-gray-400">ID</span>
-                    </div>
-                    <p class="text-white font-geist">Rina Wijaya</p>
-                    <p class="text-xs text-gray-400">Mandiri • ****4321</p>
-                    <button onclick="openSendMoneyModal()" class="mt-4 w-full rounded-lg border border-white/15 py-2 text-xs font-semibold text-gray-100 hover:bg-white/10">Send</button>
-                </div>
-                <div class="rounded-2xl border border-dashed border-white/20 bg-white/5 p-4 flex flex-col items-center justify-center text-center hover:border-white/40 transition">
-                    <i data-lucide="user-plus" class="h-8 w-8 text-gray-400 mb-3"></i>
-                    <p class="text-sm text-white font-semibold font-geist">Add New Recipient</p>
-                    <p class="text-xs text-gray-400 mt-1">Email Verification + KYC</p>
-                </div>
-            </div>
+            <div id="recipientGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
         </section>
     </main>
 
@@ -368,146 +616,222 @@
     </footer>
 
     <!-- Send Money Modal -->
-    <div id="sendMoneyModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm">
-        <div class="relative w-full max-w-2xl mx-4 rounded-3xl border border-white/10 bg-slate-900/95 p-8 backdrop-blur-xl shadow-2xl">
+    <div id="sendMoneyModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm px-4 py-10">
+        <div class="relative w-full max-w-4xl rounded-3xl border border-white/10 bg-slate-950/95 p-8 shadow-2xl">
             <button id="closeSendMoney" class="absolute top-4 right-4 text-gray-400 hover:text-white">
                 <i data-lucide="x" class="h-6 w-6"></i>
             </button>
-            <h3 class="text-2xl text-white font-bricolage font-light mb-6">Send Money Flow</h3>
-            
-            <!-- Step 1 -->
-            <div id="step1" class="step-content">
-                <div class="flex items-start gap-3 bg-white/5 border border-blue-400/30 rounded-xl p-4 mb-4">
-                    <span class="h-8 w-8 flex items-center justify-center rounded-lg bg-blue-500/15 text-blue-200 font-semibold">1</span>
-                    <div class="flex-1">
-                        <p class="font-semibold text-white mb-2">Enter Recipient Details</p>
-                        <p class="text-sm text-gray-300 mb-4">Enter recipient information and transfer amount</p>
+            <div class="flex flex-col gap-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs uppercase tracking-[0.4em] text-blue-200 font-geist">Send money</p>
+                        <h3 class="text-3xl text-white font-bricolage font-light">Simulate the full FPS ➜ Stablecoin ➜ PHP flow</h3>
+                    </div>
+                    <div class="hidden md:flex items-center gap-2 text-xs text-gray-400 font-geist">
+                        <span class="flex items-center gap-1"><i data-lucide="clock" class="h-3.5 w-3.5"></i> Avg 12 min</span>
+                        <span class="flex items-center gap-1"><i data-lucide="shield" class="h-3.5 w-3.5"></i> HKMA compliant</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-4 gap-3 text-xs font-geist" id="sendFlowProgress">
+                    <div class="flow-pill active">
+                        <span>1</span>
+                        <p>Select recipient</p>
+                    </div>
+                    <div class="flow-pill">
+                        <span>2</span>
+                        <p>Enter amount</p>
+                    </div>
+                    <div class="flow-pill">
+                        <span>3</span>
+                        <p>Review & confirm</p>
+                    </div>
+                    <div class="flow-pill">
+                        <span>4</span>
+                        <p>FPS payment</p>
+                    </div>
+                </div>
+
+                <div id="flowStep1" class="flow-step space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs uppercase tracking-[0.4em] text-emerald-200 font-geist">Step 1</p>
+                            <h4 class="text-xl text-white font-geist font-semibold">Choose a recipient</h4>
+                            <p class="text-sm text-gray-400">The list syncs with your recipients panel—additions show up instantly.</p>
+                        </div>
+                        <button class="inline-flex items-center gap-2 text-sm text-blue-200 hover:text-white" id="modalAddRecipient">
+                            <i data-lucide="user-plus" class="h-4 w-4"></i>
+                            Add new recipient
+                        </button>
+                    </div>
+                    <div id="modalRecipientList" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+                    <div class="flex justify-end gap-3">
+                        <button class="rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm text-gray-200" disabled>Back</button>
+                        <button id="toStep2" class="rounded-xl bg-gradient-to-r from-blue-400 to-emerald-400 px-6 py-3 text-sm font-semibold text-white disabled:opacity-40" disabled>Continue →</button>
+                    </div>
+                </div>
+
+                <div id="flowStep2" class="flow-step space-y-6 hidden">
+                    <div>
+                        <p class="text-xs uppercase tracking-[0.4em] text-emerald-200 font-geist">Step 2</p>
+                        <h4 class="text-xl text-white font-geist font-semibold">Enter amount & see FX instantly</h4>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6">
                         <div class="space-y-3">
-                            <div>
-                                <label class="block text-xs text-gray-400 mb-1">Recipient Name</label>
-                                <input type="text" id="step1Recipient" placeholder="e.g., Maria Santos" class="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white placeholder-gray-500 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20">
-                            </div>
-                            <div>
-                                <label class="block text-xs text-gray-400 mb-1">Amount (HKD)</label>
-                                <input type="number" id="step1Amount" placeholder="e.g., 1000" class="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white placeholder-gray-500 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20">
+                            <label class="text-xs text-gray-400 font-geist">You send (HKD)</label>
+                            <input type="number" id="sendAmountInput" class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-500 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20" placeholder="1000">
+                            <p class="text-xs text-gray-400">Fee: HKD <span id="feePreview">0.00</span> · Guaranteed FX 1 HKD = 7.056 PHPC</p>
+                        </div>
+                        <div class="space-y-3">
+                            <label class="text-xs text-gray-400 font-geist">Recipient gets</label>
+                            <div class="rounded-2xl border border-emerald-400/20 bg-emerald-500/10 px-4 py-3">
+                                <p class="text-2xl text-white font-bricolage" id="receiveAmountPreview">PHP 0.00</p>
+                                <p class="text-xs text-emerald-200">PHPC bridge amount: <span id="phpcPreview">0</span></p>
                             </div>
                         </div>
                     </div>
+                    <div class="flex justify-between gap-3">
+                        <button class="rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm text-gray-200" data-back-step="1">← Back to recipients</button>
+                        <button id="toStep3" class="rounded-xl bg-gradient-to-r from-blue-400 to-emerald-400 px-6 py-3 text-sm font-semibold text-white disabled:opacity-40" disabled>Review details →</button>
+                    </div>
                 </div>
-                <button id="nextToStep2" class="w-full rounded-xl bg-gradient-to-r from-blue-400 to-emerald-400 px-6 py-3 text-white font-semibold font-geist hover:shadow-lg shadow-blue-900/30 transition">
-                    Next: Purchase Stablecoin →
-                </button>
-            </div>
 
-            <!-- Step 2 -->
-            <div id="step2" class="step-content hidden">
-                <div class="flex items-start gap-3 bg-white/5 border border-purple-400/30 rounded-xl p-4 mb-4">
-                    <span class="h-8 w-8 flex items-center justify-center rounded-lg bg-purple-500/15 text-purple-200 font-semibold">2</span>
-                    <div class="flex-1">
-                        <p class="font-semibold text-white mb-2">Purchase Stablecoin</p>
-                        <p class="text-sm text-gray-300 mb-4">Converting HKD to HKMA-compliant stablecoin</p>
-                        <div class="space-y-3">
-                            <div class="bg-white/5 rounded-lg p-3">
+                <div id="flowStep3" class="flow-step space-y-6 hidden">
+                    <div>
+                        <p class="text-xs uppercase tracking-[0.4em] text-emerald-200 font-geist">Step 3</p>
+                        <h4 class="text-xl text-white font-geist font-semibold">Review transfer details</h4>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-4 text-sm font-geist">
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-4 space-y-2">
+                            <p class="text-xs text-gray-400">You send</p>
+                            <p class="text-white text-lg" id="reviewSend">HKD 0</p>
+                            <p class="text-xs text-gray-500">Fee HKD <span id="reviewFee">0</span></p>
+                        </div>
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-4 space-y-2">
+                            <p class="text-xs text-gray-400">Recipient gets</p>
+                            <p class="text-white text-lg" id="reviewReceive">PHP 0</p>
+                            <p class="text-xs text-gray-500">PHPC bridge: <span id="reviewPHPC">0</span></p>
+                        </div>
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-4 space-y-2">
+                            <p class="text-xs text-gray-400">Recipient</p>
+                            <p class="text-white text-lg" id="reviewRecipientName">-</p>
+                            <p class="text-xs text-gray-500" id="reviewRecipientBank">-</p>
+                        </div>
+                    </div>
+                    <div class="rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-4 text-xs text-emerald-200">
+                        <p class="font-semibold">Compliance ready</p>
+                        <p>HKMA licensed counterparties + FPS traceability. Alerts fire if SLA exceeds 15 minutes.</p>
+                    </div>
+                    <div class="flex justify-between gap-3">
+                        <button class="rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm text-gray-200" data-back-step="2">← Edit amount</button>
+                        <button id="toStep4" class="rounded-xl bg-gradient-to-r from-blue-400 to-emerald-400 px-6 py-3 text-sm font-semibold text-white">Go to FPS instructions →</button>
+                    </div>
+                </div>
+
+                <div id="flowStep4" class="flow-step space-y-6 hidden">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs uppercase tracking-[0.4em] text-emerald-200 font-geist">Step 4</p>
+                            <h4 class="text-xl text-white font-geist font-semibold">Complete FPS payment</h4>
+                            <p class="text-sm text-gray-400">Use QR or FPS ID. Countdown auto-resets if you restart.</p>
+                        </div>
+                        <div class="text-right text-sm">
+                            <p class="text-gray-400">Time left</p>
+                            <p class="text-white text-xl font-bricolage" id="fpsCountdown">15:00</p>
+                        </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="space-y-3 text-sm text-gray-300">
+                            <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
+                                <div class="flex items-center justify-between">
+                                    <p class="text-xs text-gray-400">Recipient</p>
+                                    <button class="text-xs text-blue-200 hover:text-white" data-copy="recipientName">Copy</button>
+                                </div>
+                                <p class="text-white text-lg" id="fpsRecipient">-</p>
+                                <p class="text-xs text-gray-500" id="fpsBank">-</p>
+                            </div>
+                            <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
+                                <div class="flex items-center justify-between">
+                                    <p class="text-xs text-gray-400">FPS ID</p>
+                                    <button class="text-xs text-blue-200 hover:text-white" data-copy="fpsId">Copy</button>
+                                </div>
+                                <p class="text-white text-lg" id="fpsIdValue">165482739</p>
+                            </div>
+                            <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
+                                <div class="flex items-center justify-between">
+                                    <p class="text-xs text-gray-400">Payment reference</p>
+                                    <button class="text-xs text-blue-200 hover:text-white" data-copy="paymentRef">Copy</button>
+                                </div>
+                                <p class="text-white text-lg" id="fpsReference">TX0000000000</p>
+                            </div>
+                            <div class="bg-emerald-500/10 border border-emerald-400/30 rounded-2xl p-4">
+                                <p class="text-xs text-emerald-200">Send exactly</p>
+                                <p class="text-2xl text-white font-bricolage" id="fpsExactAmount">HKD 0.00</p>
+                            </div>
+                        </div>
+                        <div class="bg-white/90 rounded-2xl p-6 flex flex-col items-center gap-4 text-center text-slate-900">
+                            <div class="w-40 h-40 bg-white rounded-xl border-2 border-slate-200 flex items-center justify-center relative">
+                                <div class="absolute inset-3 grid grid-cols-8 grid-rows-8 gap-0.5" aria-hidden="true">
+                                    <div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div>
+                                    <div class="bg-black"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-black"></div>
+                                    <div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div><div class="bg-black"></div>
+                                    <div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div>
+                                    <div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div>
+                                    <div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div>
+                                    <div class="bg-black"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-black"></div>
+                                    <div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div>
+                                </div>
+                            </div>
+                            <p class="text-sm font-semibold">Scan with your FPS mobile app</p>
+                            <ol class="text-left text-xs space-y-1 text-gray-600">
+                                <li>1. Open bank app → "FPS Transfer"</li>
+                                <li>2. Scan QR or enter FPS ID</li>
+                                <li>3. Enter amount + reference</li>
+                                <li>4. Confirm payment</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-3 md:flex-row">
+                        <button class="flex-1 rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm text-white" id="restartFlowNew">Start over</button>
+                        <button class="flex-1 rounded-xl bg-gradient-to-r from-emerald-400 to-blue-400 px-6 py-3 text-sm font-semibold text-white" id="completeFlowNew">I've completed FPS ✓</button>
+                    </div>
+                </div>
+
+                <!-- Success State -->
+                <div id="flowSuccess" class="flow-step hidden space-y-6 text-center">
+                    <div class="flex justify-center">
+                        <div class="h-24 w-24 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                            <i data-lucide="check" class="h-12 w-12 text-emerald-400"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-2xl text-white font-bricolage font-semibold mb-2">Payment Completed!</h4>
+                        <p class="text-sm text-gray-400">Your transfer has been successfully processed</p>
+                    </div>
+                    <div class="space-y-3 text-left">
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                            <p class="text-xs text-gray-400 mb-1">Recipient</p>
+                            <p class="text-white font-semibold" id="successRecipient">-</p>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-3">
+                            <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                                <p class="text-xs text-gray-400 mb-1">Amount Sent</p>
+                                <p class="text-white font-semibold" id="successAmountSent">HKD 0.00</p>
+                            </div>
+                            <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
                                 <p class="text-xs text-gray-400 mb-1">Amount Received</p>
-                                <p class="text-white font-semibold" id="step2Amount">HKD 0</p>
-                            </div>
-                            <div class="bg-white/5 rounded-lg p-3">
-                                <p class="text-xs text-gray-400 mb-1">Stablecoin Rate</p>
-                                <p class="text-white font-semibold">1 HKD = 1 HKD Stablecoin</p>
+                                <p class="text-white font-semibold" id="successAmountReceived">PHP 0.00</p>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <button id="nextToStep3" class="w-full rounded-xl bg-gradient-to-r from-blue-400 to-emerald-400 px-6 py-3 text-white font-semibold font-geist hover:shadow-lg shadow-blue-900/30 transition">
-                    Next: Convert to PHPC →
-                </button>
-            </div>
-
-            <!-- Step 3 -->
-            <div id="step3" class="step-content hidden">
-                <div class="flex items-start gap-3 bg-white/5 border border-pink-400/30 rounded-xl p-4 mb-4">
-                    <span class="h-8 w-8 flex items-center justify-center rounded-lg bg-pink-500/15 text-pink-200 font-semibold">3</span>
-                    <div class="flex-1">
-                        <p class="font-semibold text-white mb-2">Convert to PHPC</p>
-                        <p class="text-sm text-gray-300 mb-4">Establishing cross-border liquidity</p>
-                        <div class="space-y-3">
-                            <div class="bg-white/5 rounded-lg p-3">
-                                <p class="text-xs text-gray-400 mb-1">HKD Stablecoin</p>
-                                <p class="text-white font-semibold" id="step3Stablecoin">0 HKD Stablecoin</p>
-                            </div>
-                            <div class="bg-white/5 rounded-lg p-3">
-                                <p class="text-xs text-gray-400 mb-1">PHPC Exchange Rate</p>
-                                <p class="text-white font-semibold">1 HKD Stablecoin = 7.056 PHPC</p>
-                            </div>
-                            <div class="bg-white/5 rounded-lg p-3">
-                                <p class="text-xs text-gray-400 mb-1">PHPC Amount</p>
-                                <p class="text-white font-semibold" id="step3PHPC">0 PHPC</p>
-                            </div>
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                            <p class="text-xs text-gray-400 mb-1">Transaction ID</p>
+                            <p class="text-white font-semibold font-mono text-sm" id="successTransactionId">TX0000000000</p>
                         </div>
                     </div>
-                </div>
-                <button id="nextToStep4" class="w-full rounded-xl bg-gradient-to-r from-blue-400 to-emerald-400 px-6 py-3 text-white font-semibold font-geist hover:shadow-lg shadow-blue-900/30 transition">
-                    Next: Deposit to Recipient →
-                </button>
-            </div>
-
-            <!-- Step 4 -->
-            <div id="step4" class="step-content hidden">
-                <div class="flex items-start gap-3 bg-white/5 border border-amber-400/30 rounded-xl p-4 mb-4">
-                    <span class="h-8 w-8 flex items-center justify-center rounded-lg bg-amber-500/15 text-amber-200 font-semibold">4</span>
-                    <div class="flex-1">
-                        <p class="font-semibold text-white mb-2">Scan FPS QR Code to Send Money</p>
-                        <p class="text-sm text-gray-300 mb-4">Scan the QR code below with your bank app to complete the FPS payment</p>
-                        <div class="flex flex-col md:flex-row gap-4 mb-4">
-                            <div class="flex-1 space-y-3">
-                                <div class="bg-white/5 rounded-lg p-3">
-                                    <p class="text-xs text-gray-400 mb-1">Recipient</p>
-                                    <p class="text-white font-semibold" id="step4Recipient">-</p>
-                                </div>
-                                <div class="bg-white/5 rounded-lg p-3">
-                                    <p class="text-xs text-gray-400 mb-1">PHPC Amount</p>
-                                    <p class="text-white font-semibold" id="step4PHPC">0 PHPC</p>
-                                </div>
-                                <div class="bg-white/5 rounded-lg p-3">
-                                    <p class="text-xs text-gray-400 mb-1">PHP Exchange Rate</p>
-                                    <p class="text-white font-semibold">1 PHPC = 0.1417 PHP</p>
-                                </div>
-                                <div class="bg-emerald-500/10 border border-emerald-400/30 rounded-lg p-3">
-                                    <p class="text-xs text-emerald-300 mb-1">Final Amount</p>
-                                    <p class="text-emerald-200 font-semibold text-lg" id="step4Final">PHP 0</p>
-                                </div>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <div class="bg-white rounded-lg p-4 flex items-center justify-center">
-                                    <div class="text-center">
-                                        <div class="w-32 h-32 bg-white rounded-lg flex items-center justify-center border-2 border-gray-300 mb-2 relative">
-                                            <!-- QR Code Pattern -->
-                                            <div class="absolute inset-2 grid grid-cols-8 grid-rows-8 gap-0.5">
-                                                <div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div>
-                                                <div class="bg-black"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-black"></div>
-                                                <div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div><div class="bg-black"></div>
-                                                <div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div>
-                                                <div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div>
-                                                <div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-white"></div><div class="bg-black"></div>
-                                                <div class="bg-black"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div><div class="bg-black"></div>
-                                                <div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div><div class="bg-black"></div>
-                                            </div>
-                                        </div>
-                                        <p class="text-xs text-gray-600 font-geist">FPS QR Code</p>
-                                        <p class="text-xs text-gray-500 font-geist mt-1">Scan with bank app</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="flex gap-3">
+                        <button class="flex-1 rounded-xl bg-gradient-to-r from-blue-400 to-emerald-400 px-6 py-3 text-sm font-semibold text-white" id="newTransferBtn">New Transfer</button>
+                        <button class="flex-1 rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm text-white hover:bg-white/10" id="closeSuccessBtn">Close</button>
                     </div>
-                </div>
-                <div class="flex gap-3">
-                    <button id="restartFlow" class="flex-1 rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-white font-semibold font-geist hover:bg-white/10 transition">
-                        Start Over
-                    </button>
-                    <button id="completeFlow" class="flex-1 rounded-xl bg-gradient-to-r from-emerald-400 to-blue-400 px-6 py-3 text-white font-semibold font-geist hover:shadow-lg shadow-emerald-900/30 transition">
-                        Complete Transfer ✓
-                    </button>
                 </div>
             </div>
         </div>
@@ -621,28 +945,17 @@
         </div>
     </div>
 
-    <script type="module">
-        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-        const supabaseUrl = document.querySelector('meta[name="supabase-url"]')?.content?.trim() || localStorage.getItem('SUPABASE_URL') || 'https://wgzrajebtwsjruhcefdq.supabase.co'
-        const supabaseAnonKey = document.querySelector('meta[name="supabase-anon-key"]')?.content?.trim() || localStorage.getItem('SUPABASE_ANON_KEY') || ''
-        const supabase = supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null
-        function decodeJwt(token) { const parts = token?.split('.') || []; if (parts.length !== 3) return {}; try { return JSON.parse(atob(parts[1])); } catch { return {} } }
-        async function getSessionSafe() { if (!supabase) return null; const { data: { session } } = await supabase.auth.getSession(); if (!session) return null; const payload = decodeJwt(session.access_token); const now = Math.floor(Date.now() / 1000); if (payload?.exp && payload.exp < now) { const { data, error } = await supabase.auth.refreshSession(); if (error) return null; return data.session; } return session }
-        function extractName(u) { const m = u?.user_metadata || {}; return m.display_name || m.name || m.full_name || m.preferred_username || m.user_name || (u?.email ? u.email.split('@')[0] : '') }
-        function extractAvatar(u) { const m = u?.user_metadata || {}; return m.avatar_url || m.picture || '' }
-        function isGoogle(u) { return u?.app_metadata?.provider === 'google' }
-        async function renderUser() { lucide.createIcons(); const userBadge = document.getElementById('userBadge'); const avatar = document.getElementById('userAvatar'); const nameEl = document.getElementById('userNameLabel'); const greetSpan = document.getElementById('greetName'); const session = await getSessionSafe(); if (!session) return; const user = session.user; const name = extractName(user); const avatarUrl = extractAvatar(user); if (userBadge) { userBadge.classList.remove('hidden'); userBadge.textContent = isGoogle(user) ? 'Google • Logged in' : 'Logged in' } if (avatar) { if (avatarUrl) { avatar.style.backgroundImage = `url('${avatarUrl}')`; avatar.style.backgroundSize = 'cover'; avatar.textContent = '' } else { const initials = name ? name.split(' ').map(s=>s[0]).join('').slice(0,2).toUpperCase() : 'U'; avatar.textContent = initials } } if (nameEl) { nameEl.textContent = name || 'User' } if (greetSpan) { greetSpan.textContent = (name || 'User') } }
-        async function signOut() { if (supabase) await supabase.auth.signOut(); window.location.href = 'index.html' }
-        supabase?.auth.onAuthStateChange((event, session) => { if (event === 'SIGNED_OUT') { window.location.href = 'index.html' } if (event === 'TOKEN_REFRESHED') { renderUser() } if (event === 'USER_UPDATED') { renderUser() } })
-        lucide.createIcons();
-        const toggle = document.getElementById('mobileToggle');
-        const nav = document.getElementById('mobileNav');
-        toggle?.addEventListener('click', () => {
-            const hidden = nav.classList.contains('hidden');
-            nav.classList.toggle('hidden');
-            nav.classList.toggle('flex', hidden);
-            nav.setAttribute('aria-hidden', hidden ? 'false' : 'true');
-            toggle.setAttribute('aria-expanded', hidden ? 'true' : 'false');
+    <!-- Old conflicting code removed - using global functions from head instead -->
+    <script>
+        // Mobile menu toggle
+        const mobileToggle = document.getElementById('mobileToggle');
+        const mobileNav = document.getElementById('mobileNav');
+        mobileToggle?.addEventListener('click', () => {
+            const hidden = mobileNav.classList.contains('hidden');
+            mobileNav.classList.toggle('hidden');
+            mobileNav.classList.toggle('flex', hidden);
+            mobileNav.setAttribute('aria-hidden', hidden ? 'false' : 'true');
+            mobileToggle.setAttribute('aria-expanded', hidden ? 'true' : 'false');
         });
 
         const workflowSection = document.getElementById('transferWorkflow');
@@ -653,220 +966,469 @@
         }
         headerTransferBtn?.addEventListener('click', scrollToWorkflow);
         summaryTransferBtn?.addEventListener('click', scrollToWorkflow);
-
+        // Attach sign-out event listeners
         const signOutBtn = document.getElementById('signOutBtn');
         const mobileSignOutBtn = document.getElementById('mobileSignOutBtn');
-        function signOutLocal() { signOut() }
-        signOutBtn?.addEventListener('click', signOutLocal);
-        mobileSignOutBtn?.addEventListener('click', signOutLocal);
-        renderUser()
-
-        // Send Money Modal
+        if (signOutBtn) signOutBtn.addEventListener('click', window.signOut);
+        if (mobileSignOutBtn) mobileSignOutBtn.addEventListener('click', window.signOut);
+    </script>
+    
+    <!-- Fallback initialization script -->
+    <script>
+        function mapAuthError(e) {
+            const msg = (e?.message || '').toLowerCase();
+            if (msg.includes('network')) return '網絡錯誤，請稍後重試';
+            if (msg.includes('access_denied') || msg.includes('consent')) return '已取消授權或拒絕訪問';
+            if (msg.includes('redirect_uri')) return '重定向地址不正確，請檢查配置';
+            if (msg.includes('invalid_client')) return '客戶端配置錯誤，請檢查 Client ID/Secret';
+            return '登入失敗，請重試';
+        }
+        function testExtract() {
+            const cases = [
+                { user_metadata: { name: 'Jane Doe' } },
+                { user_metadata: { full_name: 'Juan Dela Cruz' } },
+                { email: 'maria@example.com' }
+            ];
+            const results = cases.map(c => extractName(c));
+            console.assert(results[0] === 'Jane Doe', 'name fail');
+            console.assert(results[1] === 'Juan Dela Cruz', 'full_name fail');
+            console.assert(results[2] === 'maria', 'email fail');
+        }
+        function testErrors() {
+            const e1 = { message: 'network error' };
+            const e2 = { message: 'redirect_uri mismatch' };
+            const e3 = { message: 'access_denied' };
+            console.assert(mapAuthError(e1) === '網絡錯誤，請稍後重試', 'net');
+            console.assert(mapAuthError(e2) === '重定向地址不正確，請檢查配置', 'redir');
+            console.assert(mapAuthError(e3) === '已取消授權或拒絕訪問', 'consent');
+        }
+        async function testSession() {
+            const s = await getSessionSafe();
+            console.assert(!!s, 'session missing');
+        }
+        async function runAuthTests() {
+            await testSession();
+            testExtract();
+            testErrors();
+            console.log('Auth tests passed');
+        }
+    </script>
+    
+    <!-- Fallback initialization script -->
+    <script>
+        // Flow step navigation
+        window.showFlowStep = function(index) {
+            const flowSteps = ['flowStep1','flowStep2','flowStep3','flowStep4'].map(id => document.getElementById(id));
+            const flowPills = Array.from(document.querySelectorAll('#sendFlowProgress .flow-pill'));
+            
+            flowSteps.forEach((step, i) => {
+                if (!step) return;
+                if (i === index) step.classList.remove('hidden');
+                else step.classList.add('hidden');
+            });
+            
+            flowPills.forEach((pill, i) => {
+                pill.classList.toggle('active', i === index);
+                pill.classList.toggle('completed', i < index);
+            });
+            
+            if (index !== 3) {
+                window.resetCountdown();
+            }
+        };
+        
+        window.resetCountdown = function() {
+            if (window.countdownInterval) {
+                clearInterval(window.countdownInterval);
+            }
+            const fpsCountdown = document.getElementById('fpsCountdown');
+            if (fpsCountdown) fpsCountdown.textContent = '15:00';
+        };
+        
+        window.startCountdown = function() {
+            window.resetCountdown();
+            let remaining = 15 * 60;
+            window.countdownInterval = setInterval(() => {
+                remaining -= 1;
+                if (remaining <= 0) {
+                    window.resetCountdown();
+                    return;
+                }
+                const minutes = String(Math.floor(remaining / 60)).padStart(2, '0');
+                const seconds = String(remaining % 60).padStart(2, '0');
+                const fpsCountdown = document.getElementById('fpsCountdown');
+                if (fpsCountdown) fpsCountdown.textContent = `${minutes}:${seconds}`;
+            }, 1000);
+        };
+        
+        window.resetSendMoneyFlow = function() {
+            window.selectedRecipientId = null;
+            window.currentAmount = 0;
+            const sendAmountInput = document.getElementById('sendAmountInput');
+            if (sendAmountInput) sendAmountInput.value = '';
+            
+            const feePreview = document.getElementById('feePreview');
+            const receiveAmountPreview = document.getElementById('receiveAmountPreview');
+            const reviewSend = document.getElementById('reviewSend');
+            const reviewFee = document.getElementById('reviewFee');
+            const reviewReceive = document.getElementById('reviewReceive');
+            const reviewRecipientName = document.getElementById('reviewRecipientName');
+            const reviewRecipientBank = document.getElementById('reviewRecipientBank');
+            const fpsRecipient = document.getElementById('fpsRecipient');
+            const fpsBank = document.getElementById('fpsBank');
+            const fpsReference = document.getElementById('fpsReference');
+            const fpsExactAmount = document.getElementById('fpsExactAmount');
+            
+            if (feePreview) feePreview.textContent = '0.00';
+            if (receiveAmountPreview) receiveAmountPreview.textContent = 'PHP 0.00';
+            if (reviewSend) reviewSend.textContent = 'HKD 0';
+            if (reviewFee) reviewFee.textContent = '0';
+            if (reviewReceive) reviewReceive.textContent = 'PHP 0';
+            if (reviewRecipientName) reviewRecipientName.textContent = '-';
+            if (reviewRecipientBank) reviewRecipientBank.textContent = '-';
+            if (fpsRecipient) fpsRecipient.textContent = '-';
+            if (fpsBank) fpsBank.textContent = '-';
+            if (fpsReference) fpsReference.textContent = 'TX0000000000';
+            if (fpsExactAmount) fpsExactAmount.textContent = 'HKD 0.00';
+            
+            window.renderModalRecipients();
+            window.showFlowStep(0);
+            window.updateStepControls();
+        };
+        
+        window.populateReviewRecipient = function() {
+            const recipient = window.getSelectedRecipient();
+            if (!recipient) return;
+            const reviewRecipientName = document.getElementById('reviewRecipientName');
+            const reviewRecipientBank = document.getElementById('reviewRecipientBank');
+            if (reviewRecipientName) reviewRecipientName.textContent = recipient.name;
+            if (reviewRecipientBank) reviewRecipientBank.textContent = `${recipient.bank} • ${window.maskAccount(recipient.account)}`;
+        };
+        
+        window.populateFpsSection = function() {
+            const recipient = window.getSelectedRecipient();
+            if (!recipient) return;
+            const php = (window.currentAmount * 6.5).toFixed(2);
+            const txId = `TX${Date.now()}`;
+            
+            const fpsRecipient = document.getElementById('fpsRecipient');
+            const fpsBank = document.getElementById('fpsBank');
+            const fpsReference = document.getElementById('fpsReference');
+            const fpsExactAmount = document.getElementById('fpsExactAmount');
+            const feePreview = document.getElementById('feePreview');
+            
+            if (fpsRecipient) fpsRecipient.textContent = recipient.name;
+            if (fpsBank) fpsBank.textContent = `${recipient.bank} (${window.countryLabels[recipient.country] || recipient.country})`;
+            if (fpsReference) fpsReference.textContent = txId;
+            if (fpsExactAmount) fpsExactAmount.textContent = `HKD ${(window.currentAmount + parseFloat(feePreview?.textContent || '0')).toFixed(2)}`;
+            
+            const fpsFinalPhp = document.getElementById('fpsFinalPhp');
+            if (fpsFinalPhp) fpsFinalPhp.textContent = `PHP ${php}`;
+        };
+        
+        // Ensure icons are rendered and functions are accessible
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+        
+        // Attach event listeners for buttons if module script failed
         const sendMoneyBtn = document.getElementById('sendMoneyBtn');
         const sendMoneyModal = document.getElementById('sendMoneyModal');
         const closeSendMoney = document.getElementById('closeSendMoney');
+        const toStep2 = document.getElementById('toStep2');
+        const toStep3 = document.getElementById('toStep3');
+        const toStep4 = document.getElementById('toStep4');
+        const sendAmountInput = document.getElementById('sendAmountInput');
+        const backStepButtons = document.querySelectorAll('[data-back-step]');
+        const modalAddRecipient = document.getElementById('modalAddRecipient');
         
-        // Reset flow when opening modal
-        function resetSendMoneyFlow() {
-            document.getElementById('step1').classList.remove('hidden');
-            document.getElementById('step2').classList.add('hidden');
-            document.getElementById('step3').classList.add('hidden');
-            document.getElementById('step4').classList.add('hidden');
-            document.getElementById('step1Recipient').value = '';
-            document.getElementById('step1Amount').value = '';
+        // Send Money Modal open/close
+        if (sendMoneyBtn && sendMoneyModal) {
+            sendMoneyBtn.addEventListener('click', () => {
+                window.resetSendMoneyFlow();
+                sendMoneyModal.classList.remove('hidden');
+                sendMoneyModal.classList.add('flex');
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            });
         }
-
-        sendMoneyBtn?.addEventListener('click', () => {
-            resetSendMoneyFlow();
-            sendMoneyModal?.classList.remove('hidden');
-            sendMoneyModal?.classList.add('flex');
-            lucide.createIcons();
-        });
         
-        closeSendMoney?.addEventListener('click', () => {
-            resetSendMoneyFlow();
-            sendMoneyModal?.classList.add('hidden');
-            sendMoneyModal?.classList.remove('flex');
-        });
-        
-        sendMoneyModal?.addEventListener('click', (e) => {
-            if (e.target === sendMoneyModal) {
-                resetSendMoneyFlow();
+        if (closeSendMoney && sendMoneyModal) {
+            closeSendMoney.addEventListener('click', () => {
+                window.resetSendMoneyFlow();
                 sendMoneyModal.classList.add('hidden');
                 sendMoneyModal.classList.remove('flex');
-            }
-        });
-
-        // Step-by-step flow navigation
-        const nextToStep2 = document.getElementById('nextToStep2');
-        const nextToStep3 = document.getElementById('nextToStep3');
-        const nextToStep4 = document.getElementById('nextToStep4');
-        const restartFlow = document.getElementById('restartFlow');
-        const completeFlow = document.getElementById('completeFlow');
-
-        nextToStep2?.addEventListener('click', () => {
-            const recipient = document.getElementById('step1Recipient').value;
-            const amount = document.getElementById('step1Amount').value;
-            
-            if (!recipient || !amount) {
-                alert('Please fill in recipient name and amount');
-                return;
-            }
-            
-            document.getElementById('step1').classList.add('hidden');
-            document.getElementById('step2').classList.remove('hidden');
-            document.getElementById('step2Amount').textContent = `HKD ${amount}`;
-            lucide.createIcons();
-        });
-
-        nextToStep3?.addEventListener('click', () => {
-            const amount = document.getElementById('step1Amount').value;
-            const stablecoin = amount;
-            const phpc = (parseFloat(amount) * 7.056).toFixed(2);
-            
-            document.getElementById('step2').classList.add('hidden');
-            document.getElementById('step3').classList.remove('hidden');
-            document.getElementById('step3Stablecoin').textContent = `${stablecoin} HKD Stablecoin`;
-            document.getElementById('step3PHPC').textContent = `${phpc} PHPC`;
-            lucide.createIcons();
-        });
-
-        nextToStep4?.addEventListener('click', () => {
-            const recipient = document.getElementById('step1Recipient').value;
-            const amount = document.getElementById('step1Amount').value;
-            const phpc = (parseFloat(amount) * 7.056).toFixed(2);
-            const php = (parseFloat(phpc) * 0.1417).toFixed(2);
-            
-            document.getElementById('step3').classList.add('hidden');
-            document.getElementById('step4').classList.remove('hidden');
-            document.getElementById('step4Recipient').textContent = recipient;
-            document.getElementById('step4PHPC').textContent = `${phpc} PHPC`;
-            document.getElementById('step4Final').textContent = `PHP ${php}`;
-            lucide.createIcons();
-        });
-
-        restartFlow?.addEventListener('click', () => {
-            resetSendMoneyFlow();
-            lucide.createIcons();
-        });
-
-        completeFlow?.addEventListener('click', () => {
-            const recipient = document.getElementById('step1Recipient').value;
-            const amount = document.getElementById('step1Amount').value;
-            const php = (parseFloat(amount) * 7.056 * 0.1417).toFixed(2);
-            
-            alert(`Transfer completed successfully!\n\nRecipient: ${recipient}\nAmount: HKD ${amount}\nFinal Amount: PHP ${php}\n\nTransaction ID: TX${Date.now()}`);
-            resetSendMoneyFlow();
-            sendMoneyModal.classList.add('hidden');
-            sendMoneyModal.classList.remove('flex');
-        });
-
-        // Add Recipient Modal
-        const addRecipientBtn = document.getElementById('addRecipientBtn');
-        const recipientsAddNewBtn = document.getElementById('recipientsAddNewBtn');
-        const addRecipientModal = document.getElementById('addRecipientModal');
-        const closeAddRecipient = document.getElementById('closeAddRecipient');
-        const recipientForm = document.getElementById('recipientForm');
-        
-        function openAddRecipientModal() {
-            addRecipientModal?.classList.remove('hidden');
-            addRecipientModal?.classList.add('flex');
-            lucide.createIcons();
+            });
         }
         
-        addRecipientBtn?.addEventListener('click', openAddRecipientModal);
-        recipientsAddNewBtn?.addEventListener('click', openAddRecipientModal);
+        if (sendMoneyModal) {
+            sendMoneyModal.addEventListener('click', (event) => {
+                if (event.target === sendMoneyModal) {
+                    window.resetSendMoneyFlow();
+                    sendMoneyModal.classList.add('hidden');
+                    sendMoneyModal.classList.remove('flex');
+                }
+            });
+        }
         
-        closeAddRecipient?.addEventListener('click', () => {
-            addRecipientModal?.classList.add('hidden');
-            addRecipientModal?.classList.remove('flex');
+        // Step navigation
+        if (toStep2) {
+            toStep2.addEventListener('click', () => {
+                if (!window.selectedRecipientId) return;
+                window.showFlowStep(1);
+                if (sendAmountInput) sendAmountInput.focus();
+            });
+        }
+        
+        if (toStep3) {
+            toStep3.addEventListener('click', () => {
+                if (!window.currentAmount) return;
+                window.updateAmountPreviews();
+                window.populateReviewRecipient();
+                window.showFlowStep(2);
+            });
+        }
+        
+        if (toStep4) {
+            toStep4.addEventListener('click', () => {
+                window.populateFpsSection();
+                window.showFlowStep(3);
+                window.startCountdown();
+            });
+        }
+        
+        // Back buttons
+        backStepButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = parseInt(btn.getAttribute('data-back-step'), 10);
+                if (Number.isInteger(target)) window.showFlowStep(target - 1);
+            });
         });
         
-        addRecipientModal?.addEventListener('click', (e) => {
-            if (e.target === addRecipientModal) {
+        // Amount input
+        if (sendAmountInput) {
+            sendAmountInput.addEventListener('input', window.updateAmountPreviews);
+        }
+        
+        // Add recipient button
+        if (modalAddRecipient) {
+            modalAddRecipient.addEventListener('click', () => {
+                const name = prompt('Recipient name:');
+                if (!name) return;
+                const country = prompt('Country code (PH/TH/ID/VN):');
+                if (!country) return;
+                const bank = prompt('Bank name:');
+                if (!bank) return;
+                const account = prompt('Account number:');
+                if (!account) return;
+                
+                window.addNewRecipient(name, country, bank, account);
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            });
+        }
+        
+        // Initial render
+        window.renderModalRecipients();
+        
+        // Attach event listeners for Add Recipient modal
+        const addRecipientBtn = document.getElementById('addRecipientBtn');
+        const addRecipientModal = document.getElementById('addRecipientModal');
+        const closeAddRecipient = document.getElementById('closeAddRecipient');
+        
+        if (addRecipientBtn && addRecipientModal) {
+            addRecipientBtn.addEventListener('click', () => {
+                addRecipientModal.classList.remove('hidden');
+                addRecipientModal.classList.add('flex');
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            });
+        }
+        
+        if (closeAddRecipient && addRecipientModal) {
+            closeAddRecipient.addEventListener('click', () => {
                 addRecipientModal.classList.add('hidden');
                 addRecipientModal.classList.remove('flex');
-            }
-        });
+            });
+        }
         
-        recipientForm?.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = document.getElementById('recipientName').value;
-            const country = document.getElementById('recipientCountry').value;
-            const bank = document.getElementById('recipientBank').value;
-            const account = document.getElementById('recipientAccount').value;
-            
-            alert(`Recipient added successfully!\n\nName: ${name}\nCountry: ${country}\nBank: ${bank}\nAccount: ${account}`);
-            recipientForm.reset();
-            addRecipientModal.classList.add('hidden');
-            addRecipientModal.classList.remove('flex');
-        });
+        if (addRecipientModal) {
+            addRecipientModal.addEventListener('click', (e) => {
+                if (e.target === addRecipientModal) {
+                    addRecipientModal.classList.add('hidden');
+                    addRecipientModal.classList.remove('flex');
+                }
+            });
+        }
+        
+        // Attach event listener for Add Recipient form submission
+        const recipientForm = document.getElementById('recipientForm');
+        if (recipientForm) {
+            recipientForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('recipientName').value.trim();
+                const country = document.getElementById('recipientCountry').value;
+                const bank = document.getElementById('recipientBank').value.trim();
+                const account = document.getElementById('recipientAccount').value.trim();
 
-        // Download Receipt Modal
+                if (!name || !country || !bank || !account) {
+                    alert('Please fill in all required fields.');
+                    return;
+                }
+
+                const accentOptions = ['blue', 'emerald', 'purple', 'amber'];
+                const accent = accentOptions[window.recipients.length % accentOptions.length];
+                const newRecipient = {
+                    id: `rcp-${Date.now()}`,
+                    name,
+                    country,
+                    bank,
+                    account,
+                    avatar: name.charAt(0).toUpperCase(),
+                    accent
+                };
+
+                window.recipients.push(newRecipient);
+                recipientForm.reset();
+                addRecipientModal.classList.add('hidden');
+                addRecipientModal.classList.remove('flex');
+                window.renderModalRecipients();
+                window.selectRecipient(newRecipient.id);
+                alert('Recipient added and ready for transfers!');
+            });
+        }
+        
+        // Attach event listeners for FPS flow buttons
+        const restartFlowNew = document.getElementById('restartFlowNew');
+        const completeFlowNew = document.getElementById('completeFlowNew');
+        
+        if (restartFlowNew) {
+            restartFlowNew.addEventListener('click', () => {
+                window.resetSendMoneyFlow();
+                window.showFlowStep(0);
+            });
+        }
+        
+        if (completeFlowNew) {
+            completeFlowNew.addEventListener('click', () => {
+                const recipient = window.getSelectedRecipient();
+                if (!recipient || !window.currentAmount) {
+                    alert('Select a recipient and amount before completing the flow.');
+                    return;
+                }
+                const php = (window.currentAmount * 6.5).toFixed(2);
+                const txId = `TX${Date.now()}`;
+                
+                // Update success state with transaction details
+                document.getElementById('successRecipient').textContent = recipient.name;
+                document.getElementById('successAmountSent').textContent = `HKD ${window.currentAmount.toFixed(2)}`;
+                document.getElementById('successAmountReceived').textContent = `PHP ${php}`;
+                document.getElementById('successTransactionId').textContent = txId;
+                
+                // Hide all flow steps and show success state
+                document.querySelectorAll('.flow-step').forEach(step => {
+                    step.classList.add('hidden');
+                });
+                document.getElementById('flowSuccess').classList.remove('hidden');
+                
+                // Hide the flow progress pills
+                document.getElementById('sendFlowProgress').classList.add('hidden');
+                
+                // Recreate icons for the new checkmark
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            });
+        }
+        
+        // Attach event listeners for success state buttons
+        const newTransferBtn = document.getElementById('newTransferBtn');
+        const closeSuccessBtn = document.getElementById('closeSuccessBtn');
+        
+        if (newTransferBtn) {
+            newTransferBtn.addEventListener('click', () => {
+                // Reset and show flow step 1
+                document.getElementById('flowSuccess').classList.add('hidden');
+                document.getElementById('sendFlowProgress').classList.remove('hidden');
+                window.resetSendMoneyFlow();
+                window.showFlowStep(0);
+            });
+        }
+        
+        if (closeSuccessBtn) {
+            closeSuccessBtn.addEventListener('click', () => {
+                const sendMoneyModal = document.getElementById('sendMoneyModal');
+                if (sendMoneyModal) {
+                    document.getElementById('flowSuccess').classList.add('hidden');
+                    document.getElementById('sendFlowProgress').classList.remove('hidden');
+                    window.resetSendMoneyFlow();
+                    sendMoneyModal.classList.add('hidden');
+                    sendMoneyModal.classList.remove('flex');
+                }
+            });
+        }
+        
+        // Attach event listeners for Download Receipt modal
         const downloadReceiptBtn = document.getElementById('downloadReceiptBtn');
         const downloadReceiptModal = document.getElementById('downloadReceiptModal');
         const closeDownloadReceipt = document.getElementById('closeDownloadReceipt');
         
-        downloadReceiptBtn?.addEventListener('click', () => {
-            downloadReceiptModal?.classList.remove('hidden');
-            downloadReceiptModal?.classList.add('flex');
-            lucide.createIcons();
-        });
+        if (downloadReceiptBtn && downloadReceiptModal) {
+            downloadReceiptBtn.addEventListener('click', () => {
+                downloadReceiptModal.classList.remove('hidden');
+                downloadReceiptModal.classList.add('flex');
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            });
+        }
         
-        closeDownloadReceipt?.addEventListener('click', () => {
-            downloadReceiptModal?.classList.add('hidden');
-            downloadReceiptModal?.classList.remove('flex');
-        });
-        
-        downloadReceiptModal?.addEventListener('click', (e) => {
-            if (e.target === downloadReceiptModal) {
+        if (closeDownloadReceipt && downloadReceiptModal) {
+            closeDownloadReceipt.addEventListener('click', () => {
                 downloadReceiptModal.classList.add('hidden');
                 downloadReceiptModal.classList.remove('flex');
-            }
-        });
-
-        // Open Send Money Modal function
-        window.openSendMoneyModal = function() {
-            resetSendMoneyFlow();
-            sendMoneyModal?.classList.remove('hidden');
-            sendMoneyModal?.classList.add('flex');
-            lucide.createIcons();
-        };
-
-        // Download Receipt Function
-        window.downloadReceipt = function(txId) {
-            // Create a simple PDF-like content
-            const receiptContent = `
-                FPS-Stable Transaction Receipt
-                ==============================
+            });
+        }
+        
+        if (downloadReceiptModal) {
+            downloadReceiptModal.addEventListener('click', (e) => {
+                if (e.target === downloadReceiptModal) {
+                    downloadReceiptModal.classList.add('hidden');
+                    downloadReceiptModal.classList.remove('flex');
+                }
+            });
+        }
+        
+        // Make downloadReceipt globally accessible as fallback
+        if (typeof window.downloadReceipt === 'undefined') {
+            window.downloadReceipt = function(txId) {
+                const receiptContent = `
+                    FPS-Stable Transaction Receipt
+                    ==============================
+                    
+                    Transaction ID: ${txId}
+                    Date: ${new Date().toLocaleDateString()}
+                    Status: Completed
+                    
+                    This is a demo receipt for transaction ${txId}.
+                    In a production environment, this would generate
+                    a proper PDF file with all transaction details.
+                `;
                 
-                Transaction ID: ${txId}
-                Date: ${new Date().toLocaleDateString()}
-                Status: Completed
+                const blob = new Blob([receiptContent], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${txId}_receipt.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
                 
-                This is a demo receipt for transaction ${txId}.
-                In a production environment, this would generate
-                a proper PDF file with all transaction details.
-            `;
-            
-            // Create a blob and download
-            const blob = new Blob([receiptContent], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${txId}_receipt.txt`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            alert(`Receipt for ${txId} downloaded successfully!`);
-        };
-        function mapAuthError(e){ const msg = (e?.message||'').toLowerCase(); if(msg.includes('network')) return '網絡錯誤，請稍後重試'; if(msg.includes('access_denied')||msg.includes('consent')) return '已取消授權或拒絕訪問'; if(msg.includes('redirect_uri')) return '重定向地址不正確，請檢查配置'; if(msg.includes('invalid_client')) return '客戶端配置錯誤，請檢查 Client ID/Secret'; return '登入失敗，請重試' }
-        function testExtract(){ const cases=[{user_metadata:{name:'Jane Doe'}},{user_metadata:{full_name:'Juan Dela Cruz'}},{email:'maria@example.com'}]; const results=cases.map(c=>extractName(c)); console.assert(results[0]==='Jane Doe','name fail'); console.assert(results[1]==='Juan Dela Cruz','full_name fail'); console.assert(results[2]==='maria','email fail') }
-        function testErrors(){ const e1={message:'network error'}; const e2={message:'redirect_uri mismatch'}; const e3={message:'access_denied'}; console.assert(mapAuthError(e1)==='網絡錯誤，請稍後重試','net'); console.assert(mapAuthError(e2)==='重定向地址不正確，請檢查配置','redir'); console.assert(mapAuthError(e3)==='已取消授權或拒絕訪問','consent') }
-        async function testSession(){ const s = await getSessionSafe(); console.assert(!!s,'session missing') }
-        async function runAuthTests(){ await testSession(); testExtract(); testErrors(); console.log('Auth tests passed') }
+                alert(`Receipt for ${txId} downloaded successfully!`);
+            };
+        }
     </script>
 </body>
 </html>

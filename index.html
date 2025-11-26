@@ -107,6 +107,10 @@
                 <div class="grid gap-8 lg:grid-cols-5 lg:gap-12 pt-20 pb-20 sm:pt-24 sm:pb-24 lg:pt-32 lg:pb-32 items-center">
                     <!-- Hero Content -->
                     <div class="lg:col-span-3 fade-slide" style="animation-delay:.1s">
+                        <p class="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-xs text-emerald-200 font-geist">
+                            <i data-lucide="zap" class="h-3.5 w-3.5"></i>
+                            HK ➜ PH FPS + Stablecoin Rail
+                        </p>
                         <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl tracking-tight text-white mb-8 font-bricolage font-light leading-tight">
                             Send money HK ➜ PH<br class="hidden sm:block">
                             in minutes, not days<br class="hidden sm:block">
@@ -114,44 +118,38 @@
                         </h1>
 
                         <p class="text-lg sm:text-xl text-gray-300 mb-10 max-w-2xl font-geist">
-                            Fast, low-cost cross-border remittance leveraging regulated stablecoins. See exactly what your family receives with 1-2% fees.
+                            Lightning-fast FPS collection, compliant HKD stablecoins, and instant PHP payouts. Track every step with full transparency.
                         </p>
 
-                        
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-4">
+                                <p class="text-xs uppercase tracking-[0.3em] text-emerald-200 font-geist">Settlement</p>
+                                <p class="text-2xl text-white font-bricolage font-light mt-2">12 min avg</p>
+                                <p class="text-xs text-gray-300 mt-1">P95 under 30 minutes</p>
+                            </div>
+                            <div class="rounded-2xl border border-blue-400/20 bg-blue-500/10 p-4">
+                                <p class="text-xs uppercase tracking-[0.3em] text-blue-200 font-geist">Fees</p>
+                                <p class="text-2xl text-white font-bricolage font-light mt-2">&lt; 1.0%</p>
+                                <p class="text-xs text-gray-300 mt-1">Guaranteed upfront</p>
+                            </div>
+                            <div class="rounded-2xl border border-purple-400/20 bg-purple-500/10 p-4">
+                                <p class="text-xs uppercase tracking-[0.3em] text-purple-200 font-geist">Compliance</p>
+                                <p class="text-2xl text-white font-bricolage font-light mt-2">HKMA ready</p>
+                                <p class="text-xs text-gray-300 mt-1">KYC / AML built-in</p>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Login/Registration Card -->
+                    <!-- Login Card & CTA -->
                     <div class="lg:col-span-2 fade-slide" style="animation-delay:.25s">
                         <div class="space-y-6">
-                            <div class="bg-gradient-to-br from-blue-900/30 to-slate-900/70 border border-blue-500/30 rounded-2xl p-6 backdrop-blur-xl shadow-2xl">
-                                <div class="mb-6">
-                                    <p class="text-xs text-blue-200 uppercase tracking-[0.4em] font-geist">FR-1 Onboarding</p>
-                                    <h3 class="text-2xl text-white font-semibold font-geist mt-1">Create a new account</h3>
-                                    <p class="text-sm text-gray-300 font-geist mt-2">Register with your email to start the HK ➜ PH remittance flow.</p>
-                                </div>
-                                <form class="space-y-4" id="emailRegistrationForm">
+                            <div id="loginCard" class="bg-gradient-to-br from-slate-900/80 to-blue-900/40 border border-white/10 rounded-2xl p-6 backdrop-blur-xl shadow-2xl">
+                                <div class="flex items-center justify-between mb-6">
                                     <div>
-                                        <label for="registerEmail" class="text-xs uppercase text-gray-300 font-semibold font-geist tracking-wide">Email</label>
-                                        <input id="registerEmail" type="email" placeholder="maria@example.com" class="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40 transition">
+                                        <p class="text-xs text-blue-200 uppercase tracking-[0.4em] font-geist">Session Resume</p>
+                                        <h3 class="text-2xl text-white font-semibold font-geist mt-1">Log in to continue</h3>
                                     </div>
-                                    <div>
-                                        <label for="registerPassword" class="text-xs uppercase text-gray-300 font-semibold font-geist tracking-wide">Password</label>
-                                        <input id="registerPassword" type="password" placeholder="••••••••" class="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40 transition">
-                                    </div>
-                                    <button type="button" id="emailRegistrationButton" class="w-full inline-flex justify-center items-center gap-2 bg-gradient-to-r from-blue-400 to-emerald-400 text-white font-medium font-geist rounded-xl py-3 shadow-lg shadow-blue-900/40 hover:-translate-y-0.5 transition">
-                                        <i data-lucide="user-plus" class="h-4 w-4"></i>
-                                        Register with Email
-                                    </button>
-                                    <p id="registrationMessage" class="hidden text-xs text-rose-200 bg-rose-500/10 border border-rose-400/20 rounded-xl px-3 py-2 font-geist">Something went wrong. Please try again.</p>
-                                </form>
-                                <p class="text-xs text-gray-400 font-geist mt-4">
-                                    * MVP Scope: After creating an account you will be guided to HKID or passport verification to satisfy KYC/AML requirements.
-                                </p>
-                            </div>
-                            <div id="loginCard" class="bg-gradient-to-br from-blue-900/30 to-slate-900/70 border border-blue-500/30 rounded-2xl p-6 backdrop-blur-xl shadow-2xl">
-                                <div class="mb-6">
-                                    <h3 class="text-2xl text-white font-semibold font-geist">Already registered?</h3>
-                                    <p class="text-sm text-gray-300 font-geist mt-2">Log in with your verified email and continue where you left off.</p>
+                                    <span class="text-xs text-gray-400 font-geist">MVP • v0.4</span>
                                 </div>
                                 <form class="space-y-4" id="emailLoginForm">
                                     <div>
@@ -168,14 +166,45 @@
                                     </button>
                                     <p id="loginError" class="hidden text-xs text-rose-200 bg-rose-500/10 border border-rose-400/20 rounded-xl px-3 py-2 font-geist">Login failed. Check your email or password.</p>
                                 </form>
-                                <div class="mt-4">
+                                <div class="mt-4 space-y-3">
                                     <button id="googleLoginButton" class="w-full inline-flex justify-center items-center gap-3 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-gray-100 hover:bg-white/10 hover:border-white/30 transition">
                                         <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google icon" class="h-4 w-4">
                                         Continue with Google
                                     </button>
-                                    <p class="text-xs text-gray-400 font-geist mt-3">
-                                        Use Google SSO if you prefer a passwordless experience.
+                                    <button type="button" data-open-registration class="w-full inline-flex justify-center items-center gap-2 rounded-xl border border-dashed border-blue-400/40 bg-blue-500/5 px-4 py-3 text-sm text-blue-100 hover:border-blue-400/60 hover:bg-blue-500/10 transition">
+                                        <i data-lucide="user-plus" class="h-4 w-4"></i>
+                                        Create a new account
+                                    </button>
+                                    <p class="text-xs text-gray-400 font-geist text-center">
+                                        No multi-step forms on load — click “Create a new account” to launch a focused onboarding workspace.
                                     </p>
+                                </div>
+                            </div>
+
+                            <div class="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl shadow-xl">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <div class="h-10 w-10 rounded-xl bg-emerald-500/15 flex items-center justify-center text-emerald-200">
+                                        <i data-lucide="shield" class="h-4 w-4"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs uppercase tracking-[0.4em] text-emerald-200 font-geist">Controls</p>
+                                        <h4 class="text-white font-semibold font-geist">Trust & Safeguards</h4>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm font-geist">
+                                    <div class="rounded-xl border border-white/15 bg-white/5 p-3">
+                                        <p class="text-gray-400 text-xs">HKMA Licensed
+                                        </p>
+                                        <p class="text-white font-semibold">Sandbox Ready</p>
+                                    </div>
+                                    <div class="rounded-xl border border-white/15 bg-white/5 p-3">
+                                        <p class="text-gray-400 text-xs">Bank-level</p>
+                                        <p class="text-white font-semibold">Encryption</p>
+                                    </div>
+                                    <div class="rounded-xl border border-white/15 bg-white/5 p-3">
+                                        <p class="text-gray-400 text-xs">Support</p>
+                                        <p class="text-white font-semibold">24/7 bilingual</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -183,6 +212,86 @@
                 </div>
             </div>
         </section>
+
+        <!-- Registration Modal -->
+        <div id="registrationModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm px-4 py-10">
+            <div data-registration-panel class="relative w-full max-w-4xl mx-auto rounded-3xl border border-white/10 bg-slate-950/95 p-8 shadow-2xl focus:outline-none" tabindex="-1" aria-modal="true" role="dialog">
+                <button type="button" data-close-registration class="absolute top-4 right-4 text-gray-400 hover:text-white" aria-label="Close registration">
+                    <i data-lucide="x" class="h-6 w-6"></i>
+                </button>
+                <div class="grid gap-8 lg:grid-cols-2">
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-xs uppercase tracking-[0.4em] text-blue-200 font-geist">Swift onboarding</p>
+                            <h3 class="mt-2 text-3xl text-white font-bricolage font-semibold">Create a remittance workspace</h3>
+                            <p class="text-sm text-gray-300 font-geist mt-3">Inspired by the old dual-panel UI: toggle between sign-up and login—but only when you need it. Less clutter, same flow.</p>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-4">
+                            <div class="flex items-center gap-3">
+                                <span class="h-10 w-10 rounded-xl bg-blue-500/15 text-blue-100 flex items-center justify-center font-semibold">1</span>
+                                <div>
+                                    <p class="text-sm text-white font-semibold">Account basics</p>
+                                    <p class="text-xs text-gray-400">Email + password using Supabase auth</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="h-10 w-10 rounded-xl bg-emerald-500/15 text-emerald-100 flex items-center justify-center font-semibold">2</span>
+                                <div>
+                                    <p class="text-sm text-white font-semibold">HKMA ready</p>
+                                    <p class="text-xs text-gray-400">Redirect to dashboard for HKID/passport verification</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="h-10 w-10 rounded-xl bg-purple-500/15 text-purple-100 flex items-center justify-center font-semibold">3</span>
+                                <div>
+                                    <p class="text-sm text-white font-semibold">Simulate transfers</p>
+                                    <p class="text-xs text-gray-400">Follow FPS → Stablecoin → PHP in minutes</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-gray-300 font-geist">
+                            <p class="font-semibold text-white mb-1">Why a modal?</p>
+                            <p>On mobile, dual cards felt cramped. This keeps the login hero clean while honoring the old UI’s “Sign Up” reveal.</p>
+                        </div>
+                    </div>
+
+                    <div class="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-xs uppercase tracking-[0.4em] text-blue-200 font-geist">Registration</p>
+                                <h4 class="text-2xl text-white font-geist font-semibold mt-1">Create a new account</h4>
+                            </div>
+                            <span class="inline-flex items-center gap-1 rounded-full border border-white/15 px-3 py-1 text-xs text-gray-100 font-geist">
+                                <i data-lucide="lock" class="h-3.5 w-3.5"></i>
+                                Secure
+                            </span>
+                        </div>
+                        <form id="emailRegistrationForm" class="space-y-4">
+                            <div>
+                                <label for="registerEmail" class="text-xs uppercase text-gray-300 font-semibold font-geist tracking-wide">Email</label>
+                                <input id="registerEmail" type="email" placeholder="maria@example.com" class="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40 transition">
+                            </div>
+                            <div>
+                                <label for="registerUsername" class="text-xs uppercase text-gray-300 font-semibold font-geist tracking-wide">Full Name</label>
+                                <input id="registerUsername" type="text" placeholder="Maria Santos" class="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40 transition">
+                            </div>
+                            <div>
+                                <label for="registerPassword" class="text-xs uppercase text-gray-300 font-semibold font-geist tracking-wide">Password</label>
+                                <input id="registerPassword" type="password" placeholder="••••••••" class="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/40 transition">
+                            </div>
+                            <button type="button" id="emailRegistrationButton" class="w-full inline-flex justify-center items-center gap-2 bg-gradient-to-r from-blue-400 to-emerald-400 text-white font-medium font-geist rounded-xl py-3 shadow-lg shadow-blue-900/40 hover:-translate-y-0.5 transition">
+                                <i data-lucide="user-plus" class="h-4 w-4"></i>
+                                Register with Email
+                            </button>
+                            <p id="registrationMessage" class="hidden text-xs text-rose-200 bg-rose-500/10 border border-rose-400/20 rounded-xl px-3 py-2 font-geist">Something went wrong. Please try again.</p>
+                        </form>
+                        <div class="text-xs text-gray-400 font-geist">
+                            * MVP scope: After creating an account you’ll land in dashboard.html for KYC and the improved send-money workflow. Backend hooks remain unchanged.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Transaction Snapshot Section -->
         <section class="sm:px-6 lg:px-8 sm:pb-20 sm:pt-16 lg:pt-20 pt-12 pr-4 pb-12 pl-4">
@@ -525,6 +634,7 @@
         });
 
         const registerEmailInput = document.getElementById('registerEmail');
+        const registerUsernameInput = document.getElementById('registerUsername');
         const registerPasswordInput = document.getElementById('registerPassword');
         const registrationButton = document.getElementById('emailRegistrationButton');
         const registrationMessage = document.getElementById('registrationMessage');
@@ -533,6 +643,41 @@
         const loginButton = document.getElementById('emailLoginButton');
         const loginError = document.getElementById('loginError');
         const googleButton = document.getElementById('googleLoginButton');
+        const registrationModal = document.getElementById('registrationModal');
+        const registrationPanel = registrationModal?.querySelector('[data-registration-panel]');
+        const openRegistrationButtons = document.querySelectorAll('[data-open-registration]');
+        const closeRegistrationButton = registrationModal?.querySelector('[data-close-registration]');
+
+        function openRegistrationModal() {
+            if (!registrationModal) return;
+            registrationModal.classList.remove('hidden');
+            registrationModal.classList.add('flex');
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+            requestAnimationFrame(() => {
+                (registerEmailInput || registrationPanel)?.focus();
+            });
+        }
+
+        function closeRegistrationModal() {
+            if (!registrationModal || registrationModal.classList.contains('hidden')) return;
+            registrationModal.classList.add('hidden');
+            registrationModal.classList.remove('flex');
+        }
+
+        openRegistrationButtons.forEach(btn => btn.addEventListener('click', openRegistrationModal));
+        closeRegistrationButton?.addEventListener('click', closeRegistrationModal);
+        registrationModal?.addEventListener('click', (event) => {
+            if (event.target === registrationModal) {
+                closeRegistrationModal();
+            }
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeRegistrationModal();
+            }
+        });
 
         const supabaseUrl = (
             document.querySelector('meta[name="supabase-url"]')?.content?.trim() ||
@@ -604,15 +749,18 @@
 
         registrationButton?.addEventListener('click', async () => {
             const email = registerEmailInput.value.trim();
+            const username = registerUsernameInput.value.trim();
             const password = registerPasswordInput.value.trim();
             if (!supabase) {
                 showBanner(registrationMessage, 'Missing Supabase config. Add the URL/key via <meta> tags or localStorage.', true);
                 return;
             }
-            if (!email || !password) {
-                showBanner(registrationMessage, 'Please enter both email and password.', true);
+            if (!email || !username || !password) {
+                showBanner(registrationMessage, 'Please enter email, full name, and password.', true);
                 return;
             }
+            // Store username in localStorage for dashboard display
+            localStorage.setItem('userFullName', username);
             const redirectTo = window.location.origin + '/dashboard.html';
             const { error } = await supabase.auth.signUp({
                 email,
