@@ -765,7 +765,7 @@
             const { error } = await supabase.auth.signUp({
                 email,
                 password,
-                options: { emailRedirectTo: redirectTo }
+                options: { emailRedirectTo: redirectTo, data: { display_name: username } }
             });
             if (error) {
                 showBanner(registrationMessage, 'Registration failed: ' + error.message, true);
@@ -790,10 +790,15 @@
                 showBanner(loginError, 'Please enter both email and password.');
                 return;
             }
-            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
             if (error) {
                 showBanner(loginError, 'Login failed: ' + error.message);
             } else {
+                const fullName = localStorage.getItem('userFullName') || '';
+                const provider = data?.user?.app_metadata?.provider || '';
+                if (fullName && provider === 'email') {
+                    try { await supabase.auth.updateUser({ data: { display_name: fullName } }); } catch {}
+                }
                 hideBanner(loginError);
                 window.location.href = 'dashboard.html';
             }
