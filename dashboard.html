@@ -843,14 +843,14 @@
                     <select id="recipientCountry" required class="w-full rounded-xl border border-white/10 bg-white px-4 py-3 text-gray-900 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20">
                         <option value="">Select Country</option>
                         <option value="PH">Philippines</option>
-                        <option value="TH">Thailand</option>
                         <option value="ID">Indonesia</option>
-                        <option value="VN">Vietnam</option>
                     </select>
                 </div>
                 <div>
                     <label class="block text-sm text-gray-300 font-geist mb-2">Bank Name</label>
-                    <input type="text" id="recipientBank" required class="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-500 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20">
+                    <select id="recipientBank" required class="w-full rounded-xl border border-white/10 bg-white px-4 py-3 text-gray-900 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20">
+                        <option value="">Select Bank</option>
+                    </select>
                 </div>
                 <div>
                     <label class="block text-sm text-gray-300 font-geist mb-2">Account Number</label>
@@ -1251,6 +1251,176 @@
             });
         }
         
+        // Bank options by country
+        const banksByCountry = {
+            'PH': [
+                { code: '011', name: 'BDO Unibank, Inc. (Bank Code: 011)' },
+                { code: '018', name: 'Metropolitan Bank & Trust Company (Metrobank) (Bank Code: 018)' },
+                { code: '010', name: 'Bank of the Philippine Islands (BPI) (Bank Code: 010)' }
+            ],
+            'ID': [
+                { code: '008', name: 'PT Bank Mandiri (Persero) Tbk (Bank Code: 008)' },
+                { code: '002', name: 'PT Bank Rakyat Indonesia (Persero) Tbk (Bank Code: 002)' },
+                { code: '014', name: 'PT Bank Central Asia Tbk (Bank Code: 014)' }
+            ]
+        };
+        
+        // Handle country selection change
+        const recipientCountry = document.getElementById('recipientCountry');
+        const recipientBank = document.getElementById('recipientBank');
+        const recipientAccount = document.getElementById('recipientAccount');
+        
+        if (recipientCountry) {
+            recipientCountry.addEventListener('change', (e) => {
+                const selectedCountry = e.target.value;
+                
+                // Clear bank dropdown
+                if (recipientBank) {
+                    recipientBank.innerHTML = '<option value="">Select Bank</option>';
+                    
+                    // Populate banks based on selected country
+                    if (selectedCountry && banksByCountry[selectedCountry]) {
+                        banksByCountry[selectedCountry].forEach(bank => {
+                            const option = document.createElement('option');
+                            option.value = bank.code;
+                            option.textContent = bank.name;
+                            recipientBank.appendChild(option);
+                        });
+                    }
+                }
+                
+                // Clear account number when country changes
+                if (recipientAccount) {
+                    recipientAccount.value = '';
+                }
+            });
+        }
+        
+        // Account number validation (BDO, Metrobank, BPI, Bank Mandiri, BRI, BCA)
+        if (recipientAccount) {
+            recipientAccount.addEventListener('blur', (e) => {
+                const country = recipientCountry?.value;
+                const bank = recipientBank?.value;
+                const accountValue = e.target.value.trim();
+                
+                // BDO validation (Philippines + BDO)
+                if (country === 'PH' && bank === '011' && accountValue) {
+                    const accountLength = accountValue.length;
+                    
+                    // Check if account contains only digits
+                    if (!/^\d+$/.test(accountValue)) {
+                        alert('Invalid BDO Unibank account format. Please enter a 12-digit numeric account number.');
+                        e.target.value = '';
+                        return;
+                    }
+                    
+                    // Handle 10-digit legacy accounts
+                    if (accountLength === 10) {
+                        const confirmed = confirm('BDO legacy account detected. Please prepend two zeros at the beginning to make it 12 digits.');
+                        if (confirmed) {
+                            e.target.value = '00' + accountValue;
+                        } else {
+                            e.target.value = '';
+                        }
+                    } else if (accountLength !== 12) {
+                        // Invalid length
+                        alert('Invalid BDO Unibank account format. Please enter a 12-digit numeric account number.');
+                        e.target.value = '';
+                    }
+                }
+                
+                // Metrobank validation (Philippines + Metrobank)
+                if (country === 'PH' && bank === '018' && accountValue) {
+                    const accountLength = accountValue.length;
+                    
+                    // Check if account contains only digits
+                    if (!/^\d+$/.test(accountValue)) {
+                        alert('Invalid Metropolitan Bank & Trust Company account format. Please enter a 13-digit numeric account number.');
+                        e.target.value = '';
+                        return;
+                    }
+                    
+                    // Check for exactly 13 digits (excludes Virtual Accounts)
+                    if (accountLength !== 13) {
+                        alert('Invalid Metropolitan Bank & Trust Company account format. Please enter a 13-digit numeric account number.');
+                        e.target.value = '';
+                    }
+                }
+                
+                // BPI validation (Philippines + BPI)
+                if (country === 'PH' && bank === '010' && accountValue) {
+                    const accountLength = accountValue.length;
+                    
+                    // Check if account contains only digits
+                    if (!/^\d+$/.test(accountValue)) {
+                        alert('Invalid Bank of the Philippine Islands account format. Please enter a 10-digit numeric account number.');
+                        e.target.value = '';
+                        return;
+                    }
+                    
+                    // Check for exactly 10 digits (excludes Virtual Accounts)
+                    if (accountLength !== 10) {
+                        alert('Invalid Bank of the Philippine Islands account format. Please enter a 10-digit numeric account number.');
+                        e.target.value = '';
+                    }
+                }
+                
+                // Bank Mandiri validation (Indonesia + Bank Mandiri)
+                if (country === 'ID' && bank === '008' && accountValue) {
+                    const accountLength = accountValue.length;
+                    
+                    // Check if account contains only digits
+                    if (!/^\d+$/.test(accountValue)) {
+                        alert('Invalid PT Bank Mandiri (Persero) Tbk account format. Please enter a 13-digit numeric account number.');
+                        e.target.value = '';
+                        return;
+                    }
+                    
+                    // Check for exactly 13 digits
+                    if (accountLength !== 13) {
+                        alert('Invalid PT Bank Mandiri (Persero) Tbk account format. Please enter a 13-digit numeric account number.');
+                        e.target.value = '';
+                    }
+                }
+                
+                // BRI validation (Indonesia + BRI)
+                if (country === 'ID' && bank === '002' && accountValue) {
+                    const accountLength = accountValue.length;
+                    
+                    // Check if account contains only digits
+                    if (!/^\d+$/.test(accountValue)) {
+                        alert('Invalid PT Bank Rakyat Indonesia (Persero) Tbk account format. Please enter a 15-digit numeric account number.');
+                        e.target.value = '';
+                        return;
+                    }
+                    
+                    // Reject if not exactly 15 digits (excludes Virtual Accounts)
+                    if (accountLength !== 15) {
+                        alert('Invalid PT Bank Rakyat Indonesia (Persero) Tbk account format. Please enter a 15-digit numeric account number.');
+                        e.target.value = '';
+                    }
+                }
+                
+                // BCA validation (Indonesia + BCA)
+                if (country === 'ID' && bank === '014' && accountValue) {
+                    const accountLength = accountValue.length;
+                    
+                    // Check if account contains only digits
+                    if (!/^\d+$/.test(accountValue)) {
+                        alert('Invalid PT Bank Central Asia Tbk account format. Please enter a 10-digit numeric account number.');
+                        e.target.value = '';
+                        return;
+                    }
+                    
+                    // Reject if not exactly 10 digits (excludes Virtual Accounts)
+                    if (accountLength !== 10) {
+                        alert('Invalid PT Bank Central Asia Tbk account format. Please enter a 10-digit numeric account number.');
+                        e.target.value = '';
+                    }
+                }
+            });
+        }
+        
         // Attach event listener for Add Recipient form submission
         const recipientForm = document.getElementById('recipientForm');
         if (recipientForm) {
@@ -1258,10 +1428,12 @@
                 e.preventDefault();
                 const name = document.getElementById('recipientName').value.trim();
                 const country = document.getElementById('recipientCountry').value;
-                const bank = document.getElementById('recipientBank').value.trim();
+                const bankCode = document.getElementById('recipientBank').value.trim();
+                const bankSelect = document.getElementById('recipientBank');
+                const bankName = bankSelect?.options[bankSelect.selectedIndex]?.text || bankCode;
                 const account = document.getElementById('recipientAccount').value.trim();
 
-                if (!name || !country || !bank || !account) {
+                if (!name || !country || !bankCode || !account) {
                     alert('Please fill in all required fields.');
                     return;
                 }
@@ -1272,7 +1444,7 @@
                     id: `rcp-${Date.now()}`,
                     name,
                     country,
-                    bank,
+                    bank: bankName,
                     account,
                     avatar: name.charAt(0).toUpperCase(),
                     accent
