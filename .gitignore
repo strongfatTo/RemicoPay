@@ -1,0 +1,7 @@
+﻿node_modules/
+.next/
+.env
+.DS_Store
+
+vibeship-spawner-skills/
+ui-ux-pro-max-skill/
