@@ -1,5 +1,6 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
+import "dotenv/config";
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -13,8 +14,8 @@ const config: HardhatUserConfig = {
   },
   networks: {
     etherlinkTestnet: {
-      url: "https://node.ghostnet.etherlink.com",
-      chainId: 128123,
+      url: "https://node.shadownet.etherlink.com",
+      chainId: 127823,
       accounts: process.env.DEPLOYER_PRIVATE_KEY
         ? [process.env.DEPLOYER_PRIVATE_KEY]
         : [],
@@ -35,10 +36,10 @@ const config: HardhatUserConfig = {
     customChains: [
       {
         network: "etherlinkTestnet",
-        chainId: 128123,
+        chainId: 127823,
         urls: {
-          apiURL: "https://testnet.explorer.etherlink.com/api",
-          browserURL: "https://testnet.explorer.etherlink.com",
+          apiURL: "https://shadownet.explorer.etherlink.com/api",
+          browserURL: "https://shadownet.explorer.etherlink.com",
         },
       },
       {

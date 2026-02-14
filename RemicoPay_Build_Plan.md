@@ -124,3 +124,63 @@ remitcircle/
 7. （模擬）後端完成匯款 → PHPC 釋放到收款人
 
 這證明了鏈上流程可行。鏈下部分（FPS、Coins.ph 對接）在 Pitch 中解釋為「Phase 2 整合」。
+
+## 測試與部署指南
+
+### 本地單元測試
+```
+cd contracts
+npx hardhat test
+```
+預期：26/26 測試全部通過 ✅
+
+### 部署到 Etherlink Testnet
+1. 領取測試用 XTZ（Gas 費）：https://faucet.etherlink.com/
+2. 在 `contracts/` 目錄建立 `.env` 檔，加入部署者私鑰：
+   ```
+   DEPLOYER_PRIVATE_KEY=0x你的私鑰
+   ```
+3. 安裝 dotenv：`npm install dotenv --save-dev`
+4. 部署合約：
+   ```
+   cd contracts
+   npx hardhat run scripts/deploy.ts --network etherlinkTestnet
+   ```
+5. 部署完成後，將 3 個合約地址更新到 `frontend/lib/contracts.ts` 的 `ADDRESSES` 物件中
+6. 在區塊瀏覽器驗證：https://testnet.explorer.etherlink.com
+
+### 端到端測試流程
+部署後按以下順序測試：
+1. 打開 http://localhost:3000，點 Connect Wallet → MetaMask 連接成功
+2. 首頁點 Claim 10,000 Test HKDR → MetaMask 確認 → 餘額顯示 10,000 HKDR
+3. Exchange Calculator 輸入 1000 → 顯示 PHP 報價 + 0.7% 手續費
+4. 點 Send Now → /send 頁面三步驟表單
+5. 填入收款地址 + 金額 → Approve HKDR → MetaMask 確認授權
+6. Confirm & Send → MetaMask 確認 → Confetti 慶祝動效
+7. View Transaction Status → /status 輸入 Remit ID 查看鏈上數據
+8. /history 頁面顯示交易記錄卡片
+9. 點 Explorer 連結 → Etherlink 區塊瀏覽器確認交易
+
+### 前端部署到 Vercel
+1. 將項目推送到 GitHub
+2. 在 Vercel 導入項目，設置 Root Directory 為 `frontend`
+3. 部署完成後獲得公開 URL
+
+## Demo 影片拍攝指南
+
+### 建議時長：2-3 分鐘
+
+### 拍攝腳本
+1. **開場（15s）**：展示首頁 Hero 動畫 + 粒子背景，介紹 RemicoPay
+2. **連接錢包（15s）**：點 Connect Wallet → MetaMask 連接 Etherlink Testnet
+3. **領取測試幣（15s）**：點 Claim 10,000 Test HKDR → 餘額更新
+4. **匯率計算（15s）**：Calculator 輸入不同金額，展示 CountUp 數字滾動
+5. **發送匯款（30s）⭐核心**：Stepper UI 動畫 → Approve → Send → Confetti 慶祝
+6. **查看狀態（15s）**：/status 輸入 Remit ID → 進度條動畫 + Neon 脈衝
+7. **歷史記錄（10s）**：/history 展示交易卡片 staggered 動畫 + Explorer 連結
+8. **收尾（15s）**：回首頁，總結「全流程鏈上驗證，0.7% 低手續費，秒級結算」
+
+### 拍攝工具
+- OBS Studio 或 Windows 內建 Win+G 錄屏
+- 解析度 1920x1080，瀏覽器全屏
+- 提前準備好收款地址（可用另一個 MetaMask 帳戶）
