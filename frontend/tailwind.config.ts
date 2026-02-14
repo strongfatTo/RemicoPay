@@ -34,12 +34,21 @@ const config: Config = {
         "glass": "0 8px 32px rgba(0,0,0,0.3)",
       },
       animation: {
+        "aurora": "aurora 60s linear infinite",
+        "border-beam": "border-beam calc(var(--duration)*1s) infinite linear",
         "glow-pulse": "glow-pulse 2s ease-in-out infinite",
         "float": "float 6s ease-in-out infinite",
         "slide-up": "slide-up 0.5s ease-out",
         "fade-in": "fade-in 0.6s ease-out",
       },
       keyframes: {
+        "aurora": {
+          "from": { backgroundPosition: "50% 50%, 50% 50%" },
+          "to": { backgroundPosition: "350% 50%, 350% 50%" },
+        },
+        "border-beam": {
+          "100%": { "offset-distance": "100%" },
+        },
         "glow-pulse": {
           "0%, 100%": { boxShadow: "0 0 15px rgba(45,212,191,0.4)" },
           "50%": { boxShadow: "0 0 30px rgba(45,212,191,0.7), 0 0 60px rgba(45,212,191,0.3)" },
