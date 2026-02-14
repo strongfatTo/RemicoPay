@@ -116,8 +116,7 @@ contract RemicoPay is ReentrancyGuard, Ownable {
 
     // ─── State-Changing Functions ────────────────────────────────────
 
-    /// @notice Create a new remittance (locks HKDR from sender)
-    /// @dev Rate is locked at creation time (exchange rate fairness principle)
+    /// @notice Create a new remittance (instant settlement: locks HKDR + mints PHPC in one tx)
     /// @param recipient Address to receive PHPC
     /// @param hkdAmount Amount of HKDR to send (18 decimals)
     /// @return remitId The ID of the created remittance
@@ -150,14 +149,17 @@ contract RemicoPay is ReentrancyGuard, Ownable {
             fee: fee,
             lockedRate: _rate,
             createdAt: uint64(block.timestamp),
-            status: Status.Pending
+            status: Status.Completed
         });
 
         emit RemittanceCreated(remitId, msg.sender, recipient, hkdAmount, phpAmount, fee, _rate);
+        emit RemittanceCompleted(remitId, recipient, phpAmount);
 
         // ── INTERACTIONS ──
-        // Transfer HKDR from sender to this contract (escrow)
+        // Transfer HKDR from sender to this contract
         hkdr.safeTransferFrom(msg.sender, address(this), hkdAmount);
+        // Mint PHPC to recipient instantly
+        IMockPHPC(phpc).mint(recipient, phpAmount);
     }
 
     /// @notice Complete a remittance (mint PHPC to recipient)

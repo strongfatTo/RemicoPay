@@ -983,8 +983,8 @@
       ]
     },
     "C:\\Users\\shado\\Desktop\\RemicoPay_Local\\contracts\\contracts\\RemicoPay.sol": {
-      "lastModificationDate": 1771072146012,
-      "contentHash": "143d512421e8344c278f093668e872e1",
+      "lastModificationDate": 1771094668395,
+      "contentHash": "cdaac537e52dd58e3aec79e2a5ba57f1",
       "sourceName": "contracts/RemicoPay.sol",
       "solcConfig": {
         "version": "0.8.24",
