@@ -1,6 +1,6 @@
 # FPS-Stable: Cross-Border Remittance Service Prototype
 
-Website : [fps-stable.netlify.app](https://fps-stable.netlify.app/)
+Website : [fps-stable.netlify.app]
 
 ## Overview
 
