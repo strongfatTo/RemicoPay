@@ -5,30 +5,30 @@ import ExchangeCalculator from "@/components/home/ExchangeCalculator";
 import MintFaucet from "@/components/home/MintFaucet";
 import { AuroraBackground } from "@/components/ui/aurora-background";
 import { Features } from "@/components/features/Features";
-import { RatesTable } from "@/components/features/RatesTable";
+import RotatingEarth from "@/components/ui/wireframe-dotted-globe";
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
 
-const testimonials = [
+const teamMembers = [
   {
     quote:
-      "RemicoPay transformed how I send money home. The fees are incredibly low compared to banks.",
-    name: "Maria Santos",
-    designation: "Domestic Worker",
-    src: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "Major in FinTech and Digital Innovation, HKBU. FinTech Intern in FORMS HK. Built AI platform for 2,000+ employees.",
+    name: "Ahtasham Ahmed",
+    designation: "Founder & CEO",
+    src: "https://cdn.gamma.app/mio4b0bgfmpw1ee/3dad9ab1f59640b2943ce72d65f43c88/optimized/WhatsApp-Tu-Xiang2025-10-05-Yu16.52.24_57310e24.avif",
   },
   {
     quote:
-      "Instant settlement on Etherlink is a game changer. My family gets the funds immediately.",
-    name: "John Cruz",
-    designation: "Software Engineer",
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "Major in FinTech and Digital Innovation, HKBU. Marketing & Operation Intern in Kena Finance. Product growth strategy & stablecoin marketing.",
+    name: "Chen Boyu, Dave",
+    designation: "Founder & CTO",
+    src: "https://cdn.gamma.app/mio4b0bgfmpw1ee/722fee062f0944d8bb00a4c11715e230/optimized/WhatsApp-Tu-Xiang2025-10-05-Yu16.59.17_cd6c82f7.avif",
   },
   {
     quote:
-      "Transparent rates and no hidden fees. I know exactly how much PHP will arrive.",
-    name: "Sarah Lee",
-    designation: "Business Owner",
-    src: "https://images.unsplash.com/photo-1623582854588-d60de57fa33f?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "AI & Sport Management, HKBU. AI Feature Development & Model Optimization. Experience in building AI Application and Games.",
+    name: "Leung Man To, Thomas",
+    designation: "R&D Team",
+    src: "https://cdn.gamma.app/mio4b0bgfmpw1ee/c8307401ef6c4377952c042ad96c6afe/optimized/WhatsApp-Tu-Xiang2025-10-05-Yu16.57.39_e3630b97.avif",
   },
 ];
 
@@ -62,16 +62,16 @@ export default function HomePage() {
       </section>
 
       {/* Rates Section */}
-      <section className="py-20 px-4 bg-brand-navy/30 border-t border-white/5" id="rates">
-        <RatesTable />
+      <section className="py-20 px-4 bg-brand-navy/30 border-t border-white/5 flex justify-center items-center overflow-hidden" id="rates">
+        <RotatingEarth />
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-20 px-4 bg-brand-deep border-t border-white/5" id="testimonials">
+      {/* Team Section */}
+      <section className="py-20 px-4 bg-brand-deep border-t border-white/5" id="team">
         <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-10 text-white">
-          Trusted by the Community
+          Our Team
         </h2>
-        <AnimatedTestimonials testimonials={testimonials} />
+        <AnimatedTestimonials testimonials={teamMembers} />
       </section>
     </div>
   );

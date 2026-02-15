@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import { Twitter } from "lucide-react";
 
 export function Footer() {
   return (
@@ -12,17 +12,8 @@ export function Footer() {
               The fastest and most secure way to exchange money globally.
             </p>
             <div className="flex space-x-4">
-              <Link href="#" className="text-white/40 hover:text-white/60">
-                <Facebook className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="text-white/40 hover:text-white/60">
+              <Link href="https://x.com/RemicoPay" className="text-white/40 hover:text-white/60">
                 <Twitter className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="text-white/40 hover:text-white/60">
-                <Instagram className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="text-white/40 hover:text-white/60">
-                <Linkedin className="h-5 w-5" />
               </Link>
             </div>
           </div>

@@ -39,7 +39,7 @@ export const AnimatedTestimonials = ({
     >
       <div className="relative grid grid-cols-1 md:grid-cols-2 gap-20">
         <div>
-          <div className="relative h-80 w-full">
+          <div className="relative h-[25rem] w-full">
             <AnimatePresence>
               {testimonials.map((testimonial, index) => (
                 <motion.div
@@ -52,7 +52,7 @@ export const AnimatedTestimonials = ({
                   }}
                   animate={{
                     opacity: active === index ? 1 : 0.7,
-                    scale: active === index ? 1 : 0.95,
+                    scale: active === index ? 1.1 : 0.95,
                     z: active === index ? 0 : -100,
                     rotate: active === index ? 0 : getRotation(index),
                     zIndex: active === index ? 999 : testimonials.length + 2 - index,

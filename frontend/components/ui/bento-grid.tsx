@@ -8,14 +8,15 @@ export const BentoGrid = ({
   children?: React.ReactNode;
 }) => {
   return (
-    <div
+    <section
       className={cn(
-        "grid md:auto-rows-[18rem] grid-cols-1 md:grid-cols-3 gap-4 max-w-7xl mx-auto ",
+        "grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto md:auto-rows-[20rem]",
         className
       )}
+      aria-label="Key Features"
     >
       {children}
-    </div>
+    </section>
   );
 };
 
@@ -33,22 +34,32 @@ export const BentoGridItem = ({
   icon?: React.ReactNode;
 }) => {
   return (
-    <div
+    <article
       className={cn(
-        "row-span-1 rounded-xl group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none p-4 bg-brand-navy border border-white/10 justify-between flex flex-col space-y-4",
+        "row-span-1 rounded-2xl group/bento hover:shadow-2xl transition duration-300 shadow-input dark:shadow-none p-6 bg-brand-navy border border-white/10 flex flex-col justify-between hover:border-brand-mint/30 relative overflow-hidden",
         className
       )}
     >
-      {header}
-      <div className="group-hover/bento:translate-x-2 transition duration-200">
-        {icon}
-        <div className="font-sans font-bold text-white mb-2 mt-2">
+      {header && (
+        <div className="flex-1 w-full rounded-xl overflow-hidden relative z-10">
+          {header}
+        </div>
+      )}
+      
+      <div className="group-hover/bento:translate-x-1 transition duration-300 mt-4 z-10">
+        <div className="mb-3 w-fit p-2 rounded-lg bg-brand-deep/50 border border-white/5 group-hover/bento:border-brand-mint/20 transition-colors">
+            {icon}
+        </div>
+        <h3 className="font-sans font-bold text-white text-lg mb-2 tracking-tight">
           {title}
-        </div>
-        <div className="font-sans font-normal text-white/60 text-xs">
+        </h3>
+        <p className="font-sans font-normal text-white/70 text-sm leading-relaxed">
           {description}
-        </div>
+        </p>
       </div>
-    </div>
+      
+      {/* Subtle background glow effect on hover */}
+      <div className="absolute inset-0 bg-brand-mint/5 opacity-0 group-hover/bento:opacity-100 transition duration-500 pointer-events-none" />
+    </article>
   );
 };
