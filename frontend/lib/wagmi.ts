@@ -21,7 +21,7 @@ export const etherlinkTestnet = defineChain({
 // ----- Wagmi + RainbowKit config -----
 export const config = getDefaultConfig({
   appName: "RemicoPay",
-  projectId: "REMICOPAY_DEMO", // WalletConnect projectId — replace with real one for production
+  projectId: "3a8170812b534d0ff9d794f19a901d64", // Mock Project ID for development
   chains: [etherlinkTestnet],
   ssr: true,
 });

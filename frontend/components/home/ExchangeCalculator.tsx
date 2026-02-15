@@ -6,6 +6,7 @@ import CountUp from "react-countup";
 import { ArrowDown, Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { BorderBeam } from "@/components/ui/border-beam";
 import Link from "next/link";
 import { useExchangeRate, useFeeBps } from "@/lib/hooks";
 import { RATE_SCALE } from "@/lib/contracts";
@@ -44,8 +45,9 @@ export default function ExchangeCalculator() {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
-      className="glass-card p-8 w-full max-w-md mx-auto"
+      className="glass-card p-8 w-full max-w-md mx-auto relative overflow-hidden"
     >
+      <BorderBeam size={300} duration={12} delay={9} colorFrom="#2dd4bf" colorTo="#5eead4" />
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h3 className="font-heading text-lg font-semibold text-white">

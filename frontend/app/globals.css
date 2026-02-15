@@ -14,6 +14,9 @@
   --brand-mint-light: #5eead4;
   --brand-mint-glow: rgba(45, 212, 191, 0.5);
   --brand-blue-glow: rgba(59, 130, 246, 0.5);
+  --white: #ffffff;
+  --black: #000000;
+  --transparent: transparent;
 }
 
 /* ===== Base Styles ===== */
