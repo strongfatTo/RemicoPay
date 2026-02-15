@@ -11,21 +11,21 @@ import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
 const teamMembers = [
   {
     quote:
-      "Major in FinTech and Digital Innovation, HKBU. FinTech Intern in FORMS HK. Built AI platform for 2,000+ employees.",
+      "Major in FinTech and Digital Innovation, HKBU. Web3 infrastructure & digital asset tokenization intern at FORMS HK (Blockchain Valley@Cyberport). Built AI platform for 2,000+ employees. Compliance intern at Kena Finance — prepared AML, licensing, and PDPO documentation for a stablecoin payments startup.",
     name: "Ahtasham Ahmed",
     designation: "Founder & CEO",
     src: "https://cdn.gamma.app/mio4b0bgfmpw1ee/3dad9ab1f59640b2943ce72d65f43c88/optimized/WhatsApp-Tu-Xiang2025-10-05-Yu16.52.24_57310e24.avif",
   },
   {
     quote:
-      "Major in FinTech and Digital Innovation, HKBU. Marketing & Operation Intern in Kena Finance. Product growth strategy & stablecoin marketing.",
+      "Major in FinTech and Digital Innovation, HKBU. 1-year intern at Kena Finance — stablecoin-based cross-border payments startup. Led user acquisition and testing in Philippines and Indonesia markets, built frontend, and resolved production bugs from user feedback.",
     name: "Chen Boyu, Dave",
     designation: "Founder & CTO",
     src: "https://cdn.gamma.app/mio4b0bgfmpw1ee/722fee062f0944d8bb00a4c11715e230/optimized/WhatsApp-Tu-Xiang2025-10-05-Yu16.59.17_cd6c82f7.avif",
   },
   {
     quote:
-      "AI & Sport Management, HKBU. AI Feature Development & Model Optimization. Experience in building AI Application and Games.",
+      "AI & Blockchain Systems, HKBU. Smart contract development & on-chain feature optimization & AI feature optimization. Built WeBond — an AI-powered platform connecting local and non-local communities. Hands-on experience engaging with migrant worker communities.",
     name: "Leung Man To, Thomas",
     designation: "R&D Team",
     src: "https://cdn.gamma.app/mio4b0bgfmpw1ee/c8307401ef6c4377952c042ad96c6afe/optimized/WhatsApp-Tu-Xiang2025-10-05-Yu16.57.39_e3630b97.avif",
