@@ -2,6 +2,8 @@
 
 **Website:** [https://remico-pay.vercel.app/](https://remico-pay.vercel.app/)
 
+**Intro Video:** [https://www.youtube.com/watch?v=tAegT-x0gxA](https://www.youtube.com/watch?v=tAegT-x0gxA)
+
 > **A blockchain-powered cross-border remittance platform enabling instant, low-cost money transfers from Hong Kong to all over the world (Initial Target: HK to Philipines & HK to Indonesia).**
 
 ## 🚩 Problem
