@@ -2,154 +2,200 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ===== Google Fonts ===== */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+/* ===== Google Fonts — Midnight Luxe preset ===== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500&display=swap');
 
-/* ===== CSS Variables — "Neon Trust" Design System ===== */
+/* ===== CSS Variables — "Midnight Luxe" Design System ===== */
 :root {
-  --brand-deep: #0a1628;
-  --brand-navy: #0f2140;
-  --brand-blue: #1a3a5c;
-  --brand-mint: #2dd4bf;
-  --brand-mint-light: #5eead4;
-  --brand-mint-glow: rgba(45, 212, 191, 0.5);
-  --brand-blue-glow: rgba(59, 130, 246, 0.5);
+  --brand-obsidian:      #0D0D12;
+  --brand-slate:         #2A2A35;
+  --brand-navy:          #1A1A22;
+  --brand-champagne:     #C9A84C;
+  --brand-champagne-lt:  #E2C97E;
+  --brand-champagne-glow: rgba(201, 168, 76, 0.45);
+  --brand-ivory:         #FAF8F5;
+  /* Legacy aliases so existing pages don't break */
+  --brand-deep:          #0D0D12;
+  --brand-blue:          #2A2A35;
+  --brand-mint:          #C9A84C;
+  --brand-mint-light:    #E2C97E;
+  --brand-mint-glow:     rgba(201, 168, 76, 0.45);
   --white: #ffffff;
   --black: #000000;
-  --transparent: transparent;
+}
+
+/* ===== Global Noise Overlay ===== */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
 }
 
 /* ===== Base Styles ===== */
 @layer base {
   * {
-    @apply border-brand-blue/30;
+    @apply border-brand-slate/30;
+  }
+
+  html {
+    scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-brand-deep text-white antialiased;
+    background-color: var(--brand-obsidian);
+    color: var(--brand-ivory);
     font-family: 'Inter', system-ui, sans-serif;
+    @apply antialiased;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
+    letter-spacing: -0.03em;
   }
 
   /* Custom Scrollbar */
-  ::-webkit-scrollbar {
-    width: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    background: var(--brand-deep);
-  }
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--brand-obsidian); }
   ::-webkit-scrollbar-thumb {
-    background: var(--brand-blue);
+    background: var(--brand-slate);
     border-radius: 3px;
   }
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--brand-mint);
-  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--brand-champagne); }
 }
 
 /* ===== Component Utilities ===== */
 @layer components {
-  /* Glassmorphism Card */
+
+  /* --- Glassmorphism Card (dark obsidian surface) --- */
   .glass-card {
-    @apply relative overflow-hidden rounded-2xl border border-white/10 backdrop-blur-xl;
+    @apply relative overflow-hidden rounded-4xl border border-white/[0.07] backdrop-blur-xl;
     background: linear-gradient(
       135deg,
-      rgba(15, 33, 64, 0.8) 0%,
-      rgba(10, 22, 40, 0.6) 100%
+      rgba(42, 42, 53, 0.55) 0%,
+      rgba(13, 13, 18, 0.45) 100%
     );
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.55);
   }
 
   .glass-card-hover {
-    @apply glass-card transition-all duration-300;
+    @apply glass-card transition-all duration-300 cursor-pointer;
   }
   .glass-card-hover:hover {
-    border-color: rgba(45, 212, 191, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(45, 212, 191, 0.15);
+    border-color: rgba(201, 168, 76, 0.28);
+    box-shadow:
+      0 8px 40px rgba(0, 0, 0, 0.55),
+      0 0 24px rgba(201, 168, 76, 0.14);
     transform: translateY(-2px);
   }
 
-  /* Neon Glow Button */
+  /* --- Magnetic CTA Button --- */
   .btn-neon {
-    @apply relative inline-flex items-center justify-center rounded-xl px-6 py-3 font-semibold text-white transition-all duration-300;
-    background: linear-gradient(135deg, #2dd4bf 0%, #14b8a6 50%, #0d9488 100%);
-    box-shadow: 0 0 15px rgba(45, 212, 191, 0.4);
+    @apply relative inline-flex items-center justify-center overflow-hidden rounded-4xl px-7 py-3 font-semibold text-[#0D0D12] transition-all;
+    background: linear-gradient(135deg, #C9A84C 0%, #A8853A 50%, #8B6B28 100%);
+    box-shadow: 0 0 18px rgba(201, 168, 76, 0.4);
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
   .btn-neon:hover {
-    box-shadow: 0 0 25px rgba(45, 212, 191, 0.6), 0 0 50px rgba(45, 212, 191, 0.3);
-    transform: translateY(-1px);
+    transform: scale(1.03);
+    box-shadow: 0 0 28px rgba(201, 168, 76, 0.6), 0 0 60px rgba(201, 168, 76, 0.25);
   }
-  .btn-neon:active {
-    transform: translateY(0);
-  }
+  .btn-neon:active { transform: scale(0.99); }
 
-  /* Neon Text Glow */
+  /* Sliding background span inside btn-neon */
+  .btn-neon .btn-slide {
+    @apply absolute inset-0 -translate-x-full transition-transform duration-500;
+    background: linear-gradient(135deg, #E2C97E 0%, #C9A84C 100%);
+    transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .btn-neon:hover .btn-slide { transform: translateX(0); }
+
+  /* --- Champagne glow text --- */
   .text-neon-mint {
-    color: var(--brand-mint);
-    text-shadow: 0 0 10px rgba(45, 212, 191, 0.5), 0 0 30px rgba(45, 212, 191, 0.2);
+    color: var(--brand-champagne);
+    text-shadow: 0 0 12px rgba(201, 168, 76, 0.5), 0 0 36px rgba(201, 168, 76, 0.2);
   }
 
-  /* Gradient text */
+  /* --- Gradient clip text --- */
   .text-gradient {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(90deg, #ffffff 0%, #2dd4bf 100%);
+    background-image: linear-gradient(90deg, #FAF8F5 0%, #C9A84C 100%);
   }
 
-  /* Neon border glow on focus */
+  /* --- Input field --- */
   .input-neon {
-    @apply rounded-xl border border-white/10 bg-brand-navy/50 px-4 py-3 text-white placeholder-white/40 outline-none transition-all duration-300;
+    @apply rounded-3xl border border-white/10 bg-brand-navy/50 px-4 py-3 text-brand-ivory placeholder-white/30 outline-none transition-all duration-300;
+    font-family: 'JetBrains Mono', monospace;
   }
   .input-neon:focus {
-    border-color: var(--brand-mint);
-    box-shadow: 0 0 10px rgba(45, 212, 191, 0.3), 0 0 30px rgba(45, 212, 191, 0.1);
+    border-color: var(--brand-champagne);
+    box-shadow: 0 0 12px rgba(201, 168, 76, 0.3), 0 0 36px rgba(201, 168, 76, 0.1);
   }
 
-  /* Progress bar gradient fill */
+  /* --- Progress gradient --- */
   .progress-gradient {
-    background: linear-gradient(90deg, #1e3a5f 0%, #2dd4bf 100%);
+    background: linear-gradient(90deg, #2A2A35 0%, #C9A84C 100%);
   }
 
-  /* Neon ripple animation */
-  .neon-ripple {
-    @apply relative;
-  }
+  /* --- Neon ripple --- */
+  .neon-ripple { @apply relative; }
   .neon-ripple::after {
     content: '';
     @apply absolute inset-0 rounded-full;
     animation: ripple 2s ease-out infinite;
   }
 
-  /* Geometric network pattern overlay */
-  .network-pattern {
-    background-image:
-      radial-gradient(circle at 20% 30%, rgba(45, 212, 191, 0.08) 1px, transparent 1px),
-      radial-gradient(circle at 80% 70%, rgba(45, 212, 191, 0.06) 1px, transparent 1px),
-      radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
-    background-size: 60px 60px, 80px 80px, 100px 100px;
+  /* --- Interactive link lift --- */
+  .link-lift {
+    @apply transition-transform duration-200;
+  }
+  .link-lift:hover { transform: translateY(-1px); }
+
+  /* --- Noise SVG texture card overlay --- */
+  .noise-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+  }
+
+  /* --- Scanning line for Protocol cards --- */
+  .scan-line {
+    @apply absolute top-0 left-0 h-full w-1 rounded-full;
+    background: linear-gradient(to bottom, transparent, #C9A84C, transparent);
+    animation: scanner 2.5s linear infinite;
+  }
+
+  /* --- Pulsing status dot --- */
+  .status-dot {
+    @apply inline-block h-2 w-2 rounded-full bg-emerald-400;
+    box-shadow: 0 0 6px rgba(52, 211, 153, 0.8);
+    animation: glow-pulse-green 2s ease-in-out infinite;
   }
 }
 
 /* ===== Keyframes ===== */
 @keyframes ripple {
-  0% {
-    box-shadow: 0 0 0 0 rgba(45, 212, 191, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 15px rgba(45, 212, 191, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(45, 212, 191, 0);
-  }
+  0%   { box-shadow: 0 0 0 0 rgba(201, 168, 76, 0.4); }
+  70%  { box-shadow: 0 0 0 15px rgba(201, 168, 76, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(201, 168, 76, 0); }
 }
 
 @keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes glow-pulse-green {
+  0%, 100% { box-shadow: 0 0 4px rgba(52, 211, 153, 0.5); }
+  50%       { box-shadow: 0 0 10px rgba(52, 211, 153, 0.9), 0 0 20px rgba(52, 211, 153, 0.4); }
 }

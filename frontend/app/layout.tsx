@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
-import NetworkBackground from "@/components/layout/NetworkBackground";
 import { Footer } from "@/components/layout/Footer";
 import Providers from "./providers";
 
 export const metadata: Metadata = {
-  title: "RemicoPay — Fast. Secure. Stablecoin Remittance.",
+  title: "RemicoPay — Precision meets",
   description:
-    "Send HKD to PHP remittances instantly using stablecoins on Etherlink. Low fees, transparent exchange rates, fully on-chain.",
+    "Send HKD to PHP remittances instantly using stablecoins on Etherlink. Best rates, instant confirmation, fully on-chain.",
 };
 
 export default function RootLayout({
@@ -18,18 +17,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className="min-h-screen bg-brand-deep text-white">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700;1,900&family=JetBrains+Mono:wght@400;500&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="min-h-screen text-brand-ivory" style={{ backgroundColor: "#0D0D12" }}>
         <Providers>
-          {/* Animated particle network background - kept for consistency but can be removed if needed */}
-          {/* <NetworkBackground /> */}
-
-          {/* Navigation */}
           <Navbar />
-
-          {/* Main content */}
           <main className="relative z-10">{children}</main>
-
-          {/* Footer */}
           <Footer />
         </Providers>
       </body>
