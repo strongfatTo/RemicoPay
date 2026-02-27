@@ -60,7 +60,9 @@ export interface RemicoPayInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "completeRemittance"
+      | "completeRemittanceWithFPS"
       | "createRemittance"
+      | "createRemittanceWithFPS"
       | "exchangeRate"
       | "feeBps"
       | "getQuote"
@@ -68,20 +70,26 @@ export interface RemicoPayInterface extends Interface {
       | "hkdr"
       | "nextRemitId"
       | "owner"
+      | "paymentVerifier"
       | "phpc"
       | "refundRemittance"
+      | "remitFPSRef"
       | "remittances"
       | "renounceOwnership"
       | "setExchangeRate"
       | "setFeeBps"
+      | "setPaymentVerifier"
       | "transferOwnership"
   ): FunctionFragment;
 
   getEvent(
     nameOrSignatureOrTopic:
       | "ExchangeRateUpdated"
+      | "FPSRemittanceCompleted"
+      | "FPSRemittanceCreated"
       | "FeeBpsUpdated"
       | "OwnershipTransferred"
+      | "PaymentVerifierUpdated"
       | "RemittanceCompleted"
       | "RemittanceCreated"
       | "RemittanceRefunded"
@@ -92,8 +100,16 @@ export interface RemicoPayInterface extends Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "completeRemittanceWithFPS",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "createRemittance",
     values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "createRemittanceWithFPS",
+    values: [AddressLike, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "exchangeRate",
@@ -114,9 +130,17 @@ export interface RemicoPayInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "paymentVerifier",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "phpc", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "refundRemittance",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "remitFPSRef",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
@@ -136,6 +160,10 @@ export interface RemicoPayInterface extends Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "setPaymentVerifier",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [AddressLike]
   ): string;
@@ -145,7 +173,15 @@ export interface RemicoPayInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "completeRemittanceWithFPS",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "createRemittance",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "createRemittanceWithFPS",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -164,9 +200,17 @@ export interface RemicoPayInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "paymentVerifier",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "phpc", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "refundRemittance",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "remitFPSRef",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -183,6 +227,10 @@ export interface RemicoPayInterface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "setFeeBps", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "setPaymentVerifier",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
@@ -194,6 +242,53 @@ export namespace ExchangeRateUpdatedEvent {
   export interface OutputObject {
     oldRate: bigint;
     newRate: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace FPSRemittanceCompletedEvent {
+  export type InputTuple = [
+    remitId: BigNumberish,
+    recipient: AddressLike,
+    phpAmount: BigNumberish
+  ];
+  export type OutputTuple = [
+    remitId: bigint,
+    recipient: string,
+    phpAmount: bigint
+  ];
+  export interface OutputObject {
+    remitId: bigint;
+    recipient: string;
+    phpAmount: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace FPSRemittanceCreatedEvent {
+  export type InputTuple = [
+    remitId: BigNumberish,
+    sender: AddressLike,
+    fpsPaymentRef: BytesLike,
+    hkdAmount: BigNumberish
+  ];
+  export type OutputTuple = [
+    remitId: bigint,
+    sender: string,
+    fpsPaymentRef: string,
+    hkdAmount: bigint
+  ];
+  export interface OutputObject {
+    remitId: bigint;
+    sender: string;
+    fpsPaymentRef: string;
+    hkdAmount: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -220,6 +315,19 @@ export namespace OwnershipTransferredEvent {
   export interface OutputObject {
     previousOwner: string;
     newOwner: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace PaymentVerifierUpdatedEvent {
+  export type InputTuple = [oldVerifier: AddressLike, newVerifier: AddressLike];
+  export type OutputTuple = [oldVerifier: string, newVerifier: string];
+  export interface OutputObject {
+    oldVerifier: string;
+    newVerifier: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -354,8 +462,20 @@ export interface RemicoPay extends BaseContract {
     "nonpayable"
   >;
 
+  completeRemittanceWithFPS: TypedContractMethod<
+    [remitId: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
   createRemittance: TypedContractMethod<
     [recipient: AddressLike, hkdAmount: BigNumberish],
+    [bigint],
+    "nonpayable"
+  >;
+
+  createRemittanceWithFPS: TypedContractMethod<
+    [recipient: AddressLike, hkdAmount: BigNumberish, fpsPaymentRef: BytesLike],
     [bigint],
     "nonpayable"
   >;
@@ -388,6 +508,8 @@ export interface RemicoPay extends BaseContract {
 
   owner: TypedContractMethod<[], [string], "view">;
 
+  paymentVerifier: TypedContractMethod<[], [string], "view">;
+
   phpc: TypedContractMethod<[], [string], "view">;
 
   refundRemittance: TypedContractMethod<
@@ -395,6 +517,8 @@ export interface RemicoPay extends BaseContract {
     [void],
     "nonpayable"
   >;
+
+  remitFPSRef: TypedContractMethod<[arg0: BigNumberish], [string], "view">;
 
   remittances: TypedContractMethod<
     [arg0: BigNumberish],
@@ -427,6 +551,12 @@ export interface RemicoPay extends BaseContract {
     "nonpayable"
   >;
 
+  setPaymentVerifier: TypedContractMethod<
+    [_verifier: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
   transferOwnership: TypedContractMethod<
     [newOwner: AddressLike],
     [void],
@@ -441,9 +571,19 @@ export interface RemicoPay extends BaseContract {
     nameOrSignature: "completeRemittance"
   ): TypedContractMethod<[remitId: BigNumberish], [void], "nonpayable">;
   getFunction(
+    nameOrSignature: "completeRemittanceWithFPS"
+  ): TypedContractMethod<[remitId: BigNumberish], [void], "nonpayable">;
+  getFunction(
     nameOrSignature: "createRemittance"
   ): TypedContractMethod<
     [recipient: AddressLike, hkdAmount: BigNumberish],
+    [bigint],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "createRemittanceWithFPS"
+  ): TypedContractMethod<
+    [recipient: AddressLike, hkdAmount: BigNumberish, fpsPaymentRef: BytesLike],
     [bigint],
     "nonpayable"
   >;
@@ -483,11 +623,17 @@ export interface RemicoPay extends BaseContract {
     nameOrSignature: "owner"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
+    nameOrSignature: "paymentVerifier"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
     nameOrSignature: "phpc"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "refundRemittance"
   ): TypedContractMethod<[remitId: BigNumberish], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "remitFPSRef"
+  ): TypedContractMethod<[arg0: BigNumberish], [string], "view">;
   getFunction(
     nameOrSignature: "remittances"
   ): TypedContractMethod<
@@ -516,6 +662,9 @@ export interface RemicoPay extends BaseContract {
     nameOrSignature: "setFeeBps"
   ): TypedContractMethod<[newFeeBps: BigNumberish], [void], "nonpayable">;
   getFunction(
+    nameOrSignature: "setPaymentVerifier"
+  ): TypedContractMethod<[_verifier: AddressLike], [void], "nonpayable">;
+  getFunction(
     nameOrSignature: "transferOwnership"
   ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
 
@@ -525,6 +674,20 @@ export interface RemicoPay extends BaseContract {
     ExchangeRateUpdatedEvent.InputTuple,
     ExchangeRateUpdatedEvent.OutputTuple,
     ExchangeRateUpdatedEvent.OutputObject
+  >;
+  getEvent(
+    key: "FPSRemittanceCompleted"
+  ): TypedContractEvent<
+    FPSRemittanceCompletedEvent.InputTuple,
+    FPSRemittanceCompletedEvent.OutputTuple,
+    FPSRemittanceCompletedEvent.OutputObject
+  >;
+  getEvent(
+    key: "FPSRemittanceCreated"
+  ): TypedContractEvent<
+    FPSRemittanceCreatedEvent.InputTuple,
+    FPSRemittanceCreatedEvent.OutputTuple,
+    FPSRemittanceCreatedEvent.OutputObject
   >;
   getEvent(
     key: "FeeBpsUpdated"
@@ -539,6 +702,13 @@ export interface RemicoPay extends BaseContract {
     OwnershipTransferredEvent.InputTuple,
     OwnershipTransferredEvent.OutputTuple,
     OwnershipTransferredEvent.OutputObject
+  >;
+  getEvent(
+    key: "PaymentVerifierUpdated"
+  ): TypedContractEvent<
+    PaymentVerifierUpdatedEvent.InputTuple,
+    PaymentVerifierUpdatedEvent.OutputTuple,
+    PaymentVerifierUpdatedEvent.OutputObject
   >;
   getEvent(
     key: "RemittanceCompleted"
@@ -574,6 +744,28 @@ export interface RemicoPay extends BaseContract {
       ExchangeRateUpdatedEvent.OutputObject
     >;
 
+    "FPSRemittanceCompleted(uint256,address,uint256)": TypedContractEvent<
+      FPSRemittanceCompletedEvent.InputTuple,
+      FPSRemittanceCompletedEvent.OutputTuple,
+      FPSRemittanceCompletedEvent.OutputObject
+    >;
+    FPSRemittanceCompleted: TypedContractEvent<
+      FPSRemittanceCompletedEvent.InputTuple,
+      FPSRemittanceCompletedEvent.OutputTuple,
+      FPSRemittanceCompletedEvent.OutputObject
+    >;
+
+    "FPSRemittanceCreated(uint256,address,bytes32,uint256)": TypedContractEvent<
+      FPSRemittanceCreatedEvent.InputTuple,
+      FPSRemittanceCreatedEvent.OutputTuple,
+      FPSRemittanceCreatedEvent.OutputObject
+    >;
+    FPSRemittanceCreated: TypedContractEvent<
+      FPSRemittanceCreatedEvent.InputTuple,
+      FPSRemittanceCreatedEvent.OutputTuple,
+      FPSRemittanceCreatedEvent.OutputObject
+    >;
+
     "FeeBpsUpdated(uint256,uint256)": TypedContractEvent<
       FeeBpsUpdatedEvent.InputTuple,
       FeeBpsUpdatedEvent.OutputTuple,
@@ -594,6 +786,17 @@ export interface RemicoPay extends BaseContract {
       OwnershipTransferredEvent.InputTuple,
       OwnershipTransferredEvent.OutputTuple,
       OwnershipTransferredEvent.OutputObject
+    >;
+
+    "PaymentVerifierUpdated(address,address)": TypedContractEvent<
+      PaymentVerifierUpdatedEvent.InputTuple,
+      PaymentVerifierUpdatedEvent.OutputTuple,
+      PaymentVerifierUpdatedEvent.OutputObject
+    >;
+    PaymentVerifierUpdated: TypedContractEvent<
+      PaymentVerifierUpdatedEvent.InputTuple,
+      PaymentVerifierUpdatedEvent.OutputTuple,
+      PaymentVerifierUpdatedEvent.OutputObject
     >;
 
     "RemittanceCompleted(uint256,address,uint256)": TypedContractEvent<

@@ -3,5 +3,11 @@
 /* eslint-disable */
 import type * as remicoPaySol from "./RemicoPay.sol";
 export type { remicoPaySol };
+import type * as scheduledRemittanceSol from "./ScheduledRemittance.sol";
+export type { scheduledRemittanceSol };
+import type * as interfaces from "./interfaces";
+export type { interfaces };
+export type { FPSVerifier } from "./FPSVerifier";
 export type { MockHKDR } from "./MockHKDR";
 export type { MockPHPC } from "./MockPHPC";
+export type { SimpleYieldVault } from "./SimpleYieldVault";

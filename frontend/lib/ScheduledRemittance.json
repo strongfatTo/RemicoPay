@@ -13,6 +13,16 @@
                                        "type":  "address"
                                    },
                                    {
+                                       "internalType":  "address",
+                                       "name":  "_vault",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "_treasury",
+                                       "type":  "address"
+                                   },
+                                   {
                                        "internalType":  "uint256",
                                        "name":  "_exchangeRate",
                                        "type":  "uint256"
@@ -30,14 +40,21 @@
                     "inputs":  [
 
                                ],
-                    "name":  "FPSRemittanceNotPending",
+                    "name":  "AlreadyExecutedOrCancelled",
                     "type":  "error"
                 },
                 {
                     "inputs":  [
 
                                ],
-                    "name":  "InsufficientAllowance",
+                    "name":  "InvalidDate",
+                    "type":  "error"
+                },
+                {
+                    "inputs":  [
+
+                               ],
+                    "name":  "InvalidDay",
                     "type":  "error"
                 },
                 {
@@ -58,7 +75,14 @@
                     "inputs":  [
 
                                ],
-                    "name":  "NoPaymentVerifier",
+                    "name":  "NotScheduled",
+                    "type":  "error"
+                },
+                {
+                    "inputs":  [
+
+                               ],
+                    "name":  "NotSender",
                     "type":  "error"
                 },
                 {
@@ -87,28 +111,7 @@
                     "inputs":  [
 
                                ],
-                    "name":  "PaymentNotVerified",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
                     "name":  "ReentrancyGuardReentrantCall",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "RemittanceNotFound",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "RemittanceNotPending",
                     "type":  "error"
                 },
                 {
@@ -120,6 +123,20 @@
                                    }
                                ],
                     "name":  "SafeERC20FailedOperation",
+                    "type":  "error"
+                },
+                {
+                    "inputs":  [
+
+                               ],
+                    "name":  "ScheduleNotFound",
+                    "type":  "error"
+                },
+                {
+                    "inputs":  [
+
+                               ],
+                    "name":  "TooEarly",
                     "type":  "error"
                 },
                 {
@@ -153,62 +170,6 @@
                                    }
                                ],
                     "name":  "ExchangeRateUpdated",
-                    "type":  "event"
-                },
-                {
-                    "anonymous":  false,
-                    "inputs":  [
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "uint256",
-                                       "name":  "remitId",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "address",
-                                       "name":  "recipient",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "phpAmount",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "FPSRemittanceCompleted",
-                    "type":  "event"
-                },
-                {
-                    "anonymous":  false,
-                    "inputs":  [
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "uint256",
-                                       "name":  "remitId",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "address",
-                                       "name":  "sender",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "bytes32",
-                                       "name":  "fpsPaymentRef",
-                                       "type":  "bytes32"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "hkdAmount",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "FPSRemittanceCreated",
                     "type":  "event"
                 },
                 {
@@ -254,18 +215,18 @@
                     "inputs":  [
                                    {
                                        "indexed":  true,
-                                       "internalType":  "address",
-                                       "name":  "oldVerifier",
-                                       "type":  "address"
+                                       "internalType":  "uint256",
+                                       "name":  "oldScheduleId",
+                                       "type":  "uint256"
                                    },
                                    {
                                        "indexed":  true,
-                                       "internalType":  "address",
-                                       "name":  "newVerifier",
-                                       "type":  "address"
+                                       "internalType":  "uint256",
+                                       "name":  "newScheduleId",
+                                       "type":  "uint256"
                                    }
                                ],
-                    "name":  "PaymentVerifierUpdated",
+                    "name":  "RecurringRescheduled",
                     "type":  "event"
                 },
                 {
@@ -274,23 +235,23 @@
                                    {
                                        "indexed":  true,
                                        "internalType":  "uint256",
-                                       "name":  "remitId",
+                                       "name":  "scheduleId",
                                        "type":  "uint256"
                                    },
                                    {
                                        "indexed":  true,
                                        "internalType":  "address",
-                                       "name":  "recipient",
+                                       "name":  "sender",
                                        "type":  "address"
                                    },
                                    {
                                        "indexed":  false,
                                        "internalType":  "uint256",
-                                       "name":  "phpAmount",
+                                       "name":  "hkdReturned",
                                        "type":  "uint256"
                                    }
                                ],
-                    "name":  "RemittanceCompleted",
+                    "name":  "ScheduleCancelled",
                     "type":  "event"
                 },
                 {
@@ -299,7 +260,7 @@
                                    {
                                        "indexed":  true,
                                        "internalType":  "uint256",
-                                       "name":  "remitId",
+                                       "name":  "scheduleId",
                                        "type":  "uint256"
                                    },
                                    {
@@ -323,23 +284,23 @@
                                    {
                                        "indexed":  false,
                                        "internalType":  "uint256",
-                                       "name":  "phpAmount",
+                                       "name":  "vaultShares",
                                        "type":  "uint256"
                                    },
                                    {
                                        "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "fee",
-                                       "type":  "uint256"
+                                       "internalType":  "uint64",
+                                       "name":  "scheduledDate",
+                                       "type":  "uint64"
                                    },
                                    {
                                        "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "rate",
-                                       "type":  "uint256"
+                                       "internalType":  "bool",
+                                       "name":  "isRecurring",
+                                       "type":  "bool"
                                    }
                                ],
-                    "name":  "RemittanceCreated",
+                    "name":  "ScheduleCreated",
                     "type":  "event"
                 },
                 {
@@ -348,104 +309,93 @@
                                    {
                                        "indexed":  true,
                                        "internalType":  "uint256",
-                                       "name":  "remitId",
+                                       "name":  "scheduleId",
                                        "type":  "uint256"
                                    },
                                    {
                                        "indexed":  true,
                                        "internalType":  "address",
-                                       "name":  "sender",
+                                       "name":  "recipient",
                                        "type":  "address"
                                    },
                                    {
                                        "indexed":  false,
                                        "internalType":  "uint256",
-                                       "name":  "hkdAmount",
+                                       "name":  "phpAmount",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "indexed":  false,
+                                       "internalType":  "uint256",
+                                       "name":  "yieldEarned",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "indexed":  false,
+                                       "internalType":  "uint256",
+                                       "name":  "feeCharged",
                                        "type":  "uint256"
                                    }
                                ],
-                    "name":  "RemittanceRefunded",
+                    "name":  "ScheduleExecuted",
                     "type":  "event"
                 },
                 {
                     "inputs":  [
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "remitId",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "completeRemittance",
-                    "outputs":  [
 
-                                ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "remitId",
-                                       "type":  "uint256"
-                                   }
                                ],
-                    "name":  "completeRemittanceWithFPS",
-                    "outputs":  [
-
-                                ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "address",
-                                       "name":  "recipient",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "hkdAmount",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "createRemittance",
+                    "name":  "MAX_FEE_BPS",
                     "outputs":  [
                                     {
                                         "internalType":  "uint256",
-                                        "name":  "remitId",
+                                        "name":  "",
                                         "type":  "uint256"
                                     }
                                 ],
-                    "stateMutability":  "nonpayable",
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+
+                               ],
+                    "name":  "PROTOCOL_YIELD_SHARE",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "",
+                                        "type":  "uint256"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+
+                               ],
+                    "name":  "USER_YIELD_SHARE",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "",
+                                        "type":  "uint256"
+                                    }
+                                ],
+                    "stateMutability":  "view",
                     "type":  "function"
                 },
                 {
                     "inputs":  [
                                    {
-                                       "internalType":  "address",
-                                       "name":  "recipient",
-                                       "type":  "address"
-                                   },
-                                   {
                                        "internalType":  "uint256",
-                                       "name":  "hkdAmount",
+                                       "name":  "scheduleId",
                                        "type":  "uint256"
-                                   },
-                                   {
-                                       "internalType":  "bytes32",
-                                       "name":  "fpsPaymentRef",
-                                       "type":  "bytes32"
                                    }
                                ],
-                    "name":  "createRemittanceWithFPS",
+                    "name":  "cancelSchedule",
                     "outputs":  [
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "remitId",
-                                        "type":  "uint256"
-                                    }
+
                                 ],
                     "stateMutability":  "nonpayable",
                     "type":  "function"
@@ -467,6 +417,21 @@
                 },
                 {
                     "inputs":  [
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "scheduleId",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "executeRemittance",
+                    "outputs":  [
+
+                                ],
+                    "stateMutability":  "nonpayable",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
 
                                ],
                     "name":  "feeBps",
@@ -484,87 +449,36 @@
                     "inputs":  [
                                    {
                                        "internalType":  "uint256",
-                                       "name":  "hkdAmount",
+                                       "name":  "scheduleId",
                                        "type":  "uint256"
                                    }
                                ],
-                    "name":  "getQuote",
+                    "name":  "getScheduleQuote",
                     "outputs":  [
                                     {
                                         "internalType":  "uint256",
-                                        "name":  "phpAmount",
+                                        "name":  "currentValue",
                                         "type":  "uint256"
                                     },
                                     {
                                         "internalType":  "uint256",
-                                        "name":  "fee",
+                                        "name":  "estimatedYield",
                                         "type":  "uint256"
                                     },
                                     {
                                         "internalType":  "uint256",
-                                        "name":  "rate",
+                                        "name":  "baseFee",
                                         "type":  "uint256"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "remitId",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "getRemittance",
-                    "outputs":  [
+                                    },
                                     {
-                                        "components":  [
-                                                           {
-                                                               "internalType":  "address",
-                                                               "name":  "sender",
-                                                               "type":  "address"
-                                                           },
-                                                           {
-                                                               "internalType":  "address",
-                                                               "name":  "recipient",
-                                                               "type":  "address"
-                                                           },
-                                                           {
-                                                               "internalType":  "uint256",
-                                                               "name":  "hkdAmount",
-                                                               "type":  "uint256"
-                                                           },
-                                                           {
-                                                               "internalType":  "uint256",
-                                                               "name":  "phpAmount",
-                                                               "type":  "uint256"
-                                                           },
-                                                           {
-                                                               "internalType":  "uint256",
-                                                               "name":  "fee",
-                                                               "type":  "uint256"
-                                                           },
-                                                           {
-                                                               "internalType":  "uint256",
-                                                               "name":  "lockedRate",
-                                                               "type":  "uint256"
-                                                           },
-                                                           {
-                                                               "internalType":  "uint64",
-                                                               "name":  "createdAt",
-                                                               "type":  "uint64"
-                                                           },
-                                                           {
-                                                               "internalType":  "enum RemicoPay.Status",
-                                                               "name":  "status",
-                                                               "type":  "uint8"
-                                                           }
-                                                       ],
-                                        "internalType":  "struct RemicoPay.Remittance",
-                                        "name":  "",
-                                        "type":  "tuple"
+                                        "internalType":  "uint256",
+                                        "name":  "effectiveFee",
+                                        "type":  "uint256"
+                                    },
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "estimatedPhp",
+                                        "type":  "uint256"
                                     }
                                 ],
                     "stateMutability":  "view",
@@ -589,7 +503,7 @@
                     "inputs":  [
 
                                ],
-                    "name":  "nextRemitId",
+                    "name":  "nextScheduleId",
                     "outputs":  [
                                     {
                                         "internalType":  "uint256",
@@ -619,21 +533,6 @@
                     "inputs":  [
 
                                ],
-                    "name":  "paymentVerifier",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "contract IPaymentVerifier",
-                                        "name":  "",
-                                        "type":  "address"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-
-                               ],
                     "name":  "phpc",
                     "outputs":  [
                                     {
@@ -647,15 +546,65 @@
                 },
                 {
                     "inputs":  [
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "remitId",
-                                       "type":  "uint256"
-                                   }
+
                                ],
-                    "name":  "refundRemittance",
+                    "name":  "protocolTreasury",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "address",
+                                        "name":  "",
+                                        "type":  "address"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+
+                               ],
+                    "name":  "renounceOwnership",
                     "outputs":  [
 
+                                ],
+                    "stateMutability":  "nonpayable",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "recipient",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "hkdAmount",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "internalType":  "uint64",
+                                       "name":  "scheduledDate",
+                                       "type":  "uint64"
+                                   },
+                                   {
+                                       "internalType":  "bool",
+                                       "name":  "isRecurring",
+                                       "type":  "bool"
+                                   },
+                                   {
+                                       "internalType":  "uint8",
+                                       "name":  "recurringDay",
+                                       "type":  "uint8"
+                                   }
+                               ],
+                    "name":  "scheduleRemittance",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "scheduleId",
+                                        "type":  "uint256"
+                                    }
                                 ],
                     "stateMutability":  "nonpayable",
                     "type":  "function"
@@ -668,26 +617,7 @@
                                        "type":  "uint256"
                                    }
                                ],
-                    "name":  "remitFPSRef",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "bytes32",
-                                        "name":  "",
-                                        "type":  "bytes32"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "remittances",
+                    "name":  "schedules",
                     "outputs":  [
                                     {
                                         "internalType":  "address",
@@ -706,18 +636,13 @@
                                     },
                                     {
                                         "internalType":  "uint256",
-                                        "name":  "phpAmount",
+                                        "name":  "vaultShares",
                                         "type":  "uint256"
                                     },
                                     {
-                                        "internalType":  "uint256",
-                                        "name":  "fee",
-                                        "type":  "uint256"
-                                    },
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "lockedRate",
-                                        "type":  "uint256"
+                                        "internalType":  "uint64",
+                                        "name":  "scheduledDate",
+                                        "type":  "uint64"
                                     },
                                     {
                                         "internalType":  "uint64",
@@ -725,23 +650,22 @@
                                         "type":  "uint64"
                                     },
                                     {
-                                        "internalType":  "enum RemicoPay.Status",
+                                        "internalType":  "bool",
+                                        "name":  "isRecurring",
+                                        "type":  "bool"
+                                    },
+                                    {
+                                        "internalType":  "uint8",
+                                        "name":  "recurringDay",
+                                        "type":  "uint8"
+                                    },
+                                    {
+                                        "internalType":  "enum ScheduledRemittance.Status",
                                         "name":  "status",
                                         "type":  "uint8"
                                     }
                                 ],
                     "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "renounceOwnership",
-                    "outputs":  [
-
-                                ],
-                    "stateMutability":  "nonpayable",
                     "type":  "function"
                 },
                 {
@@ -778,11 +702,11 @@
                     "inputs":  [
                                    {
                                        "internalType":  "address",
-                                       "name":  "_verifier",
+                                       "name":  "_treasury",
                                        "type":  "address"
                                    }
                                ],
-                    "name":  "setPaymentVerifier",
+                    "name":  "setProtocolTreasury",
                     "outputs":  [
 
                                 ],
@@ -802,6 +726,21 @@
 
                                 ],
                     "stateMutability":  "nonpayable",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+
+                               ],
+                    "name":  "vault",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "contract ERC4626",
+                                        "name":  "",
+                                        "type":  "address"
+                                    }
+                                ],
+                    "stateMutability":  "view",
                     "type":  "function"
                 }
             ]

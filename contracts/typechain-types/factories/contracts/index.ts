@@ -2,5 +2,9 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as remicoPaySol from "./RemicoPay.sol";
+export * as scheduledRemittanceSol from "./ScheduledRemittance.sol";
+export * as interfaces from "./interfaces";
+export { FPSVerifier__factory } from "./FPSVerifier__factory";
 export { MockHKDR__factory } from "./MockHKDR__factory";
 export { MockPHPC__factory } from "./MockPHPC__factory";
+export { SimpleYieldVault__factory } from "./SimpleYieldVault__factory";

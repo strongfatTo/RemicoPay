@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./interfaces/IPaymentVerifier.sol";
 
 /// @title RemicoPay - HKD → PHP Cross-Border Remittance on Etherlink
 /// @notice Escrow-based remittance: locks HKDR from sender, releases PHPC to recipient
@@ -23,6 +24,10 @@ contract RemicoPay is ReentrancyGuard, Ownable {
     uint256 public exchangeRate;   // HKDR → PHPC rate, scaled by 1e6 (e.g. 7_350_000 = 7.35)
     uint256 public feeBps;         // Fee in basis points (70 = 0.7%)
     uint256 public nextRemitId;    // Auto-incrementing remittance ID
+
+    // FPS integration
+    IPaymentVerifier public paymentVerifier;
+    mapping(uint256 => bytes32) public remitFPSRef;  // remitId → fpsPaymentRef
 
     // ─── Remittance Status ───────────────────────────────────────────
     enum Status { Pending, Completed, Refunded }
@@ -48,6 +53,9 @@ contract RemicoPay is ReentrancyGuard, Ownable {
     error RemittanceNotFound();
     error RemittanceNotPending();
     error InsufficientAllowance();
+    error NoPaymentVerifier();
+    error PaymentNotVerified();
+    error FPSRemittanceNotPending();
 
     // ─── Events ──────────────────────────────────────────────────────
     event RemittanceCreated(
@@ -63,6 +71,9 @@ contract RemicoPay is ReentrancyGuard, Ownable {
     event RemittanceRefunded(uint256 indexed remitId, address indexed sender, uint256 hkdAmount);
     event ExchangeRateUpdated(uint256 oldRate, uint256 newRate);
     event FeeBpsUpdated(uint256 oldFee, uint256 newFee);
+    event FPSRemittanceCreated(uint256 indexed remitId, address indexed sender, bytes32 fpsPaymentRef, uint256 hkdAmount);
+    event FPSRemittanceCompleted(uint256 indexed remitId, address indexed recipient, uint256 phpAmount);
+    event PaymentVerifierUpdated(address indexed oldVerifier, address indexed newVerifier);
 
     // ─── Constructor ─────────────────────────────────────────────────
     /// @param _hkdr Address of MockHKDR token
@@ -207,7 +218,74 @@ contract RemicoPay is ReentrancyGuard, Ownable {
         hkdr.safeTransfer(sender, hkdAmount);
     }
 
+    // ─── FPS Remittance Flow ──────────────────────────────────────────
+
+    /// @notice Create a remittance paid via FPS (no HKDR lock — pending verification)
+    /// @param recipient Address to receive PHPC
+    /// @param hkdAmount Amount of HKD being sent via FPS
+    /// @param fpsPaymentRef Hash of the FPS reference number
+    function createRemittanceWithFPS(
+        address recipient,
+        uint256 hkdAmount,
+        bytes32 fpsPaymentRef
+    ) external nonReentrant returns (uint256 remitId) {
+        if (recipient == address(0)) revert ZeroAddress();
+        if (hkdAmount == 0) revert ZeroAmount();
+        if (address(paymentVerifier) == address(0)) revert NoPaymentVerifier();
+
+        uint256 _rate = exchangeRate;
+        uint256 _feeBps = feeBps;
+        uint256 fee = (hkdAmount * _feeBps) / 10_000;
+        uint256 netHkd = hkdAmount - fee;
+        uint256 phpAmount = (netHkd * _rate) / 1e6;
+
+        remitId = nextRemitId;
+        unchecked { ++nextRemitId; }
+
+        remittances[remitId] = Remittance({
+            sender: msg.sender,
+            recipient: recipient,
+            hkdAmount: hkdAmount,
+            phpAmount: phpAmount,
+            fee: fee,
+            lockedRate: _rate,
+            createdAt: uint64(block.timestamp),
+            status: Status.Pending  // Pending until FPS is verified
+        });
+
+        remitFPSRef[remitId] = fpsPaymentRef;
+
+        emit FPSRemittanceCreated(remitId, msg.sender, fpsPaymentRef, hkdAmount);
+    }
+
+    /// @notice Complete an FPS remittance after payment is verified
+    /// @param remitId Remittance ID to complete
+    function completeRemittanceWithFPS(uint256 remitId) external onlyOwner nonReentrant {
+        if (remitId >= nextRemitId) revert RemittanceNotFound();
+        Remittance storage remit = remittances[remitId];
+        if (remit.status != Status.Pending) revert FPSRemittanceNotPending();
+
+        bytes32 fpsRef = remitFPSRef[remitId];
+        if (!paymentVerifier.isPaymentVerified(fpsRef)) revert PaymentNotVerified();
+
+        address recipient = remit.recipient;
+        uint256 phpAmount = remit.phpAmount;
+
+        remit.status = Status.Completed;
+
+        emit FPSRemittanceCompleted(remitId, recipient, phpAmount);
+
+        IMockPHPC(phpc).mint(recipient, phpAmount);
+    }
+
     // ─── Admin Functions ─────────────────────────────────────────────
+
+    /// @notice Set the payment verifier contract
+    function setPaymentVerifier(address _verifier) external onlyOwner {
+        address old = address(paymentVerifier);
+        paymentVerifier = IPaymentVerifier(_verifier);
+        emit PaymentVerifierUpdated(old, _verifier);
+    }
 
     /// @notice Update the exchange rate
     /// @param newRate New HKD→PHP rate (scaled by 1e6)

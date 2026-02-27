@@ -4,6 +4,9 @@
 import RemicoPayABI from "./RemicoPay.json";
 import MockHKDRABI from "./MockHKDR.json";
 import MockPHPCABI from "./MockPHPC.json";
+import ScheduledRemittanceABI from "./ScheduledRemittance.json";
+import SimpleYieldVaultABI from "./SimpleYieldVault.json";
+import FPSVerifierABI from "./FPSVerifier.json";
 
 // ----- Etherlink Testnet (ghostnet) -----
 export const CHAIN_CONFIG = {
@@ -19,10 +22,13 @@ export const ADDRESSES = {
   MockHKDR: "0xa2712f014199F35e19b0F69f5D33FDdF5c738f10",
   MockPHPC: "0xF5079Dc7F12D32E26855949c1398211DC0BC617c",
   RemicoPay: "0xab9e900912eC429D3bF50deF4658e99e38cc0A8C",
+  SimpleYieldVault: "0x0000000000000000000000000000000000000000",   // TODO: update after deploy
+  ScheduledRemittance: "0x0000000000000000000000000000000000000000", // TODO: update after deploy
+  FPSVerifier: "0x0000000000000000000000000000000000000000",        // TODO: update after deploy
 } as const;
 
 // ----- ABIs -----
-export { RemicoPayABI, MockHKDRABI, MockPHPCABI };
+export { RemicoPayABI, MockHKDRABI, MockPHPCABI, ScheduledRemittanceABI, SimpleYieldVaultABI, FPSVerifierABI };
 
 // ----- Constants (must match contract values) -----
 export const RATE_SCALE = 1_000_000n; // 1e6

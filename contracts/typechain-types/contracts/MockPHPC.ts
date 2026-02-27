@@ -31,11 +31,12 @@ export interface MockPHPCInterface extends Interface {
       | "balanceOf"
       | "decimals"
       | "mint"
-      | "minter"
+      | "minters"
       | "name"
       | "owner"
       | "renounceOwnership"
-      | "setMinter"
+      | "setMinter(address,bool)"
+      | "setMinter(address)"
       | "symbol"
       | "totalSupply"
       | "transfer"
@@ -68,7 +69,10 @@ export interface MockPHPCInterface extends Interface {
     functionFragment: "mint",
     values: [AddressLike, BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "minter", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "minters",
+    values: [AddressLike]
+  ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -76,7 +80,11 @@ export interface MockPHPCInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "setMinter",
+    functionFragment: "setMinter(address,bool)",
+    values: [AddressLike, boolean]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setMinter(address)",
     values: [AddressLike]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
@@ -102,14 +110,21 @@ export interface MockPHPCInterface extends Interface {
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "minter", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "minters", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "setMinter", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "setMinter(address,bool)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setMinter(address)",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
@@ -145,11 +160,11 @@ export namespace ApprovalEvent {
 }
 
 export namespace MinterUpdatedEvent {
-  export type InputTuple = [oldMinter: AddressLike, newMinter: AddressLike];
-  export type OutputTuple = [oldMinter: string, newMinter: string];
+  export type InputTuple = [minter: AddressLike, enabled: boolean];
+  export type OutputTuple = [minter: string, enabled: boolean];
   export interface OutputObject {
-    oldMinter: string;
-    newMinter: string;
+    minter: string;
+    enabled: boolean;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -253,7 +268,7 @@ export interface MockPHPC extends BaseContract {
     "nonpayable"
   >;
 
-  minter: TypedContractMethod<[], [string], "view">;
+  minters: TypedContractMethod<[arg0: AddressLike], [boolean], "view">;
 
   name: TypedContractMethod<[], [string], "view">;
 
@@ -261,7 +276,17 @@ export interface MockPHPC extends BaseContract {
 
   renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
 
-  setMinter: TypedContractMethod<[_minter: AddressLike], [void], "nonpayable">;
+  "setMinter(address,bool)": TypedContractMethod<
+    [_minter: AddressLike, _enabled: boolean],
+    [void],
+    "nonpayable"
+  >;
+
+  "setMinter(address)": TypedContractMethod<
+    [_minter: AddressLike],
+    [void],
+    "nonpayable"
+  >;
 
   symbol: TypedContractMethod<[], [string], "view">;
 
@@ -317,8 +342,8 @@ export interface MockPHPC extends BaseContract {
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "minter"
-  ): TypedContractMethod<[], [string], "view">;
+    nameOrSignature: "minters"
+  ): TypedContractMethod<[arg0: AddressLike], [boolean], "view">;
   getFunction(
     nameOrSignature: "name"
   ): TypedContractMethod<[], [string], "view">;
@@ -329,7 +354,14 @@ export interface MockPHPC extends BaseContract {
     nameOrSignature: "renounceOwnership"
   ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
-    nameOrSignature: "setMinter"
+    nameOrSignature: "setMinter(address,bool)"
+  ): TypedContractMethod<
+    [_minter: AddressLike, _enabled: boolean],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "setMinter(address)"
   ): TypedContractMethod<[_minter: AddressLike], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "symbol"
@@ -396,7 +428,7 @@ export interface MockPHPC extends BaseContract {
       ApprovalEvent.OutputObject
     >;
 
-    "MinterUpdated(address,address)": TypedContractEvent<
+    "MinterUpdated(address,bool)": TypedContractEvent<
       MinterUpdatedEvent.InputTuple,
       MinterUpdatedEvent.OutputTuple,
       MinterUpdatedEvent.OutputObject

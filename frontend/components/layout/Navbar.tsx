@@ -4,13 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { ArrowRightLeft, Clock, History, Home } from "lucide-react";
+import { ArrowRightLeft, Clock, History, Home, CalendarClock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState, useEffect, useRef } from "react";
 
 const navLinks = [
   { href: "/", label: "Home", icon: Home },
   { href: "/send", label: "Send", icon: ArrowRightLeft },
+  { href: "/schedule", label: "Schedule", icon: CalendarClock },
   { href: "/status", label: "Status", icon: Clock },
   { href: "/history", label: "History", icon: History },
 ];

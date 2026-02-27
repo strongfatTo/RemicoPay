@@ -1,0 +1,352 @@
+{
+    "abi":  [
+                {
+                    "inputs":  [
+
+                               ],
+                    "stateMutability":  "nonpayable",
+                    "type":  "constructor"
+                },
+                {
+                    "inputs":  [
+
+                               ],
+                    "name":  "AlreadyVerified",
+                    "type":  "error"
+                },
+                {
+                    "inputs":  [
+
+                               ],
+                    "name":  "OnlyOperator",
+                    "type":  "error"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "owner",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "OwnableInvalidOwner",
+                    "type":  "error"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "account",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "OwnableUnauthorizedAccount",
+                    "type":  "error"
+                },
+                {
+                    "inputs":  [
+
+                               ],
+                    "name":  "ZeroAddress",
+                    "type":  "error"
+                },
+                {
+                    "inputs":  [
+
+                               ],
+                    "name":  "ZeroAmount",
+                    "type":  "error"
+                },
+                {
+                    "anonymous":  false,
+                    "inputs":  [
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "address",
+                                       "name":  "operator",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "indexed":  false,
+                                       "internalType":  "bool",
+                                       "name":  "enabled",
+                                       "type":  "bool"
+                                   }
+                               ],
+                    "name":  "OperatorUpdated",
+                    "type":  "event"
+                },
+                {
+                    "anonymous":  false,
+                    "inputs":  [
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "address",
+                                       "name":  "previousOwner",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "address",
+                                       "name":  "newOwner",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "OwnershipTransferred",
+                    "type":  "event"
+                },
+                {
+                    "anonymous":  false,
+                    "inputs":  [
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "bytes32",
+                                       "name":  "paymentRef",
+                                       "type":  "bytes32"
+                                   },
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "address",
+                                       "name":  "payer",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "indexed":  false,
+                                       "internalType":  "uint256",
+                                       "name":  "amount",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "PaymentConfirmed",
+                    "type":  "event"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "bytes32",
+                                       "name":  "paymentRef",
+                                       "type":  "bytes32"
+                                   },
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "amount",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "payer",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "confirmPayment",
+                    "outputs":  [
+
+                                ],
+                    "stateMutability":  "nonpayable",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "bytes32",
+                                       "name":  "paymentRef",
+                                       "type":  "bytes32"
+                                   }
+                               ],
+                    "name":  "getPayment",
+                    "outputs":  [
+                                    {
+                                        "components":  [
+                                                           {
+                                                               "internalType":  "uint256",
+                                                               "name":  "amount",
+                                                               "type":  "uint256"
+                                                           },
+                                                           {
+                                                               "internalType":  "address",
+                                                               "name":  "payer",
+                                                               "type":  "address"
+                                                           },
+                                                           {
+                                                               "internalType":  "uint64",
+                                                               "name":  "confirmedAt",
+                                                               "type":  "uint64"
+                                                           },
+                                                           {
+                                                               "internalType":  "bool",
+                                                               "name":  "verified",
+                                                               "type":  "bool"
+                                                           }
+                                                       ],
+                                        "internalType":  "struct FPSVerifier.PaymentRecord",
+                                        "name":  "",
+                                        "type":  "tuple"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "bytes32",
+                                       "name":  "paymentRef",
+                                       "type":  "bytes32"
+                                   }
+                               ],
+                    "name":  "isPaymentVerified",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "bool",
+                                        "name":  "",
+                                        "type":  "bool"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "operators",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "bool",
+                                        "name":  "",
+                                        "type":  "bool"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+
+                               ],
+                    "name":  "owner",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "address",
+                                        "name":  "",
+                                        "type":  "address"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "bytes32",
+                                       "name":  "",
+                                       "type":  "bytes32"
+                                   }
+                               ],
+                    "name":  "payments",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "amount",
+                                        "type":  "uint256"
+                                    },
+                                    {
+                                        "internalType":  "address",
+                                        "name":  "payer",
+                                        "type":  "address"
+                                    },
+                                    {
+                                        "internalType":  "uint64",
+                                        "name":  "confirmedAt",
+                                        "type":  "uint64"
+                                    },
+                                    {
+                                        "internalType":  "bool",
+                                        "name":  "verified",
+                                        "type":  "bool"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+
+                               ],
+                    "name":  "renounceOwnership",
+                    "outputs":  [
+
+                                ],
+                    "stateMutability":  "nonpayable",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "_operator",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "internalType":  "bool",
+                                       "name":  "_enabled",
+                                       "type":  "bool"
+                                   }
+                               ],
+                    "name":  "setOperator",
+                    "outputs":  [
+
+                                ],
+                    "stateMutability":  "nonpayable",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "newOwner",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "transferOwnership",
+                    "outputs":  [
+
+                                ],
+                    "stateMutability":  "nonpayable",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "bytes32",
+                                       "name":  "paymentRef",
+                                       "type":  "bytes32"
+                                   },
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "amount",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "payer",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "verifyPayment",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "bool",
+                                        "name":  "",
+                                        "type":  "bool"
+                                    }
+                                ],
+                    "stateMutability":  "nonpayable",
+                    "type":  "function"
+                }
+            ]
+}
