@@ -4,6 +4,8 @@
 
 **Intro Video:** [https://www.youtube.com/watch?v=tAegT-x0gxA](https://www.youtube.com/watch?v=tAegT-x0gxA)
 
+**Demo Video:** [https://youtu.be/LzJN1aWkbAc](https://youtu.be/LzJN1aWkbAc)
+
 > **A blockchain-powered cross-border remittance platform enabling instant, low-cost money transfers from Hong Kong to all over the world (Initial Target: HK to Philipines & HK to Indonesia).**
 
 ## 🚩 Problem
@@ -155,6 +157,26 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/)
 - **Web3:** [Wagmi](https://wagmi.sh/), [Viem](https://viem.sh/), [RainbowKit](https://www.rainbowkit.com/)
 - **UI Components:** [Lucide React](https://lucide.dev/), [Framer Motion](https://www.framer.com/motion/)
+
+---
+
+## 🧪 Quick Test Guide
+
+**1. Setup Wallet (Etherlink Testnet)**
+- Make sure your MetaMask network is **Etherlink Shadownet Testnet**.
+- Get free testnet gas from the [Etherlink Faucet](https://faucet.etherlink.com/).
+- Import these tokens to see your balances:
+  - **MockHKDR:** `0xB4f813F56Fcb34048b7d1ac508153060577Df421`
+  - **MockPHPC:** `0x88a4dd63451089Ca1c86dF29E8258301De1cB3d0`
+
+**2. Get Test HKDR**
+- Connect to `http://localhost:3000`.
+- Click **"HKDR Faucet"** in the top navigation bar to mint **10,000 HKDR**.
+
+**3. Try a Remittance**
+- Go to the **Send** page.
+- Choose **Wallet (HKDR)** to see the smart contract instantly lock HKDR & mint PHPC.
+- *Or* choose **FPS Transfer** to see a simulated "Pending" payment awaiting real-world bank verification.
 
 ---
 

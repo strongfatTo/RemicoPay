@@ -19,12 +19,12 @@ export const CHAIN_CONFIG = {
 
 // ----- Deployed Addresses (update after `npx hardhat run scripts/deploy.ts --network etherlinkTestnet`) -----
 export const ADDRESSES = {
-  MockHKDR: "0xa2712f014199F35e19b0F69f5D33FDdF5c738f10",
-  MockPHPC: "0xF5079Dc7F12D32E26855949c1398211DC0BC617c",
-  RemicoPay: "0xab9e900912eC429D3bF50deF4658e99e38cc0A8C",
-  SimpleYieldVault: "0x0000000000000000000000000000000000000000",   // TODO: update after deploy
-  ScheduledRemittance: "0x0000000000000000000000000000000000000000", // TODO: update after deploy
-  FPSVerifier: "0x0000000000000000000000000000000000000000",        // TODO: update after deploy
+  MockHKDR: "0xB4f813F56Fcb34048b7d1ac508153060577Df421",
+  MockPHPC: "0x88a4dd63451089Ca1c86dF29E8258301De1cB3d0",
+  RemicoPay: "0xC23465B69b7aB17Bfc26134b3617e6E657335232",
+  SimpleYieldVault: "0x697d590450F04E1d713A629e00554A3dDA55d368",
+  ScheduledRemittance: "0x3fF8bEAa8A51Dd44375FCdF35963d0dB9cC6054e",
+  FPSVerifier: "0xE058cbb7DFed9459b952f0B3CF11f6Ec23E00eDb",
 } as const;
 
 // ----- ABIs -----

@@ -8,7 +8,7 @@ import MintFaucet from "@/components/home/MintFaucet";
 import FeaturesSection from "@/components/home/FeaturesSection";
 import ProtocolSection from "@/components/home/ProtocolSection";
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
-import { Check } from "lucide-react";
+import { Check, Users, ArrowRightLeft, Coins } from "lucide-react";
 
 /* ─────────────────────────────────────────────────────────────
    DATA
@@ -17,52 +17,57 @@ import { Check } from "lucide-react";
 const teamMembers = [
   {
     quote:
-      "Major in FinTech and Digital Innovation, HKBU. Web3 infrastructure & digital asset tokenization intern at FORMS HK (Blockchain Valley@Cyberport). Built AI platform for 2,000+ employees. Compliance intern at Kena Finance — prepared AML, licensing, and PDPO documentation for a stablecoin payments startup.",
+      "Major in FinTech and Digital Innovation, Year 4 BAScT HKBU. #FinTech Intern at FORMS HK Built AI platform for 2,000+ employees. #Compliance intern at Kena Finance Prepared AML, Licensing and PDPO documentation.",
     name: "Ahtasham Ahmed",
-    designation: "Founder & CEO",
+    designation: "Founder, CEO",
     src: "https://cdn.gamma.app/mio4b0bgfmpw1ee/3dad9ab1f59640b2943ce72d65f43c88/optimized/WhatsApp-Tu-Xiang2025-10-05-Yu16.52.24_57310e24.avif",
   },
   {
     quote:
-      "Major in FinTech and Digital Innovation, HKBU. 1-year intern at Kena Finance — stablecoin-based cross-border payments startup. Led user acquisition and testing in Philippines and Indonesia markets, built frontend, and resolved production bugs from user feedback.",
+      "Major in FinTech and Digital Innovation, Year 4 BAScT HKBU. #Marketing & Operation Intern at Kena Finance. #Led user acquisition and testing in Philippines and Indonesia markets. #Built frontend, and resolved production bugs from user feedback.",
     name: "Chen Boyu, Dave",
-    designation: "Founder & CTO",
+    designation: "Founder, CTO",
     src: "https://cdn.gamma.app/mio4b0bgfmpw1ee/722fee062f0944d8bb00a4c11715e230/optimized/WhatsApp-Tu-Xiang2025-10-05-Yu16.59.17_cd6c82f7.avif",
   },
   {
     quote:
-      "AI & Blockchain Systems, HKBU. Smart contract development & on-chain feature optimization. Built WeBond — an AI-powered platform connecting local and non-local communities. Hands-on experience engaging with migrant worker communities.",
+      "Health Technology and Social Change, Year 2 BAScT HKBU. #Major Skills: Smart contract development & AI feature optimization. #Built WeBond - An AI-powered platform connecting local and non-local communities. Hands-on experience engaging with migrant worker communities.",
     name: "Leung Man To, Thomas",
-    designation: "R&D Team",
-    src: "https://cdn.gamma.app/mio4b0bgfmpw1ee/c8307401ef6c4377952c042ad96c6afe/optimized/WhatsApp-Tu-Xiang2025-10-05-Yu16.57.39_e3630b97.avif",
+    designation: "R&D",
+    src: "/thomas.jpg",
   },
 ];
 
-const pricingTiers = [
+const ultimateGoals = [
   {
-    name: "Essential",
-    fee: "0.5%",
-    desc: "For individuals sending occasional remittances.",
-    features: ["Up to 5,000 HKDR / month", "Standard rate", "Email support"],
-    cta: "Get Started",
-    accent: false,
+    title: "Target Users",
+    subtitle: "Phase 1 - HK → PHP / IDR corridors",
+    desc: "Designed for domestic workers and migrant workers in Hong Kong sending money home.",
+    features: [
+      "Simple mobile-first interface",
+      "Optimized for small and medium transfers"
+    ]
   },
   {
-    name: "Performance",
-    fee: "0.7%",
-    desc: "Best for regular senders who need live rates and priority.",
-    features: ["Unlimited HKDR", "Live on-chain rate", "Priority settlement", "24/7 support"],
-    cta: "Send Money Now",
-    accent: true,
+    title: "Easy Transfer",
+    subtitle: "Light KYC onboarding",
+    desc: "Send money using tools you already use.",
+    features: [
+      "Support Faster Payment System (FPS)",
+      "Fund transfers from any FPS-enabled bank or e-wallet",
+      "No crypto knowledge required",
+      "Simple HKD deposit to overseas payout"
+    ]
   },
   {
-    name: "Enterprise",
-    fee: "Custom",
-    desc: "For businesses, NGOs, or high-volume corridors.",
-    features: ["Custom fee structure", "Dedicated relay node", "Compliance reporting", "SLA guarantee"],
-    cta: "Contact Us",
-    accent: false,
-  },
+    title: "Stablecoin Settlement",
+    subtitle: "Below 1% / transaction",
+    desc: "Faster and cheaper global transfers.",
+    features: [
+      "Near-instant settlement on blockchain",
+      "Transparent on-chain verification"
+    ]
+  }
 ];
 
 /* ─────────────────────────────────────────────────────────────
@@ -179,7 +184,7 @@ function HeroSection() {
                 fontSize: "1.12em",
               }}
             >
-              Precision.
+              Stablecoin.
             </span>
           </motion.h1>
 
@@ -191,7 +196,7 @@ function HeroSection() {
             className="text-base md:text-lg mb-10 leading-relaxed max-w-lg"
             style={{ color: "rgba(250,248,245,0.55)" }}
           >
-            Send HKD to PHP in seconds — not days. Best on-chain exchange rates,
+            Send HKD to PHP in minutes — not days. Best exchange rates,
             zero hidden fees, permanently verifiable on Etherlink.
           </motion.p>
 
@@ -266,7 +271,7 @@ function PhilosophySection() {
           className="text-sm md:text-base mb-6"
           style={{ color: "rgba(250,248,245,0.4)" }}
         >
-          Most remittance services focus on: slow bank rails, hidden margins, and opaque fees.
+          Most remittance services are slow, hidden margins, and large fees.
         </motion.p>
 
         {/* Power statement */}
@@ -307,18 +312,24 @@ function PhilosophySection() {
    PRICING SECTION
 ───────────────────────────────────────────────────────────── */
 
-function PricingSection() {
+function UltimateGoalSection() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
+  const getIcon = (title: string) => {
+    if (title === "Target Users") return <Users className="w-6 h-6" />;
+    if (title === "Easy Transfer") return <ArrowRightLeft className="w-6 h-6" />;
+    return <Coins className="w-6 h-6" />;
+  };
+
   return (
-    <Section id="pricing">
-      <SectionLabel text="Pricing" />
+    <Section id="ultimate-goal">
+      <SectionLabel text="Ultimate Goal" />
       <h2
-        className="font-heading font-bold tracking-tight mb-14"
-        style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)", color: "#FAF8F5" }}
+        className="font-heading font-bold tracking-tight mb-14 max-w-4xl"
+        style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)", color: "#FAF8F5" }}
       >
-        Transparent fees.{" "}
+        Built for real-world remittance{" "}
         <span
           style={{
             fontFamily: '"Playfair Display", Georgia, serif',
@@ -326,100 +337,69 @@ function PricingSection() {
             color: "#C9A84C",
           }}
         >
-          No surprises.
+          between Hong Kong and Southeast Asia.
         </span>
       </h2>
 
-      <div ref={ref} className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        {pricingTiers.map((tier, i) => (
+      <div ref={ref} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {ultimateGoals.map((goal, i) => (
           <motion.div
-            key={tier.name}
-            initial={{ opacity: 0, y: 40 }}
+            key={goal.title}
+            initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: i * 0.12, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className={`relative flex flex-col p-8 rounded-4xl border noise-overlay ${
-              tier.accent ? "ring-1" : ""
-            }`}
+            transition={{ duration: 0.6, delay: i * 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="group relative flex flex-col p-8 md:p-10 rounded-4xl border overflow-hidden bg-[#2A2A35]/30 hover:bg-[#2A2A35]/40 transition-colors duration-500"
             style={{
-              backgroundColor: tier.accent
-                ? "rgba(201,168,76,0.1)"
-                : "rgba(42,42,53,0.45)",
-              borderColor: tier.accent
-                ? "rgba(201,168,76,0.5)"
-                : "rgba(255,255,255,0.07)",
-              boxShadow: tier.accent
-                ? "0 0 40px rgba(201,168,76,0.12)"
-                : undefined,
+              borderColor: "rgba(255,255,255,0.05)",
             }}
           >
-            {tier.accent && (
-              <div
-                className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-semibold"
-                style={{
-                  backgroundColor: "#C9A84C",
-                  color: "#0D0D12",
-                  fontFamily: "'JetBrains Mono', monospace",
-                }}
-              >
-                Most Popular
+            {/* Hover Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#C9A84C]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+            {/* Top Section */}
+            <div className="relative z-10 flex flex-col gap-6 mb-8">
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-[#C9A84C]/10 border border-[#C9A84C]/20 text-[#C9A84C] group-hover:scale-110 group-hover:bg-[#C9A84C]/20 transition-all duration-500 shadow-[0_0_15px_rgba(201,168,76,0.1)] group-hover:shadow-[0_0_25px_rgba(201,168,76,0.2)]">
+                {getIcon(goal.title)}
               </div>
-            )}
-
-            <div className="mb-6">
-              <h3 className="font-heading text-lg font-semibold text-brand-ivory mb-1">
-                {tier.name}
-              </h3>
-              <p className="text-xs text-brand-ivory/40 leading-relaxed">{tier.desc}</p>
+              <div>
+                <h3 className="font-heading text-2xl font-bold tracking-tight mb-3 text-[#FAF8F5]">
+                  {goal.title}
+                </h3>
+                <p className="text-sm md:text-base text-brand-ivory/50 leading-relaxed min-h-[48px]">
+                  {goal.desc}
+                </p>
+              </div>
             </div>
 
-            <div className="mb-8">
-              <span
-                className="text-4xl font-bold tracking-tight"
-                style={{ color: tier.accent ? "#C9A84C" : "#FAF8F5" }}
+            <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent mb-8" />
+
+            {/* Bottom Section */}
+            <div className="relative z-10 flex flex-col flex-1">
+              <div
+                className="inline-flex items-center gap-2 mb-8 font-semibold w-full"
+                style={{ color: "#C9A84C" }}
               >
-                {tier.fee}
-              </span>
-              <span className="text-xs text-brand-ivory/30 ml-2">/ transaction</span>
+                <div className="bg-[#C9A84C]/10 border border-[#C9A84C]/20 px-4 py-2 rounded-xl text-lg w-full text-center group-hover:shadow-[0_0_15px_rgba(201,168,76,0.1)] transition-shadow">
+                  {goal.subtitle}
+                </div>
+              </div>
+
+              <ul className="flex flex-col gap-5 mt-auto">
+                {goal.features.map((f, j) => (
+                  <li key={j} className="flex items-start gap-4 text-sm md:text-base text-brand-ivory/70 transition-colors group-hover:text-brand-ivory/90">
+                    <Check
+                      size={20}
+                      className="mt-0.5 shrink-0"
+                      style={{ color: "rgba(201,168,76,0.8)" }}
+                    />
+                    <span className="leading-snug">{f}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            <ul className="space-y-3 mb-8 flex-1">
-              {tier.features.map((f) => (
-                <li key={f} className="flex items-start gap-2.5 text-sm text-brand-ivory/60">
-                  <Check
-                    size={14}
-                    className="mt-0.5 shrink-0"
-                    style={{ color: "#C9A84C" }}
-                  />
-                  {f}
-                </li>
-              ))}
-            </ul>
-
-            <Link href={tier.name === "Enterprise" ? "#" : "/send"}>
-              <button
-                className={`w-full rounded-3xl py-3 text-sm font-semibold transition-all duration-300 ${
-                  tier.accent ? "btn-neon overflow-hidden" : ""
-                }`}
-                style={
-                  !tier.accent
-                    ? {
-                        backgroundColor: "rgba(255,255,255,0.05)",
-                        border: "1px solid rgba(255,255,255,0.1)",
-                        color: "rgba(250,248,245,0.7)",
-                      }
-                    : {}
-                }
-              >
-                {tier.accent ? (
-                  <>
-                    <span className="btn-slide" />
-                    <span className="relative z-10">{tier.cta}</span>
-                  </>
-                ) : (
-                  tier.cta
-                )}
-              </button>
-            </Link>
+            {/* Glowing border effect on hover */}
+            <div className="absolute inset-0 rounded-4xl border border-[#C9A84C] opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none shadow-[inset_0_0_20px_rgba(201,168,76,0.1)]" />
           </motion.div>
         ))}
       </div>
@@ -469,7 +449,7 @@ export default function HomePage() {
 
       {/* D. PROTOCOL */}
       <Section id="protocol" className="border-t" style={{ borderColor: "rgba(255,255,255,0.05)" } as React.CSSProperties}>
-        <SectionLabel text="Protocol" />
+        <SectionLabel text="MVP Testing" />
         <h2
           className="font-heading font-bold tracking-tight mb-12"
           style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)", color: "#FAF8F5" }}
@@ -488,9 +468,9 @@ export default function HomePage() {
         <ProtocolSection />
       </Section>
 
-      {/* E. PRICING */}
+      {/* E. ULTIMATE GOALS */}
       <PhilosophySpacer />
-      <PricingSection />
+      <UltimateGoalSection />
 
       {/* F. TEAM */}
       <Section
@@ -503,7 +483,7 @@ export default function HomePage() {
           className="font-heading font-bold tracking-tight mb-12"
           style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)", color: "#FAF8F5" }}
         >
-          The people behind{" "}
+          The people{" "}
           <span
             style={{
               fontFamily: '"Playfair Display", Georgia, serif',
@@ -511,7 +491,7 @@ export default function HomePage() {
               color: "#C9A84C",
             }}
           >
-            the protocol.
+            behind.
           </span>
         </h2>
         <AnimatedTestimonials testimonials={teamMembers} />

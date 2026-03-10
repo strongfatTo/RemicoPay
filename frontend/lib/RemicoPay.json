@@ -1,808 +1,761 @@
 {
-    "abi":  [
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "address",
-                                       "name":  "_hkdr",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "internalType":  "address",
-                                       "name":  "_phpc",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "_exchangeRate",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "_feeBps",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "constructor"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "FPSRemittanceNotPending",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "InsufficientAllowance",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "InvalidFee",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "InvalidRate",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "NoPaymentVerifier",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "address",
-                                       "name":  "owner",
-                                       "type":  "address"
-                                   }
-                               ],
-                    "name":  "OwnableInvalidOwner",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "address",
-                                       "name":  "account",
-                                       "type":  "address"
-                                   }
-                               ],
-                    "name":  "OwnableUnauthorizedAccount",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "PaymentNotVerified",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "ReentrancyGuardReentrantCall",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "RemittanceNotFound",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "RemittanceNotPending",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "address",
-                                       "name":  "token",
-                                       "type":  "address"
-                                   }
-                               ],
-                    "name":  "SafeERC20FailedOperation",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "ZeroAddress",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "ZeroAmount",
-                    "type":  "error"
-                },
-                {
-                    "anonymous":  false,
-                    "inputs":  [
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "oldRate",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "newRate",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "ExchangeRateUpdated",
-                    "type":  "event"
-                },
-                {
-                    "anonymous":  false,
-                    "inputs":  [
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "uint256",
-                                       "name":  "remitId",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "address",
-                                       "name":  "recipient",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "phpAmount",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "FPSRemittanceCompleted",
-                    "type":  "event"
-                },
-                {
-                    "anonymous":  false,
-                    "inputs":  [
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "uint256",
-                                       "name":  "remitId",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "address",
-                                       "name":  "sender",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "bytes32",
-                                       "name":  "fpsPaymentRef",
-                                       "type":  "bytes32"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "hkdAmount",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "FPSRemittanceCreated",
-                    "type":  "event"
-                },
-                {
-                    "anonymous":  false,
-                    "inputs":  [
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "oldFee",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "newFee",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "FeeBpsUpdated",
-                    "type":  "event"
-                },
-                {
-                    "anonymous":  false,
-                    "inputs":  [
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "address",
-                                       "name":  "previousOwner",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "address",
-                                       "name":  "newOwner",
-                                       "type":  "address"
-                                   }
-                               ],
-                    "name":  "OwnershipTransferred",
-                    "type":  "event"
-                },
-                {
-                    "anonymous":  false,
-                    "inputs":  [
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "address",
-                                       "name":  "oldVerifier",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "address",
-                                       "name":  "newVerifier",
-                                       "type":  "address"
-                                   }
-                               ],
-                    "name":  "PaymentVerifierUpdated",
-                    "type":  "event"
-                },
-                {
-                    "anonymous":  false,
-                    "inputs":  [
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "uint256",
-                                       "name":  "remitId",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "address",
-                                       "name":  "recipient",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "phpAmount",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "RemittanceCompleted",
-                    "type":  "event"
-                },
-                {
-                    "anonymous":  false,
-                    "inputs":  [
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "uint256",
-                                       "name":  "remitId",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "address",
-                                       "name":  "sender",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "address",
-                                       "name":  "recipient",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "hkdAmount",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "phpAmount",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "fee",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "rate",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "RemittanceCreated",
-                    "type":  "event"
-                },
-                {
-                    "anonymous":  false,
-                    "inputs":  [
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "uint256",
-                                       "name":  "remitId",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "address",
-                                       "name":  "sender",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "hkdAmount",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "RemittanceRefunded",
-                    "type":  "event"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "remitId",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "completeRemittance",
-                    "outputs":  [
-
-                                ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "remitId",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "completeRemittanceWithFPS",
-                    "outputs":  [
-
-                                ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "address",
-                                       "name":  "recipient",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "hkdAmount",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "createRemittance",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "remitId",
-                                        "type":  "uint256"
-                                    }
-                                ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "address",
-                                       "name":  "recipient",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "hkdAmount",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "internalType":  "bytes32",
-                                       "name":  "fpsPaymentRef",
-                                       "type":  "bytes32"
-                                   }
-                               ],
-                    "name":  "createRemittanceWithFPS",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "remitId",
-                                        "type":  "uint256"
-                                    }
-                                ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "exchangeRate",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "",
-                                        "type":  "uint256"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "feeBps",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "",
-                                        "type":  "uint256"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "hkdAmount",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "getQuote",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "phpAmount",
-                                        "type":  "uint256"
-                                    },
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "fee",
-                                        "type":  "uint256"
-                                    },
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "rate",
-                                        "type":  "uint256"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "remitId",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "getRemittance",
-                    "outputs":  [
-                                    {
-                                        "components":  [
-                                                           {
-                                                               "internalType":  "address",
-                                                               "name":  "sender",
-                                                               "type":  "address"
-                                                           },
-                                                           {
-                                                               "internalType":  "address",
-                                                               "name":  "recipient",
-                                                               "type":  "address"
-                                                           },
-                                                           {
-                                                               "internalType":  "uint256",
-                                                               "name":  "hkdAmount",
-                                                               "type":  "uint256"
-                                                           },
-                                                           {
-                                                               "internalType":  "uint256",
-                                                               "name":  "phpAmount",
-                                                               "type":  "uint256"
-                                                           },
-                                                           {
-                                                               "internalType":  "uint256",
-                                                               "name":  "fee",
-                                                               "type":  "uint256"
-                                                           },
-                                                           {
-                                                               "internalType":  "uint256",
-                                                               "name":  "lockedRate",
-                                                               "type":  "uint256"
-                                                           },
-                                                           {
-                                                               "internalType":  "uint64",
-                                                               "name":  "createdAt",
-                                                               "type":  "uint64"
-                                                           },
-                                                           {
-                                                               "internalType":  "enum RemicoPay.Status",
-                                                               "name":  "status",
-                                                               "type":  "uint8"
-                                                           }
-                                                       ],
-                                        "internalType":  "struct RemicoPay.Remittance",
-                                        "name":  "",
-                                        "type":  "tuple"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "hkdr",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "contract IERC20",
-                                        "name":  "",
-                                        "type":  "address"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "nextRemitId",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "",
-                                        "type":  "uint256"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "owner",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "address",
-                                        "name":  "",
-                                        "type":  "address"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "paymentVerifier",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "contract IPaymentVerifier",
-                                        "name":  "",
-                                        "type":  "address"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "phpc",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "address",
-                                        "name":  "",
-                                        "type":  "address"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "remitId",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "refundRemittance",
-                    "outputs":  [
-
-                                ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "remitFPSRef",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "bytes32",
-                                        "name":  "",
-                                        "type":  "bytes32"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "remittances",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "address",
-                                        "name":  "sender",
-                                        "type":  "address"
-                                    },
-                                    {
-                                        "internalType":  "address",
-                                        "name":  "recipient",
-                                        "type":  "address"
-                                    },
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "hkdAmount",
-                                        "type":  "uint256"
-                                    },
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "phpAmount",
-                                        "type":  "uint256"
-                                    },
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "fee",
-                                        "type":  "uint256"
-                                    },
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "lockedRate",
-                                        "type":  "uint256"
-                                    },
-                                    {
-                                        "internalType":  "uint64",
-                                        "name":  "createdAt",
-                                        "type":  "uint64"
-                                    },
-                                    {
-                                        "internalType":  "enum RemicoPay.Status",
-                                        "name":  "status",
-                                        "type":  "uint8"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "renounceOwnership",
-                    "outputs":  [
-
-                                ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "newRate",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "setExchangeRate",
-                    "outputs":  [
-
-                                ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "newFeeBps",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "setFeeBps",
-                    "outputs":  [
-
-                                ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "address",
-                                       "name":  "_verifier",
-                                       "type":  "address"
-                                   }
-                               ],
-                    "name":  "setPaymentVerifier",
-                    "outputs":  [
-
-                                ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "address",
-                                       "name":  "newOwner",
-                                       "type":  "address"
-                                   }
-                               ],
-                    "name":  "transferOwnership",
-                    "outputs":  [
-
-                                ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "function"
-                }
-            ]
+  "_format": "hh-sol-artifact-1",
+  "contractName": "RemicoPay",
+  "sourceName": "contracts/RemicoPay.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_hkdr",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_phpc",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_exchangeRate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_feeBps",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "FPSRemittanceNotPending",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InsufficientAllowance",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidFee",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidRate",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NoPaymentVerifier",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableInvalidOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableUnauthorizedAccount",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "PaymentNotVerified",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ReentrancyGuardReentrantCall",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "RemittanceNotFound",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "RemittanceNotPending",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        }
+      ],
+      "name": "SafeERC20FailedOperation",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ZeroAddress",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ZeroAmount",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "oldRate",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newRate",
+          "type": "uint256"
+        }
+      ],
+      "name": "ExchangeRateUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "remitId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "phpAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "FPSRemittanceCompleted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "remitId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "fpsPaymentRef",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "hkdAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "FPSRemittanceCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "oldFee",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newFee",
+          "type": "uint256"
+        }
+      ],
+      "name": "FeeBpsUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "oldVerifier",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newVerifier",
+          "type": "address"
+        }
+      ],
+      "name": "PaymentVerifierUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "remitId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "phpAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "RemittanceCompleted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "remitId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "hkdAmount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "phpAmount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "fee",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "rate",
+          "type": "uint256"
+        }
+      ],
+      "name": "RemittanceCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "remitId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "hkdAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "RemittanceRefunded",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "remitId",
+          "type": "uint256"
+        }
+      ],
+      "name": "completeRemittance",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "remitId",
+          "type": "uint256"
+        }
+      ],
+      "name": "completeRemittanceWithFPS",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "hkdAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "createRemittance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "remitId",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "hkdAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "fpsPaymentRef",
+          "type": "bytes32"
+        }
+      ],
+      "name": "createRemittanceWithFPS",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "remitId",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "exchangeRate",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "feeBps",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "hkdAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "getQuote",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "phpAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "fee",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rate",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "remitId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getRemittance",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "hkdAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "phpAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "fee",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "lockedRate",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint64",
+              "name": "createdAt",
+              "type": "uint64"
+            },
+            {
+              "internalType": "enum RemicoPay.Status",
+              "name": "status",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct RemicoPay.Remittance",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "hkdr",
+      "outputs": [
+        {
+          "internalType": "contract IERC20",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "nextRemitId",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "paymentVerifier",
+      "outputs": [
+        {
+          "internalType": "contract IPaymentVerifier",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "phpc",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "remitId",
+          "type": "uint256"
+        }
+      ],
+      "name": "refundRemittance",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "remitFPSRef",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "remittances",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "hkdAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "phpAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "fee",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "lockedRate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint64",
+          "name": "createdAt",
+          "type": "uint64"
+        },
+        {
+          "internalType": "enum RemicoPay.Status",
+          "name": "status",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "newRate",
+          "type": "uint256"
+        }
+      ],
+      "name": "setExchangeRate",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "newFeeBps",
+          "type": "uint256"
+        }
+      ],
+      "name": "setFeeBps",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_verifier",
+          "type": "address"
+        }
+      ],
+      "name": "setPaymentVerifier",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x60c06040523480156200001157600080fd5b506040516200171c3803806200171c833981016040819052620000349162000182565b600160005533806200006057604051631e4fbdf760e01b81526000600482015260240160405180910390fd5b6200006b8162000113565b506001600160a01b03841615806200008a57506001600160a01b038316155b15620000a95760405163d92e233d60e01b815260040160405180910390fd5b81600003620000cb57604051636a43f8d160e01b815260040160405180910390fd5b6103e8811115620000ef576040516358d620b360e01b815260040160405180910390fd5b6001600160a01b039384166080529190921660a052600291909155600355620001ca565b600180546001600160a01b038381166001600160a01b0319831681179093556040519116919082907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a35050565b80516001600160a01b03811681146200017d57600080fd5b919050565b600080600080608085870312156200019957600080fd5b620001a48562000165565b9350620001b46020860162000165565b6040860151606090960151949790965092505050565b60805160a05161150962000213600039600081816101f30152818161078f015281816109030152610dc901526000818161014101528181610d7b01526110a201526115096000f3fe608060405234801561001057600080fd5b50600436106101375760003560e01c806373e66f43116100b8578063cf39918e1161007c578063cf39918e146102fe578063d95f27591461032c578063db068e0e1461033f578063e3e5819c14610352578063f2fde38b14610372578063f9ebf69e1461038557600080fd5b806373e66f431461023057806379bdfff4146102505780638da5cb5b146102635780639cb3e85214610274578063b4ea0d5f1461027d57600080fd5b806344426b36116100ff57806344426b36146101c65780635de7f901146101db57806364ba3c13146101ee578063715018a61461021557806372c27b621461021d57600080fd5b8063075866ac1461013c57806324a9d8531461018057806328ff879f146101975780633818d6e5146101aa5780633ba0b9a9146101bd575b600080fd5b6101637f000000000000000000000000000000000000000000000000000000000000000081565b6040516001600160a01b0390911681526020015b60405180910390f35b61018960035481565b604051908152602001610177565b600554610163906001600160a01b031681565b6101896101b83660046112af565b610398565b61018960025481565b6101d96101d43660046112e2565b6105ee565b005b6101d96101e93660046112e2565b6107fc565b6101637f000000000000000000000000000000000000000000000000000000000000000081565b6101d961096c565b6101d961022b3660046112e2565b610980565b61024361023e3660046112e2565b6109f1565b6040516101779190611333565b61018961025e3660046113ab565b610b0d565b6001546001600160a01b0316610163565b61018960045481565b6102ea61028b3660046112e2565b60076020526000908152604090208054600182015460028301546003840154600485015460058601546006909601546001600160a01b0395861696959094169492939192909167ffffffffffffffff811690600160401b900460ff1688565b6040516101779897969594939291906113d5565b61031161030c3660046112e2565b610e3a565b60408051938452602084019290925290820152606001610177565b6101d961033a366004611434565b610eb1565b6101d961034d3660046112e2565b610f0b565b6101896103603660046112e2565b60066020526000908152604090205481565b6101d9610380366004611434565b610f72565b6101d96103933660046112e2565b610fb2565b60006103a26110d6565b6001600160a01b0384166103c95760405163d92e233d60e01b815260040160405180910390fd5b826000036103ea57604051631f2a200560e01b815260040160405180910390fd5b6005546001600160a01b031661041357604051632ba527ad60e21b815260040160405180910390fd5b60025460035460006127106104288388611465565b610432919061147c565b90506000610440828861149e565b90506000620f42406104528684611465565b61045c919061147c565b600480546001810190915560408051610100810182523381526001600160a01b038d1660208201529081018b9052606081018390526080810186905260a0810188905267ffffffffffffffff421660c082015290975090915060e0810160009052600087815260076020908152604091829020835181546001600160a01b03199081166001600160a01b039283161783559285015160018301805490941691161790915590820151600280830191909155606083015160038301556080830151600483015560a0830151600583015560c083015160068301805467ffffffffffffffff19811667ffffffffffffffff909316928317825560e086015193919268ffffffffffffffffff199091161790600160401b908490811115610582576105826112fb565b0217905550505060008681526006602090815260409182902089905581518981529081018a9052339188917f7555647901e2beb5d4374258ff9e431e009547e9aa638a13de3756afd2711e4c910160405180910390a350505050506105e76001600055565b9392505050565b6105f6611100565b6105fe6110d6565b600454811061062057604051630638c3db60e41b815260040160405180910390fd5b6000818152600760205260408120906006820154600160401b900460ff16600281111561064f5761064f6112fb565b1461066d57604051633121a70f60e21b815260040160405180910390fd5b600082815260066020526040908190205460055491516343fd6ce560e01b81526004810182905290916001600160a01b0316906343fd6ce590602401602060405180830381865afa1580156106c6573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906106ea91906114b1565b61070757604051638f26703160e01b815260040160405180910390fd5b6001820154600383015460068401805460ff60401b1916600160401b1790556040518181526001600160a01b0390921691829086907f8a6191057225c1075e83cc236329aeee20d0e4d268c64f9c49e348c680e6c2619060200160405180910390a36040516340c10f1960e01b81526001600160a01b038381166004830152602482018390527f000000000000000000000000000000000000000000000000000000000000000016906340c10f1990604401600060405180830381600087803b1580156107d357600080fd5b505af11580156107e7573d6000803e3d6000fd5b50505050505050506107f96001600055565b50565b610804611100565b61080c6110d6565b600454811061082e57604051630638c3db60e41b815260040160405180910390fd5b6000818152600760205260408120906006820154600160401b900460ff16600281111561085d5761085d6112fb565b1461087b57604051631f8f702560e11b815260040160405180910390fd5b6001810154600382015460068301805460ff60401b1916600160401b1790556040518181526001600160a01b0390921691829085907f6d74db8ae01a3dbd4b27059d5065ede6f515adc14de4678cc4eabb244dc95ecc9060200160405180910390a36040516340c10f1960e01b81526001600160a01b038381166004830152602482018390527f000000000000000000000000000000000000000000000000000000000000000016906340c10f1990604401600060405180830381600087803b15801561094757600080fd5b505af115801561095b573d6000803e3d6000fd5b505050505050506107f96001600055565b610974611100565b61097e600061112d565b565b610988611100565b6103e88111156109ab576040516358d620b360e01b815260040160405180910390fd5b600380549082905560408051828152602081018490527f5ec5620e288c4be955ccb6cfb3d55431a8fed5c4c96ffacc4b9506360695f64e91015b60405180910390a15050565b610a366040805161010081018252600080825260208201819052918101829052606081018290526080810182905260a0810182905260c081018290529060e082015290565b6004548210610a5857604051630638c3db60e41b815260040160405180910390fd5b60008281526007602090815260409182902082516101008101845281546001600160a01b03908116825260018301541692810192909252600280820154938301939093526003810154606083015260048101546080830152600581015460a0830152600681015467ffffffffffffffff811660c08401529192909160e0840191600160401b90910460ff1690811115610af357610af36112fb565b6002811115610b0457610b046112fb565b90525092915050565b6000610b176110d6565b6001600160a01b038316610b3e5760405163d92e233d60e01b815260040160405180910390fd5b81600003610b5f57604051631f2a200560e01b815260040160405180910390fd5b6002546003546000612710610b748387611465565b610b7e919061147c565b90506000610b8c828761149e565b90506000620f4240610b9e8684611465565b610ba8919061147c565b60048054600180820190925560408051610100810182523381526001600160a01b038d1660208201529081018b9052606081018490526080810187905260a0810189905267ffffffffffffffff421660c082015290985091925060e0820152600087815260076020908152604091829020835181546001600160a01b03199081166001600160a01b039283161783559285015160018301805490941691161790915590820151600280830191909155606083015160038301556080830151600483015560a0830151600583015560c083015160068301805467ffffffffffffffff19811667ffffffffffffffff909316928317825560e086015193919268ffffffffffffffffff199091161790600160401b908490811115610ccc57610ccc6112fb565b0217905550506040805189815260208101849052908101859052606081018790526001600160a01b038a169150339088907f8e0a4c64a0db630be23554730e48f763dde6cb7b66d81a47ac11d9d30881d9309060800160405180910390a4876001600160a01b0316867f6d74db8ae01a3dbd4b27059d5065ede6f515adc14de4678cc4eabb244dc95ecc83604051610d6691815260200190565b60405180910390a3610da36001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001633308a61117f565b6040516340c10f1960e01b81526001600160a01b038981166004830152602482018390527f000000000000000000000000000000000000000000000000000000000000000016906340c10f1990604401600060405180830381600087803b158015610e0d57600080fd5b505af1158015610e21573d6000803e3d6000fd5b505050505050505050610e346001600055565b92915050565b600080600083600003610e6057604051631f2a200560e01b815260040160405180910390fd5b5060025460035461271090610e759086611465565b610e7f919061147c565b91506000610e8d838661149e565b9050620f4240610e9d8383611465565b610ea7919061147c565b9350509193909250565b610eb9611100565b600580546001600160a01b038381166001600160a01b0319831681179093556040519116919082907f2d608369eafd50ea2621550d97e041eabefa7033fa2e98933f7166e0b6eeae7190600090a35050565b610f13611100565b80600003610f3457604051636a43f8d160e01b815260040160405180910390fd5b600280549082905560408051828152602081018490527fc8d1043f24843c0a1c9251fdc30017d84e87498fbcf232af9f86816b5e182bde91016109e5565b610f7a611100565b6001600160a01b038116610fa957604051631e4fbdf760e01b8152600060048201526024015b60405180910390fd5b6107f98161112d565b610fba611100565b610fc26110d6565b6004548110610fe457604051630638c3db60e41b815260040160405180910390fd5b6000818152600760205260408120906006820154600160401b900460ff166002811115611013576110136112fb565b1461103157604051631f8f702560e11b815260040160405180910390fd5b8054600282015460068301805460ff60401b1916680200000000000000001790556040518181526001600160a01b0390921691829085907fa41e06c7ada25bbbeb951c502bd4d4c37fc67dbac2d94512fcc98f1b9ad2d1099060200160405180910390a36110c96001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001683836111ec565b5050506107f96001600055565b6002600054036110f957604051633ee5aeb560e01b815260040160405180910390fd5b6002600055565b6001546001600160a01b0316331461097e5760405163118cdaa760e01b8152336004820152602401610fa0565b600180546001600160a01b038381166001600160a01b0319831681179093556040519116919082907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a35050565b6040516001600160a01b0384811660248301528381166044830152606482018390526111e69186918216906323b872dd906084015b604051602081830303815290604052915060e01b6020820180516001600160e01b038381831617835250505050611222565b50505050565b6040516001600160a01b0383811660248301526044820183905261121d91859182169063a9059cbb906064016111b4565b505050565b600080602060008451602086016000885af180611245576040513d6000823e3d81fd5b50506000513d9150811561125d57806001141561126a565b6001600160a01b0384163b155b156111e657604051635274afe760e01b81526001600160a01b0385166004820152602401610fa0565b80356001600160a01b03811681146112aa57600080fd5b919050565b6000806000606084860312156112c457600080fd5b6112cd84611293565b95602085013595506040909401359392505050565b6000602082840312156112f457600080fd5b5035919050565b634e487b7160e01b600052602160045260246000fd5b6003811061132f57634e487b7160e01b600052602160045260246000fd5b9052565b60006101008201905060018060a01b038084511683528060208501511660208401525060408301516040830152606083015160608301526080830151608083015260a083015160a083015267ffffffffffffffff60c08401511660c083015260e08301516113a460e0840182611311565b5092915050565b600080604083850312156113be57600080fd5b6113c783611293565b946020939093013593505050565b6001600160a01b0389811682528816602082015260408101879052606081018690526080810185905260a0810184905267ffffffffffffffff831660c0820152610100810161142760e0830184611311565b9998505050505050505050565b60006020828403121561144657600080fd5b6105e782611293565b634e487b7160e01b600052601160045260246000fd5b8082028115828204841417610e3457610e3461144f565b60008261149957634e487b7160e01b600052601260045260246000fd5b500490565b81810381811115610e3457610e3461144f565b6000602082840312156114c357600080fd5b815180151581146105e757600080fdfea264697066735822122063dbf8df6d93c09ceaeffe5d21982106552b4429851122883539fd5e3ba633db64736f6c63430008180033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106101375760003560e01c806373e66f43116100b8578063cf39918e1161007c578063cf39918e146102fe578063d95f27591461032c578063db068e0e1461033f578063e3e5819c14610352578063f2fde38b14610372578063f9ebf69e1461038557600080fd5b806373e66f431461023057806379bdfff4146102505780638da5cb5b146102635780639cb3e85214610274578063b4ea0d5f1461027d57600080fd5b806344426b36116100ff57806344426b36146101c65780635de7f901146101db57806364ba3c13146101ee578063715018a61461021557806372c27b621461021d57600080fd5b8063075866ac1461013c57806324a9d8531461018057806328ff879f146101975780633818d6e5146101aa5780633ba0b9a9146101bd575b600080fd5b6101637f000000000000000000000000000000000000000000000000000000000000000081565b6040516001600160a01b0390911681526020015b60405180910390f35b61018960035481565b604051908152602001610177565b600554610163906001600160a01b031681565b6101896101b83660046112af565b610398565b61018960025481565b6101d96101d43660046112e2565b6105ee565b005b6101d96101e93660046112e2565b6107fc565b6101637f000000000000000000000000000000000000000000000000000000000000000081565b6101d961096c565b6101d961022b3660046112e2565b610980565b61024361023e3660046112e2565b6109f1565b6040516101779190611333565b61018961025e3660046113ab565b610b0d565b6001546001600160a01b0316610163565b61018960045481565b6102ea61028b3660046112e2565b60076020526000908152604090208054600182015460028301546003840154600485015460058601546006909601546001600160a01b0395861696959094169492939192909167ffffffffffffffff811690600160401b900460ff1688565b6040516101779897969594939291906113d5565b61031161030c3660046112e2565b610e3a565b60408051938452602084019290925290820152606001610177565b6101d961033a366004611434565b610eb1565b6101d961034d3660046112e2565b610f0b565b6101896103603660046112e2565b60066020526000908152604090205481565b6101d9610380366004611434565b610f72565b6101d96103933660046112e2565b610fb2565b60006103a26110d6565b6001600160a01b0384166103c95760405163d92e233d60e01b815260040160405180910390fd5b826000036103ea57604051631f2a200560e01b815260040160405180910390fd5b6005546001600160a01b031661041357604051632ba527ad60e21b815260040160405180910390fd5b60025460035460006127106104288388611465565b610432919061147c565b90506000610440828861149e565b90506000620f42406104528684611465565b61045c919061147c565b600480546001810190915560408051610100810182523381526001600160a01b038d1660208201529081018b9052606081018390526080810186905260a0810188905267ffffffffffffffff421660c082015290975090915060e0810160009052600087815260076020908152604091829020835181546001600160a01b03199081166001600160a01b039283161783559285015160018301805490941691161790915590820151600280830191909155606083015160038301556080830151600483015560a0830151600583015560c083015160068301805467ffffffffffffffff19811667ffffffffffffffff909316928317825560e086015193919268ffffffffffffffffff199091161790600160401b908490811115610582576105826112fb565b0217905550505060008681526006602090815260409182902089905581518981529081018a9052339188917f7555647901e2beb5d4374258ff9e431e009547e9aa638a13de3756afd2711e4c910160405180910390a350505050506105e76001600055565b9392505050565b6105f6611100565b6105fe6110d6565b600454811061062057604051630638c3db60e41b815260040160405180910390fd5b6000818152600760205260408120906006820154600160401b900460ff16600281111561064f5761064f6112fb565b1461066d57604051633121a70f60e21b815260040160405180910390fd5b600082815260066020526040908190205460055491516343fd6ce560e01b81526004810182905290916001600160a01b0316906343fd6ce590602401602060405180830381865afa1580156106c6573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906106ea91906114b1565b61070757604051638f26703160e01b815260040160405180910390fd5b6001820154600383015460068401805460ff60401b1916600160401b1790556040518181526001600160a01b0390921691829086907f8a6191057225c1075e83cc236329aeee20d0e4d268c64f9c49e348c680e6c2619060200160405180910390a36040516340c10f1960e01b81526001600160a01b038381166004830152602482018390527f000000000000000000000000000000000000000000000000000000000000000016906340c10f1990604401600060405180830381600087803b1580156107d357600080fd5b505af11580156107e7573d6000803e3d6000fd5b50505050505050506107f96001600055565b50565b610804611100565b61080c6110d6565b600454811061082e57604051630638c3db60e41b815260040160405180910390fd5b6000818152600760205260408120906006820154600160401b900460ff16600281111561085d5761085d6112fb565b1461087b57604051631f8f702560e11b815260040160405180910390fd5b6001810154600382015460068301805460ff60401b1916600160401b1790556040518181526001600160a01b0390921691829085907f6d74db8ae01a3dbd4b27059d5065ede6f515adc14de4678cc4eabb244dc95ecc9060200160405180910390a36040516340c10f1960e01b81526001600160a01b038381166004830152602482018390527f000000000000000000000000000000000000000000000000000000000000000016906340c10f1990604401600060405180830381600087803b15801561094757600080fd5b505af115801561095b573d6000803e3d6000fd5b505050505050506107f96001600055565b610974611100565b61097e600061112d565b565b610988611100565b6103e88111156109ab576040516358d620b360e01b815260040160405180910390fd5b600380549082905560408051828152602081018490527f5ec5620e288c4be955ccb6cfb3d55431a8fed5c4c96ffacc4b9506360695f64e91015b60405180910390a15050565b610a366040805161010081018252600080825260208201819052918101829052606081018290526080810182905260a0810182905260c081018290529060e082015290565b6004548210610a5857604051630638c3db60e41b815260040160405180910390fd5b60008281526007602090815260409182902082516101008101845281546001600160a01b03908116825260018301541692810192909252600280820154938301939093526003810154606083015260048101546080830152600581015460a0830152600681015467ffffffffffffffff811660c08401529192909160e0840191600160401b90910460ff1690811115610af357610af36112fb565b6002811115610b0457610b046112fb565b90525092915050565b6000610b176110d6565b6001600160a01b038316610b3e5760405163d92e233d60e01b815260040160405180910390fd5b81600003610b5f57604051631f2a200560e01b815260040160405180910390fd5b6002546003546000612710610b748387611465565b610b7e919061147c565b90506000610b8c828761149e565b90506000620f4240610b9e8684611465565b610ba8919061147c565b60048054600180820190925560408051610100810182523381526001600160a01b038d1660208201529081018b9052606081018490526080810187905260a0810189905267ffffffffffffffff421660c082015290985091925060e0820152600087815260076020908152604091829020835181546001600160a01b03199081166001600160a01b039283161783559285015160018301805490941691161790915590820151600280830191909155606083015160038301556080830151600483015560a0830151600583015560c083015160068301805467ffffffffffffffff19811667ffffffffffffffff909316928317825560e086015193919268ffffffffffffffffff199091161790600160401b908490811115610ccc57610ccc6112fb565b0217905550506040805189815260208101849052908101859052606081018790526001600160a01b038a169150339088907f8e0a4c64a0db630be23554730e48f763dde6cb7b66d81a47ac11d9d30881d9309060800160405180910390a4876001600160a01b0316867f6d74db8ae01a3dbd4b27059d5065ede6f515adc14de4678cc4eabb244dc95ecc83604051610d6691815260200190565b60405180910390a3610da36001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001633308a61117f565b6040516340c10f1960e01b81526001600160a01b038981166004830152602482018390527f000000000000000000000000000000000000000000000000000000000000000016906340c10f1990604401600060405180830381600087803b158015610e0d57600080fd5b505af1158015610e21573d6000803e3d6000fd5b505050505050505050610e346001600055565b92915050565b600080600083600003610e6057604051631f2a200560e01b815260040160405180910390fd5b5060025460035461271090610e759086611465565b610e7f919061147c565b91506000610e8d838661149e565b9050620f4240610e9d8383611465565b610ea7919061147c565b9350509193909250565b610eb9611100565b600580546001600160a01b038381166001600160a01b0319831681179093556040519116919082907f2d608369eafd50ea2621550d97e041eabefa7033fa2e98933f7166e0b6eeae7190600090a35050565b610f13611100565b80600003610f3457604051636a43f8d160e01b815260040160405180910390fd5b600280549082905560408051828152602081018490527fc8d1043f24843c0a1c9251fdc30017d84e87498fbcf232af9f86816b5e182bde91016109e5565b610f7a611100565b6001600160a01b038116610fa957604051631e4fbdf760e01b8152600060048201526024015b60405180910390fd5b6107f98161112d565b610fba611100565b610fc26110d6565b6004548110610fe457604051630638c3db60e41b815260040160405180910390fd5b6000818152600760205260408120906006820154600160401b900460ff166002811115611013576110136112fb565b1461103157604051631f8f702560e11b815260040160405180910390fd5b8054600282015460068301805460ff60401b1916680200000000000000001790556040518181526001600160a01b0390921691829085907fa41e06c7ada25bbbeb951c502bd4d4c37fc67dbac2d94512fcc98f1b9ad2d1099060200160405180910390a36110c96001600160a01b037f00000000000000000000000000000000000000000000000000000000000000001683836111ec565b5050506107f96001600055565b6002600054036110f957604051633ee5aeb560e01b815260040160405180910390fd5b6002600055565b6001546001600160a01b0316331461097e5760405163118cdaa760e01b8152336004820152602401610fa0565b600180546001600160a01b038381166001600160a01b0319831681179093556040519116919082907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a35050565b6040516001600160a01b0384811660248301528381166044830152606482018390526111e69186918216906323b872dd906084015b604051602081830303815290604052915060e01b6020820180516001600160e01b038381831617835250505050611222565b50505050565b6040516001600160a01b0383811660248301526044820183905261121d91859182169063a9059cbb906064016111b4565b505050565b600080602060008451602086016000885af180611245576040513d6000823e3d81fd5b50506000513d9150811561125d57806001141561126a565b6001600160a01b0384163b155b156111e657604051635274afe760e01b81526001600160a01b0385166004820152602401610fa0565b80356001600160a01b03811681146112aa57600080fd5b919050565b6000806000606084860312156112c457600080fd5b6112cd84611293565b95602085013595506040909401359392505050565b6000602082840312156112f457600080fd5b5035919050565b634e487b7160e01b600052602160045260246000fd5b6003811061132f57634e487b7160e01b600052602160045260246000fd5b9052565b60006101008201905060018060a01b038084511683528060208501511660208401525060408301516040830152606083015160608301526080830151608083015260a083015160a083015267ffffffffffffffff60c08401511660c083015260e08301516113a460e0840182611311565b5092915050565b600080604083850312156113be57600080fd5b6113c783611293565b946020939093013593505050565b6001600160a01b0389811682528816602082015260408101879052606081018690526080810185905260a0810184905267ffffffffffffffff831660c0820152610100810161142760e0830184611311565b9998505050505050505050565b60006020828403121561144657600080fd5b6105e782611293565b634e487b7160e01b600052601160045260246000fd5b8082028115828204841417610e3457610e3461144f565b60008261149957634e487b7160e01b600052601260045260246000fd5b500490565b81810381811115610e3457610e3461144f565b6000602082840312156114c357600080fd5b815180151581146105e757600080fdfea264697066735822122063dbf8df6d93c09ceaeffe5d21982106552b4429851122883539fd5e3ba633db64736f6c63430008180033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
 }

@@ -13,7 +13,7 @@ const steps = [
   {
     num: "02",
     title: "Send in Seconds",
-    desc: "Enter the recipient address and HKD amount. Smart contracts handle conversion, fee deduction, and settlement automatically.",
+    desc: "Enter the recipient's wallet address and HKD amount. Smart contracts handle conversion, fee deduction, and settlement automatically.",
     visual: "scanner",
   },
   {
@@ -24,96 +24,149 @@ const steps = [
   },
 ];
 
-/* ── Helix SVG animation ── */
-function HelixVisual() {
+/* ── Wallet Connect Visual ── */
+function WalletVisual() {
   return (
-    <svg width="120" height="80" viewBox="0 0 120 80" fill="none">
-      {[0, 1, 2, 3, 4].map((i) => (
-        <motion.ellipse
-          key={i}
-          cx={20 + i * 20}
-          cy={40}
-          rx={8}
-          ry={16}
-          stroke="#C9A84C"
-          strokeWidth="1.2"
-          fill="none"
-          strokeOpacity={0.6 - i * 0.08}
-          animate={{ ry: [16, 8, 16], strokeOpacity: [0.6, 0.3, 0.6] }}
-          transition={{
-            duration: 2.5,
-            repeat: Infinity,
-            delay: i * 0.25,
-            ease: "easeInOut",
-          }}
-        />
-      ))}
-    </svg>
-  );
-}
-
-/* ── Scanner grid visual ── */
-function ScannerVisual() {
-  return (
-    <div className="relative w-32 h-20 overflow-hidden rounded-xl">
-      {/* Dot grid */}
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle, rgba(201,168,76,0.35) 1px, transparent 1px)",
-          backgroundSize: "12px 12px",
-        }}
-      />
-      {/* Scanning line */}
+    <div className="relative w-24 h-24 flex items-center justify-center">
+      {/* Wallet body */}
       <motion.div
-        className="absolute top-0 bottom-0 w-0.5 rounded-full"
-        style={{
-          background:
-            "linear-gradient(to bottom, transparent, #C9A84C, transparent)",
-          boxShadow: "0 0 8px rgba(201,168,76,0.8)",
-        }}
-        animate={{ x: [-8, 136] }}
-        transition={{ duration: 2.2, repeat: Infinity, ease: "linear" }}
-      />
+        className="relative z-10 w-12 h-9 border border-[#C9A84C]/50 rounded-lg bg-[#2A2A35]/80 backdrop-blur-sm shadow-[0_0_15px_rgba(201,168,76,0.15)] flex items-center"
+        animate={{ y: [0, -4, 0] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+      >
+        {/* Wallet flap / clip */}
+        <div className="absolute -right-[3px] top-1/2 -translate-y-1/2 w-[3px] h-3 bg-[#C9A84C] rounded-r-sm" />
+
+        {/* Connection pulse from wallet */}
+        <motion.div
+          className="absolute inset-0 border border-[#C9A84C] rounded-lg"
+          animate={{ scale: [1, 1.4], opacity: [0.5, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+        />
+      </motion.div>
+
+      {/* Coins dropping in */}
+      {[0, 1].map((i) => (
+        <motion.div
+          key={i}
+          className="absolute z-0 w-4 h-4 rounded-full bg-gradient-to-br from-[#C9A84C] to-[#C9A84C]/50 flex items-center justify-center p-[1px]"
+          initial={{ y: -25, opacity: 0, scale: 0.5 }}
+          animate={{ y: [-25, 0], opacity: [0, 1, 0], scale: [0.5, 1, 0.5] }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: i * 1.25 }}
+        >
+          <div className="w-full h-full rounded-full bg-[#0D0D12] flex items-center justify-center">
+            <span className="text-[8px] text-[#C9A84C] font-bold font-mono hover:cursor-default">$</span>
+          </div>
+        </motion.div>
+      ))}
     </div>
   );
 }
 
-/* ── EKG waveform visual ── */
-function WaveformVisual() {
-  const path =
-    "M0,40 L20,40 L25,20 L30,60 L35,10 L40,65 L45,40 L60,40 L65,30 L70,50 L75,40 L120,40";
-
+/* ── Smart Contract Convert Visual ── */
+function ConvertVisual() {
   return (
-    <svg width="120" height="80" viewBox="0 0 120 80" fill="none">
-      <motion.path
-        d={path}
-        stroke="#C9A84C"
-        strokeWidth="1.8"
-        fill="none"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeDasharray="200"
-        animate={{ strokeDashoffset: [0, -200] }}
-        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-      />
-      <motion.circle
-        cx="35"
-        cy="10"
-        r="3"
-        fill="#C9A84C"
-        animate={{ opacity: [1, 0.2, 1] }}
-        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-      />
-    </svg>
+    <div className="relative w-40 h-24 flex items-center justify-between px-2">
+      {/* HKD Node */}
+      <div className="flex flex-col items-center z-10 bg-[#0D0D12] p-1 rounded-full">
+        <div className="w-9 h-9 rounded-full border border-white/10 bg-[#2A2A35]/50 flex items-center justify-center text-[10px] text-brand-ivory/60 font-mono shadow-inner">
+          HKD
+        </div>
+      </div>
+
+      {/* Center Smart Contract Node */}
+      <motion.div
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rotate-45 border-[1.5px] border-[#C9A84C]/80 bg-[#C9A84C]/10 flex items-center justify-center z-20 backdrop-blur-md shadow-[0_0_15px_rgba(201,168,76,0.3)]"
+        animate={{ rotate: [45, 225] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+      >
+        <motion.div className="w-3 h-3 border border-[#C9A84C] border-t-transparent rounded-full" animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} />
+      </motion.div>
+
+      {/* Path lines */}
+      <div className="absolute left-[34px] right-[34px] h-[1px] bg-gradient-to-r from-white/10 via-[#C9A84C]/50 to-white/10 z-0">
+        {/* Particles */}
+        <motion.div
+          className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#C9A84C] shadow-[0_0_8px_#C9A84C]"
+          animate={{ left: ["0%", "45%", "55%", "100%"], opacity: [0, 1, 1, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </div>
+
+      {/* PHP Node */}
+      <div className="flex flex-col items-center z-10 bg-[#0D0D12] p-1 rounded-full">
+        <div className="w-9 h-9 rounded-full border border-[#C9A84C]/40 bg-[#C9A84C]/10 flex items-center justify-center text-[10px] text-[#C9A84C] font-bold font-mono shadow-[0_0_10px_rgba(201,168,76,0.15)]">
+          PHP
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Blockchain Verify Visual ── */
+function BlockchainVisual() {
+  return (
+    <div className="relative w-36 h-24 flex items-center justify-center">
+      {/* Blockchain Network */}
+      <div className="flex items-center gap-2">
+        {[0, 1, 2].map((i) => (
+          <div key={i} className="flex items-center gap-2">
+            {i > 0 && (
+              <div className="w-4 h-[2px] rounded-full bg-white/10 relative overflow-hidden">
+                <motion.div
+                  className="absolute inset-0 bg-[#C9A84C] shadow-[0_0_5px_#C9A84C]"
+                  initial={{ x: "-100%" }}
+                  animate={{ x: "100%" }}
+                  transition={{ duration: 1.5, delay: i * 0.4, repeat: Infinity, ease: "easeInOut" }}
+                />
+              </div>
+            )}
+            <motion.div
+              className="w-7 h-7 border-[1.5px] border-[#C9A84C]/30 bg-[#2A2A35]/80 rounded flex items-center justify-center relative backdrop-blur-sm"
+              animate={{
+                borderColor: i === 2 ? ["rgba(201,168,76,0.3)", "rgba(201,168,76,1)", "rgba(201,168,76,0.3)"] : "rgba(201,168,76,0.3)",
+                boxShadow: i === 2 ? ["0 0 0px rgba(201,168,76,0)", "0 0 15px rgba(201,168,76,0.4)", "0 0 0px rgba(201,168,76,0)"] : "none",
+                y: [0, -2, 0]
+              }}
+              transition={{
+                borderColor: { duration: 2, repeat: Infinity, ease: "easeInOut", delay: 1.5 },
+                boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut", delay: 1.5 },
+                y: { duration: 3, repeat: Infinity, ease: "easeInOut", delay: i * 0.2 }
+              }}
+            >
+              {/* Last block gets a checkmark or lock to signify recorded / verified */}
+              {i === 2 ? (
+                <motion.svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: [0, 1, 1, 0], scale: [0.5, 1, 1, 0.5] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </motion.svg>
+              ) : (
+                <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
+              )}
+            </motion.div>
+          </div>
+        ))}
+      </div>
+
+      {/* Etherlink Label / Tag */}
+      <motion.div
+        className="absolute -bottom-1 right-2 px-1.5 py-0.5 rounded text-[7px] border border-[#C9A84C]/30 bg-[#C9A84C]/10 text-[#C9A84C] font-mono tracking-wider opacity-80"
+        animate={{ opacity: [0.4, 0.8, 0.4] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      >
+        ETHERLINK
+      </motion.div>
+    </div>
   );
 }
 
 const visuals = {
-  helix: <HelixVisual />,
-  scanner: <ScannerVisual />,
-  waveform: <WaveformVisual />,
+  helix: <WalletVisual />,
+  scanner: <ConvertVisual />,
+  waveform: <BlockchainVisual />,
 };
 
 /* ── Protocol Card ── */
@@ -168,6 +221,11 @@ export default function ProtocolSection() {
       {steps.map((step, i) => (
         <ProtocolCard key={step.num} step={step} index={i} />
       ))}
+      <div className="pt-6 text-center">
+        <p className="text-xs text-brand-ivory/40" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+          *Detail steps please refers to Github
+        </p>
+      </div>
     </div>
   );
 }

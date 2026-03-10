@@ -11,7 +11,7 @@ export function useHKDRBalance() {
   const { address } = useAccount();
   return useReadContract({
     address: ADDRESSES.MockHKDR as `0x${string}`,
-    abi: MockHKDRABI,
+    abi: MockHKDRABI.abi,
     functionName: "balanceOf",
     args: address ? [address] : undefined,
     query: { enabled: !!address },
@@ -22,7 +22,7 @@ export function useHKDRBalance() {
 export function useExchangeRate() {
   return useReadContract({
     address: ADDRESSES.RemicoPay as `0x${string}`,
-    abi: RemicoPayABI,
+    abi: RemicoPayABI.abi,
     functionName: "exchangeRate",
   });
 }
@@ -31,7 +31,7 @@ export function useExchangeRate() {
 export function useFeeBps() {
   return useReadContract({
     address: ADDRESSES.RemicoPay as `0x${string}`,
-    abi: RemicoPayABI,
+    abi: RemicoPayABI.abi,
     functionName: "feeBps",
   });
 }
@@ -40,7 +40,7 @@ export function useFeeBps() {
 export function useQuote(hkdAmount: bigint) {
   return useReadContract({
     address: ADDRESSES.RemicoPay as `0x${string}`,
-    abi: RemicoPayABI,
+    abi: RemicoPayABI.abi,
     functionName: "getQuote",
     args: [hkdAmount],
     query: { enabled: hkdAmount > 0n },
@@ -51,7 +51,7 @@ export function useQuote(hkdAmount: bigint) {
 export function useRemittance(remitId: bigint) {
   return useReadContract({
     address: ADDRESSES.RemicoPay as `0x${string}`,
-    abi: RemicoPayABI,
+    abi: RemicoPayABI.abi,
     functionName: "getRemittance",
     args: [remitId],
     query: { enabled: remitId > 0n },
@@ -62,7 +62,7 @@ export function useRemittance(remitId: bigint) {
 export function useNextRemitId() {
   return useReadContract({
     address: ADDRESSES.RemicoPay as `0x${string}`,
-    abi: RemicoPayABI,
+    abi: RemicoPayABI.abi,
     functionName: "nextRemitId",
   });
 }
@@ -72,7 +72,7 @@ export function useHKDRAllowance() {
   const { address } = useAccount();
   return useReadContract({
     address: ADDRESSES.MockHKDR as `0x${string}`,
-    abi: MockHKDRABI,
+    abi: MockHKDRABI.abi,
     functionName: "allowance",
     args: address ? [address, ADDRESSES.RemicoPay as `0x${string}`] : undefined,
     query: { enabled: !!address },
@@ -89,7 +89,7 @@ export function useFaucet() {
   const claim = () => {
     writeContract({
       address: ADDRESSES.MockHKDR as `0x${string}`,
-      abi: MockHKDRABI,
+      abi: MockHKDRABI.abi,
       functionName: "faucet",
     });
   };
@@ -105,7 +105,7 @@ export function useApproveHKDR() {
   const approve = (amount: bigint) => {
     writeContract({
       address: ADDRESSES.MockHKDR as `0x${string}`,
-      abi: MockHKDRABI,
+      abi: MockHKDRABI.abi,
       functionName: "approve",
       args: [ADDRESSES.RemicoPay as `0x${string}`, amount],
     });
@@ -122,7 +122,7 @@ export function useCreateRemittance() {
   const send = (recipient: `0x${string}`, hkdAmount: bigint) => {
     writeContract({
       address: ADDRESSES.RemicoPay as `0x${string}`,
-      abi: RemicoPayABI,
+      abi: RemicoPayABI.abi,
       functionName: "createRemittance",
       args: [recipient, hkdAmount],
     });
@@ -209,7 +209,7 @@ export function useApproveHKDRForSchedule() {
   const approve = (amount: bigint) => {
     writeContract({
       address: ADDRESSES.MockHKDR as `0x${string}`,
-      abi: MockHKDRABI,
+      abi: MockHKDRABI.abi,
       functionName: "approve",
       args: [ADDRESSES.ScheduledRemittance as `0x${string}`, amount],
     });
@@ -228,7 +228,7 @@ export function useCreateRemittanceWithFPS() {
   const send = (recipient: `0x${string}`, hkdAmount: bigint, fpsPaymentRef: `0x${string}`) => {
     writeContract({
       address: ADDRESSES.RemicoPay as `0x${string}`,
-      abi: RemicoPayABI,
+      abi: RemicoPayABI.abi,
       functionName: "createRemittanceWithFPS",
       args: [recipient, hkdAmount, fpsPaymentRef],
     });
@@ -266,7 +266,7 @@ export function useHKDRAllowanceForSchedule() {
   const { address } = useAccount();
   return useReadContract({
     address: ADDRESSES.MockHKDR as `0x${string}`,
-    abi: MockHKDRABI,
+    abi: MockHKDRABI.abi,
     functionName: "allowance",
     args: address ? [address, ADDRESSES.ScheduledRemittance as `0x${string}`] : undefined,
     query: { enabled: !!address },

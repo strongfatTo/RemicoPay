@@ -1,747 +1,692 @@
 {
-    "abi":  [
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "address",
-                                       "name":  "_hkdr",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "internalType":  "address",
-                                       "name":  "_phpc",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "internalType":  "address",
-                                       "name":  "_vault",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "internalType":  "address",
-                                       "name":  "_treasury",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "_exchangeRate",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "_feeBps",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "constructor"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "AlreadyExecutedOrCancelled",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "InvalidDate",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "InvalidDay",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "InvalidFee",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "InvalidRate",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "NotScheduled",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "NotSender",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "address",
-                                       "name":  "owner",
-                                       "type":  "address"
-                                   }
-                               ],
-                    "name":  "OwnableInvalidOwner",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "address",
-                                       "name":  "account",
-                                       "type":  "address"
-                                   }
-                               ],
-                    "name":  "OwnableUnauthorizedAccount",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "ReentrancyGuardReentrantCall",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "address",
-                                       "name":  "token",
-                                       "type":  "address"
-                                   }
-                               ],
-                    "name":  "SafeERC20FailedOperation",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "ScheduleNotFound",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "TooEarly",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "ZeroAddress",
-                    "type":  "error"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "ZeroAmount",
-                    "type":  "error"
-                },
-                {
-                    "anonymous":  false,
-                    "inputs":  [
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "oldRate",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "newRate",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "ExchangeRateUpdated",
-                    "type":  "event"
-                },
-                {
-                    "anonymous":  false,
-                    "inputs":  [
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "oldFee",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "newFee",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "FeeBpsUpdated",
-                    "type":  "event"
-                },
-                {
-                    "anonymous":  false,
-                    "inputs":  [
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "address",
-                                       "name":  "previousOwner",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "address",
-                                       "name":  "newOwner",
-                                       "type":  "address"
-                                   }
-                               ],
-                    "name":  "OwnershipTransferred",
-                    "type":  "event"
-                },
-                {
-                    "anonymous":  false,
-                    "inputs":  [
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "uint256",
-                                       "name":  "oldScheduleId",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "uint256",
-                                       "name":  "newScheduleId",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "RecurringRescheduled",
-                    "type":  "event"
-                },
-                {
-                    "anonymous":  false,
-                    "inputs":  [
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "uint256",
-                                       "name":  "scheduleId",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "address",
-                                       "name":  "sender",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "hkdReturned",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "ScheduleCancelled",
-                    "type":  "event"
-                },
-                {
-                    "anonymous":  false,
-                    "inputs":  [
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "uint256",
-                                       "name":  "scheduleId",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "address",
-                                       "name":  "sender",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "address",
-                                       "name":  "recipient",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "hkdAmount",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "vaultShares",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint64",
-                                       "name":  "scheduledDate",
-                                       "type":  "uint64"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "bool",
-                                       "name":  "isRecurring",
-                                       "type":  "bool"
-                                   }
-                               ],
-                    "name":  "ScheduleCreated",
-                    "type":  "event"
-                },
-                {
-                    "anonymous":  false,
-                    "inputs":  [
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "uint256",
-                                       "name":  "scheduleId",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  true,
-                                       "internalType":  "address",
-                                       "name":  "recipient",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "phpAmount",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "yieldEarned",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "indexed":  false,
-                                       "internalType":  "uint256",
-                                       "name":  "feeCharged",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "ScheduleExecuted",
-                    "type":  "event"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "MAX_FEE_BPS",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "",
-                                        "type":  "uint256"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "PROTOCOL_YIELD_SHARE",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "",
-                                        "type":  "uint256"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "USER_YIELD_SHARE",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "",
-                                        "type":  "uint256"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "scheduleId",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "cancelSchedule",
-                    "outputs":  [
-
-                                ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "exchangeRate",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "",
-                                        "type":  "uint256"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "scheduleId",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "executeRemittance",
-                    "outputs":  [
-
-                                ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "feeBps",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "",
-                                        "type":  "uint256"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "scheduleId",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "getScheduleQuote",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "currentValue",
-                                        "type":  "uint256"
-                                    },
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "estimatedYield",
-                                        "type":  "uint256"
-                                    },
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "baseFee",
-                                        "type":  "uint256"
-                                    },
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "effectiveFee",
-                                        "type":  "uint256"
-                                    },
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "estimatedPhp",
-                                        "type":  "uint256"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "hkdr",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "contract IERC20",
-                                        "name":  "",
-                                        "type":  "address"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "nextScheduleId",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "",
-                                        "type":  "uint256"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "owner",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "address",
-                                        "name":  "",
-                                        "type":  "address"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "phpc",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "address",
-                                        "name":  "",
-                                        "type":  "address"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "protocolTreasury",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "address",
-                                        "name":  "",
-                                        "type":  "address"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "renounceOwnership",
-                    "outputs":  [
-
-                                ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "address",
-                                       "name":  "recipient",
-                                       "type":  "address"
-                                   },
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "hkdAmount",
-                                       "type":  "uint256"
-                                   },
-                                   {
-                                       "internalType":  "uint64",
-                                       "name":  "scheduledDate",
-                                       "type":  "uint64"
-                                   },
-                                   {
-                                       "internalType":  "bool",
-                                       "name":  "isRecurring",
-                                       "type":  "bool"
-                                   },
-                                   {
-                                       "internalType":  "uint8",
-                                       "name":  "recurringDay",
-                                       "type":  "uint8"
-                                   }
-                               ],
-                    "name":  "scheduleRemittance",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "scheduleId",
-                                        "type":  "uint256"
-                                    }
-                                ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "schedules",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "address",
-                                        "name":  "sender",
-                                        "type":  "address"
-                                    },
-                                    {
-                                        "internalType":  "address",
-                                        "name":  "recipient",
-                                        "type":  "address"
-                                    },
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "hkdAmount",
-                                        "type":  "uint256"
-                                    },
-                                    {
-                                        "internalType":  "uint256",
-                                        "name":  "vaultShares",
-                                        "type":  "uint256"
-                                    },
-                                    {
-                                        "internalType":  "uint64",
-                                        "name":  "scheduledDate",
-                                        "type":  "uint64"
-                                    },
-                                    {
-                                        "internalType":  "uint64",
-                                        "name":  "createdAt",
-                                        "type":  "uint64"
-                                    },
-                                    {
-                                        "internalType":  "bool",
-                                        "name":  "isRecurring",
-                                        "type":  "bool"
-                                    },
-                                    {
-                                        "internalType":  "uint8",
-                                        "name":  "recurringDay",
-                                        "type":  "uint8"
-                                    },
-                                    {
-                                        "internalType":  "enum ScheduledRemittance.Status",
-                                        "name":  "status",
-                                        "type":  "uint8"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "newRate",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "setExchangeRate",
-                    "outputs":  [
-
-                                ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "uint256",
-                                       "name":  "newFeeBps",
-                                       "type":  "uint256"
-                                   }
-                               ],
-                    "name":  "setFeeBps",
-                    "outputs":  [
-
-                                ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "address",
-                                       "name":  "_treasury",
-                                       "type":  "address"
-                                   }
-                               ],
-                    "name":  "setProtocolTreasury",
-                    "outputs":  [
-
-                                ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-                                   {
-                                       "internalType":  "address",
-                                       "name":  "newOwner",
-                                       "type":  "address"
-                                   }
-                               ],
-                    "name":  "transferOwnership",
-                    "outputs":  [
-
-                                ],
-                    "stateMutability":  "nonpayable",
-                    "type":  "function"
-                },
-                {
-                    "inputs":  [
-
-                               ],
-                    "name":  "vault",
-                    "outputs":  [
-                                    {
-                                        "internalType":  "contract ERC4626",
-                                        "name":  "",
-                                        "type":  "address"
-                                    }
-                                ],
-                    "stateMutability":  "view",
-                    "type":  "function"
-                }
-            ]
+  "_format": "hh-sol-artifact-1",
+  "contractName": "ScheduledRemittance",
+  "sourceName": "contracts/ScheduledRemittance.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_hkdr",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_phpc",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_vault",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_treasury",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_exchangeRate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_feeBps",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "AlreadyExecutedOrCancelled",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidDate",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidDay",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidFee",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidRate",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NotScheduled",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NotSender",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableInvalidOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableUnauthorizedAccount",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ReentrancyGuardReentrantCall",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        }
+      ],
+      "name": "SafeERC20FailedOperation",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ScheduleNotFound",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TooEarly",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ZeroAddress",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ZeroAmount",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "oldRate",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newRate",
+          "type": "uint256"
+        }
+      ],
+      "name": "ExchangeRateUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "oldFee",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newFee",
+          "type": "uint256"
+        }
+      ],
+      "name": "FeeBpsUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "oldScheduleId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "newScheduleId",
+          "type": "uint256"
+        }
+      ],
+      "name": "RecurringRescheduled",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "scheduleId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "hkdReturned",
+          "type": "uint256"
+        }
+      ],
+      "name": "ScheduleCancelled",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "scheduleId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "hkdAmount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "vaultShares",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint64",
+          "name": "scheduledDate",
+          "type": "uint64"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "isRecurring",
+          "type": "bool"
+        }
+      ],
+      "name": "ScheduleCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "scheduleId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "phpAmount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "yieldEarned",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "feeCharged",
+          "type": "uint256"
+        }
+      ],
+      "name": "ScheduleExecuted",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "MAX_FEE_BPS",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "PROTOCOL_YIELD_SHARE",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "USER_YIELD_SHARE",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "scheduleId",
+          "type": "uint256"
+        }
+      ],
+      "name": "cancelSchedule",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "exchangeRate",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "scheduleId",
+          "type": "uint256"
+        }
+      ],
+      "name": "executeRemittance",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "feeBps",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "scheduleId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getScheduleQuote",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "currentValue",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "estimatedYield",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "baseFee",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "effectiveFee",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "estimatedPhp",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "hkdr",
+      "outputs": [
+        {
+          "internalType": "contract IERC20",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "nextScheduleId",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "phpc",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "protocolTreasury",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "hkdAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint64",
+          "name": "scheduledDate",
+          "type": "uint64"
+        },
+        {
+          "internalType": "bool",
+          "name": "isRecurring",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint8",
+          "name": "recurringDay",
+          "type": "uint8"
+        }
+      ],
+      "name": "scheduleRemittance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "scheduleId",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "schedules",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "hkdAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "vaultShares",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint64",
+          "name": "scheduledDate",
+          "type": "uint64"
+        },
+        {
+          "internalType": "uint64",
+          "name": "createdAt",
+          "type": "uint64"
+        },
+        {
+          "internalType": "bool",
+          "name": "isRecurring",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint8",
+          "name": "recurringDay",
+          "type": "uint8"
+        },
+        {
+          "internalType": "enum ScheduledRemittance.Status",
+          "name": "status",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "newRate",
+          "type": "uint256"
+        }
+      ],
+      "name": "setExchangeRate",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "newFeeBps",
+          "type": "uint256"
+        }
+      ],
+      "name": "setFeeBps",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_treasury",
+          "type": "address"
+        }
+      ],
+      "name": "setProtocolTreasury",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "vault",
+      "outputs": [
+        {
+          "internalType": "contract ERC4626",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x60e06040523480156200001157600080fd5b50604051620017e8380380620017e88339810160408190526200003491620001c3565b600160005533806200006057604051631e4fbdf760e01b81526000600482015260240160405180910390fd5b6200006b8162000154565b506001600160a01b03861615806200008a57506001600160a01b038516155b806200009d57506001600160a01b038416155b80620000b057506001600160a01b038316155b15620000cf5760405163d92e233d60e01b815260040160405180910390fd5b81600003620000f157604051636a43f8d160e01b815260040160405180910390fd5b6103e881111562000115576040516358d620b360e01b815260040160405180910390fd5b6001600160a01b0395861660805293851660a05291841660c052600580546001600160a01b031916919094161790925560029190915560035562000232565b600180546001600160a01b038381166001600160a01b0319831681179093556040519116919082907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a35050565b80516001600160a01b0381168114620001be57600080fd5b919050565b60008060008060008060c08789031215620001dd57600080fd5b620001e887620001a6565b9550620001f860208801620001a6565b94506200020860408801620001a6565b93506200021860608801620001a6565b92506080870151915060a087015190509295509295509295565b60805160a05160c051611539620002af60003960008181610372015281816104b3015281816107f2015281816108ae01528181610b640152610d830152600081816101e60152610fb0015260008181610141015281816105fc01528181610635015281816107b3015281816108210152610f5c01526115396000f3fe608060405234801561001057600080fd5b50600436106101375760003560e01c806372c27b62116100b8578063a31fad2b1161007c578063a31fad2b14610295578063bdc6d9ab146102a8578063d55be8c61461033e578063db068e0e14610347578063f2fde38b1461035a578063fbfa77cf1461036d57600080fd5b806372c27b62146102105780637945a44e14610223578063803db96d146102365780638da5cb5b146102495780639520d6361461025a57600080fd5b806324a9d853116100ff57806324a9d853146101c75780633ba0b9a9146101d057806356f1eb44146101d957806364ba3c13146101e1578063715018a61461020857600080fd5b8063075866ac1461013c5780630c5a61f8146101805780630c8f9509146101955780630f038d41146101ab578063237fc2a6146101b4575b600080fd5b6101637f000000000000000000000000000000000000000000000000000000000000000081565b6040516001600160a01b0390911681526020015b60405180910390f35b61019361018e3660046112f7565b610394565b005b61019d604681565b604051908152602001610177565b61019d60045481565b6101936101c2366004611319565b6103e5565b61019d60035481565b61019d60025481565b61019d601e81565b6101637f000000000000000000000000000000000000000000000000000000000000000081565b610193610671565b61019361021e366004611319565b610685565b61019d610231366004611340565b6106f1565b600554610163906001600160a01b031681565b6001546001600160a01b0316610163565b61026d610268366004611319565b610b0e565b604080519586526020860194909452928401919091526060830152608082015260a001610177565b6101936102a3366004611319565b610cb1565b6103296102b6366004611319565b600660205260009081526040902080546001820154600283015460038401546004909401546001600160a01b0393841694929093169290919067ffffffffffffffff80821691600160401b81049091169060ff600160801b8204811691600160881b8104821691600160901b9091041689565b604051610177999897969594939291906113cf565b61019d6103e881565b610193610355366004611319565b611042565b6101936103683660046112f7565b6110ac565b6101637f000000000000000000000000000000000000000000000000000000000000000081565b61039c6110ec565b6001600160a01b0381166103c35760405163d92e233d60e01b815260040160405180910390fd5b600580546001600160a01b0319166001600160a01b0392909216919091179055565b6103ed611119565b600454811061040f5760405163d858766960e01b815260040160405180910390fd5b600081815260066020526040902080546001600160a01b031633146104475760405163b2c3aa6b60e01b815260040160405180910390fd5b60006004820154600160901b900460ff166002811115610469576104696113b9565b146104875760405163700a930b60e01b815260040160405180910390fd5b6003810154604051635d043b2960e11b81526004810191909152306024820181905260448201526000907f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03169063ba087652906064016020604051808303816000875af1158015610504573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906105289190611452565b905060008260020154821161053e57600061054d565b600283015461054d9083611481565b90506000606461055e60468461149a565b61056891906114b1565b905060006105768284611481565b9050600082866002015461058a91906114d3565b600487018054600160911b60ff60901b1990911617905586546040518281529192506001600160a01b03169088907fae7d04741f5177ccd6b9c97058c306f402936b40bab4c0e463905494b2cb927e9060200160405180910390a3811561062557600554610625906001600160a01b037f00000000000000000000000000000000000000000000000000000000000000008116911684611143565b855461065e906001600160a01b037f00000000000000000000000000000000000000000000000000000000000000008116911683611143565b50505050505061066e6001600055565b50565b6106796110ec565b61068360006111a7565b565b61068d6110ec565b6103e88111156106b0576040516358d620b360e01b815260040160405180910390fd5b60035460408051918252602082018390527f5ec5620e288c4be955ccb6cfb3d55431a8fed5c4c96ffacc4b9506360695f64e910160405180910390a1600355565b60006106fb611119565b6001600160a01b0386166107225760405163d92e233d60e01b815260040160405180910390fd5b8460000361074357604051631f2a200560e01b815260040160405180910390fd5b428467ffffffffffffffff161161076d576040516381bf7f6760e01b815260040160405180910390fd5b828015610788575060ff821615806107885750601c8260ff16115b156107a657604051630b046f8960e21b815260040160405180910390fd5b6107db6001600160a01b037f0000000000000000000000000000000000000000000000000000000000000000163330886111f9565b60405163095ea7b360e01b81526001600160a01b037f000000000000000000000000000000000000000000000000000000000000000081166004830152602482018790527f0000000000000000000000000000000000000000000000000000000000000000169063095ea7b3906044016020604051808303816000875af115801561086a573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061088e91906114e6565b50604051636e553f6560e01b8152600481018690523060248201526000907f00000000000000000000000000000000000000000000000000000000000000006001600160a01b031690636e553f65906044016020604051808303816000875af11580156108ff573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906109239190611452565b600480546001810190915560408051610120810182523381526001600160a01b038b1660208201529081018990526060810183905267ffffffffffffffff8089166080830152421660a082015286151560c082015260ff861660e0820152909350909150610100810160009052600083815260066020908152604091829020835181546001600160a01b03199081166001600160a01b03928316178355928501516001830180549094169116179091559082015160028083019190915560608301516003830155608083015160048301805460a086015160c087015160e088015167ffffffffffffffff9586166fffffffffffffffffffffffffffffffff1990941693909317600160401b95909216949094021761ffff60801b1916600160801b9315159390930260ff60881b191692909217600160881b60ff90931692909202919091178082556101008501519260ff60901b1990911690600160901b908490811115610a9357610a936113b9565b021790555050604080518881526020810184905267ffffffffffffffff881681830152861515606082015290516001600160a01b038a169250339185917fccadb753996867efdbd46fb99f6aaba91312fa242f477d0dd2f5a33bb46c46d99181900360800190a450610b056001600055565b95945050505050565b60008060008060006004548610610b385760405163d858766960e01b815260040160405180910390fd5b60008681526006602052604090819020600381015491516303d1689d60e11b81526004810192909252907f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316906307a2d13a90602401602060405180830381865afa158015610bb3573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610bd79190611452565b955080600201548611610beb576000610bfa565b6002810154610bfa9087611481565b945060006064610c0b60468861149a565b610c1591906114b1565b90506127106003548360020154610c2c919061149a565b610c3691906114b1565b94506000858210610c565760009450610c4f8683611481565b9050610c67565b610c608287611481565b9450600090505b600081868560020154610c7a9190611481565b610c8491906114d3565b9050620f424060025482610c98919061149a565b610ca291906114b1565b94505050505091939590929450565b610cb9611119565b6004548110610cdb5760405163d858766960e01b815260040160405180910390fd5b6000818152600660205260408120906004820154600160901b900460ff166002811115610d0a57610d0a6113b9565b14610d285760405163700a930b60e01b815260040160405180910390fd5b600481015467ffffffffffffffff16421015610d575760405163085de62560e01b815260040160405180910390fd5b6003810154604051635d043b2960e11b81526004810191909152306024820181905260448201526000907f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03169063ba087652906064016020604051808303816000875af1158015610dd4573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610df89190611452565b60028301549091506000818311610e10576000610e1a565b610e1a8284611481565b905060006064610e2b60468461149a565b610e3591906114b1565b90506000610e438284611481565b9050600061271060035486610e58919061149a565b610e6291906114b1565b9050600080828510610e835760009150610e7c8386611481565b9050610e94565b610e8d8584611481565b9150600090505b600081610ea1848a611481565b610eab91906114d3565b90506000620f424060025483610ec1919061149a565b610ecb91906114b1565b60048c018054600160901b60ff60901b1990911617905560018c015460408051838152602081018c90529081018790529192506001600160a01b0316908d907fc6d134a370418edf8763d8f6621941c530ace4585a61a2a5b8da2b841aadf5c69060600160405180910390a36000610f4385886114d3565b90508015610f8557600554610f85906001600160a01b037f00000000000000000000000000000000000000000000000000000000000000008116911683611143565b60018c01546040516340c10f1960e01b81526001600160a01b039182166004820152602481018490527f0000000000000000000000000000000000000000000000000000000000000000909116906340c10f1990604401600060405180830381600087803b158015610ff657600080fd5b505af115801561100a573d6000803e3d6000fd5b5050505060048c0154600160801b900460ff161561102c5761102c8d8d611238565b50505050505050505050505061066e6001600055565b61104a6110ec565b8060000361106b57604051636a43f8d160e01b815260040160405180910390fd5b60025460408051918252602082018390527fc8d1043f24843c0a1c9251fdc30017d84e87498fbcf232af9f86816b5e182bde910160405180910390a1600255565b6110b46110ec565b6001600160a01b0381166110e357604051631e4fbdf760e01b8152600060048201526024015b60405180910390fd5b61066e816111a7565b6001546001600160a01b031633146106835760405163118cdaa760e01b81523360048201526024016110da565b60026000540361113c57604051633ee5aeb560e01b815260040160405180910390fd5b6002600055565b6040516001600160a01b038381166024830152604482018390526111a291859182169063a9059cbb906064015b604051602081830303815290604052915060e01b6020820180516001600160e01b03838183161783525050505061126a565b505050565b600180546001600160a01b038381166001600160a01b0319831681179093556040519116919082907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a35050565b6040516001600160a01b0384811660248301528381166044830152606482018390526112329186918216906323b872dd90608401611170565b50505050565b60045460405183907fdc776bae0add393b06667f9f98cf798be5bb79d7793d85b993c21d01151d2a1a90600090a35050565b600080602060008451602086016000885af18061128d576040513d6000823e3d81fd5b50506000513d915081156112a55780600114156112b2565b6001600160a01b0384163b155b1561123257604051635274afe760e01b81526001600160a01b03851660048201526024016110da565b80356001600160a01b03811681146112f257600080fd5b919050565b60006020828403121561130957600080fd5b611312826112db565b9392505050565b60006020828403121561132b57600080fd5b5035919050565b801515811461066e57600080fd5b600080600080600060a0868803121561135857600080fd5b611361866112db565b945060208601359350604086013567ffffffffffffffff8116811461138557600080fd5b9250606086013561139581611332565b9150608086013560ff811681146113ab57600080fd5b809150509295509295909350565b634e487b7160e01b600052602160045260246000fd5b6001600160a01b038a8116825289166020820152604081018890526060810187905267ffffffffffffffff8681166080830152851660a082015283151560c082015260ff831660e082015261012081016003831061143d57634e487b7160e01b600052602160045260246000fd5b826101008301529a9950505050505050505050565b60006020828403121561146457600080fd5b5051919050565b634e487b7160e01b600052601160045260246000fd5b818103818111156114945761149461146b565b92915050565b80820281158282048414176114945761149461146b565b6000826114ce57634e487b7160e01b600052601260045260246000fd5b500490565b808201808211156114945761149461146b565b6000602082840312156114f857600080fd5b81516113128161133256fea26469706673582212209f97f41e1133b5371c045527c5ed4b63e03415faed0d83f9451aefdd17923c6064736f6c63430008180033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106101375760003560e01c806372c27b62116100b8578063a31fad2b1161007c578063a31fad2b14610295578063bdc6d9ab146102a8578063d55be8c61461033e578063db068e0e14610347578063f2fde38b1461035a578063fbfa77cf1461036d57600080fd5b806372c27b62146102105780637945a44e14610223578063803db96d146102365780638da5cb5b146102495780639520d6361461025a57600080fd5b806324a9d853116100ff57806324a9d853146101c75780633ba0b9a9146101d057806356f1eb44146101d957806364ba3c13146101e1578063715018a61461020857600080fd5b8063075866ac1461013c5780630c5a61f8146101805780630c8f9509146101955780630f038d41146101ab578063237fc2a6146101b4575b600080fd5b6101637f000000000000000000000000000000000000000000000000000000000000000081565b6040516001600160a01b0390911681526020015b60405180910390f35b61019361018e3660046112f7565b610394565b005b61019d604681565b604051908152602001610177565b61019d60045481565b6101936101c2366004611319565b6103e5565b61019d60035481565b61019d60025481565b61019d601e81565b6101637f000000000000000000000000000000000000000000000000000000000000000081565b610193610671565b61019361021e366004611319565b610685565b61019d610231366004611340565b6106f1565b600554610163906001600160a01b031681565b6001546001600160a01b0316610163565b61026d610268366004611319565b610b0e565b604080519586526020860194909452928401919091526060830152608082015260a001610177565b6101936102a3366004611319565b610cb1565b6103296102b6366004611319565b600660205260009081526040902080546001820154600283015460038401546004909401546001600160a01b0393841694929093169290919067ffffffffffffffff80821691600160401b81049091169060ff600160801b8204811691600160881b8104821691600160901b9091041689565b604051610177999897969594939291906113cf565b61019d6103e881565b610193610355366004611319565b611042565b6101936103683660046112f7565b6110ac565b6101637f000000000000000000000000000000000000000000000000000000000000000081565b61039c6110ec565b6001600160a01b0381166103c35760405163d92e233d60e01b815260040160405180910390fd5b600580546001600160a01b0319166001600160a01b0392909216919091179055565b6103ed611119565b600454811061040f5760405163d858766960e01b815260040160405180910390fd5b600081815260066020526040902080546001600160a01b031633146104475760405163b2c3aa6b60e01b815260040160405180910390fd5b60006004820154600160901b900460ff166002811115610469576104696113b9565b146104875760405163700a930b60e01b815260040160405180910390fd5b6003810154604051635d043b2960e11b81526004810191909152306024820181905260448201526000907f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03169063ba087652906064016020604051808303816000875af1158015610504573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906105289190611452565b905060008260020154821161053e57600061054d565b600283015461054d9083611481565b90506000606461055e60468461149a565b61056891906114b1565b905060006105768284611481565b9050600082866002015461058a91906114d3565b600487018054600160911b60ff60901b1990911617905586546040518281529192506001600160a01b03169088907fae7d04741f5177ccd6b9c97058c306f402936b40bab4c0e463905494b2cb927e9060200160405180910390a3811561062557600554610625906001600160a01b037f00000000000000000000000000000000000000000000000000000000000000008116911684611143565b855461065e906001600160a01b037f00000000000000000000000000000000000000000000000000000000000000008116911683611143565b50505050505061066e6001600055565b50565b6106796110ec565b61068360006111a7565b565b61068d6110ec565b6103e88111156106b0576040516358d620b360e01b815260040160405180910390fd5b60035460408051918252602082018390527f5ec5620e288c4be955ccb6cfb3d55431a8fed5c4c96ffacc4b9506360695f64e910160405180910390a1600355565b60006106fb611119565b6001600160a01b0386166107225760405163d92e233d60e01b815260040160405180910390fd5b8460000361074357604051631f2a200560e01b815260040160405180910390fd5b428467ffffffffffffffff161161076d576040516381bf7f6760e01b815260040160405180910390fd5b828015610788575060ff821615806107885750601c8260ff16115b156107a657604051630b046f8960e21b815260040160405180910390fd5b6107db6001600160a01b037f0000000000000000000000000000000000000000000000000000000000000000163330886111f9565b60405163095ea7b360e01b81526001600160a01b037f000000000000000000000000000000000000000000000000000000000000000081166004830152602482018790527f0000000000000000000000000000000000000000000000000000000000000000169063095ea7b3906044016020604051808303816000875af115801561086a573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061088e91906114e6565b50604051636e553f6560e01b8152600481018690523060248201526000907f00000000000000000000000000000000000000000000000000000000000000006001600160a01b031690636e553f65906044016020604051808303816000875af11580156108ff573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906109239190611452565b600480546001810190915560408051610120810182523381526001600160a01b038b1660208201529081018990526060810183905267ffffffffffffffff8089166080830152421660a082015286151560c082015260ff861660e0820152909350909150610100810160009052600083815260066020908152604091829020835181546001600160a01b03199081166001600160a01b03928316178355928501516001830180549094169116179091559082015160028083019190915560608301516003830155608083015160048301805460a086015160c087015160e088015167ffffffffffffffff9586166fffffffffffffffffffffffffffffffff1990941693909317600160401b95909216949094021761ffff60801b1916600160801b9315159390930260ff60881b191692909217600160881b60ff90931692909202919091178082556101008501519260ff60901b1990911690600160901b908490811115610a9357610a936113b9565b021790555050604080518881526020810184905267ffffffffffffffff881681830152861515606082015290516001600160a01b038a169250339185917fccadb753996867efdbd46fb99f6aaba91312fa242f477d0dd2f5a33bb46c46d99181900360800190a450610b056001600055565b95945050505050565b60008060008060006004548610610b385760405163d858766960e01b815260040160405180910390fd5b60008681526006602052604090819020600381015491516303d1689d60e11b81526004810192909252907f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316906307a2d13a90602401602060405180830381865afa158015610bb3573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610bd79190611452565b955080600201548611610beb576000610bfa565b6002810154610bfa9087611481565b945060006064610c0b60468861149a565b610c1591906114b1565b90506127106003548360020154610c2c919061149a565b610c3691906114b1565b94506000858210610c565760009450610c4f8683611481565b9050610c67565b610c608287611481565b9450600090505b600081868560020154610c7a9190611481565b610c8491906114d3565b9050620f424060025482610c98919061149a565b610ca291906114b1565b94505050505091939590929450565b610cb9611119565b6004548110610cdb5760405163d858766960e01b815260040160405180910390fd5b6000818152600660205260408120906004820154600160901b900460ff166002811115610d0a57610d0a6113b9565b14610d285760405163700a930b60e01b815260040160405180910390fd5b600481015467ffffffffffffffff16421015610d575760405163085de62560e01b815260040160405180910390fd5b6003810154604051635d043b2960e11b81526004810191909152306024820181905260448201526000907f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03169063ba087652906064016020604051808303816000875af1158015610dd4573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610df89190611452565b60028301549091506000818311610e10576000610e1a565b610e1a8284611481565b905060006064610e2b60468461149a565b610e3591906114b1565b90506000610e438284611481565b9050600061271060035486610e58919061149a565b610e6291906114b1565b9050600080828510610e835760009150610e7c8386611481565b9050610e94565b610e8d8584611481565b9150600090505b600081610ea1848a611481565b610eab91906114d3565b90506000620f424060025483610ec1919061149a565b610ecb91906114b1565b60048c018054600160901b60ff60901b1990911617905560018c015460408051838152602081018c90529081018790529192506001600160a01b0316908d907fc6d134a370418edf8763d8f6621941c530ace4585a61a2a5b8da2b841aadf5c69060600160405180910390a36000610f4385886114d3565b90508015610f8557600554610f85906001600160a01b037f00000000000000000000000000000000000000000000000000000000000000008116911683611143565b60018c01546040516340c10f1960e01b81526001600160a01b039182166004820152602481018490527f0000000000000000000000000000000000000000000000000000000000000000909116906340c10f1990604401600060405180830381600087803b158015610ff657600080fd5b505af115801561100a573d6000803e3d6000fd5b5050505060048c0154600160801b900460ff161561102c5761102c8d8d611238565b50505050505050505050505061066e6001600055565b61104a6110ec565b8060000361106b57604051636a43f8d160e01b815260040160405180910390fd5b60025460408051918252602082018390527fc8d1043f24843c0a1c9251fdc30017d84e87498fbcf232af9f86816b5e182bde910160405180910390a1600255565b6110b46110ec565b6001600160a01b0381166110e357604051631e4fbdf760e01b8152600060048201526024015b60405180910390fd5b61066e816111a7565b6001546001600160a01b031633146106835760405163118cdaa760e01b81523360048201526024016110da565b60026000540361113c57604051633ee5aeb560e01b815260040160405180910390fd5b6002600055565b6040516001600160a01b038381166024830152604482018390526111a291859182169063a9059cbb906064015b604051602081830303815290604052915060e01b6020820180516001600160e01b03838183161783525050505061126a565b505050565b600180546001600160a01b038381166001600160a01b0319831681179093556040519116919082907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a35050565b6040516001600160a01b0384811660248301528381166044830152606482018390526112329186918216906323b872dd90608401611170565b50505050565b60045460405183907fdc776bae0add393b06667f9f98cf798be5bb79d7793d85b993c21d01151d2a1a90600090a35050565b600080602060008451602086016000885af18061128d576040513d6000823e3d81fd5b50506000513d915081156112a55780600114156112b2565b6001600160a01b0384163b155b1561123257604051635274afe760e01b81526001600160a01b03851660048201526024016110da565b80356001600160a01b03811681146112f257600080fd5b919050565b60006020828403121561130957600080fd5b611312826112db565b9392505050565b60006020828403121561132b57600080fd5b5035919050565b801515811461066e57600080fd5b600080600080600060a0868803121561135857600080fd5b611361866112db565b945060208601359350604086013567ffffffffffffffff8116811461138557600080fd5b9250606086013561139581611332565b9150608086013560ff811681146113ab57600080fd5b809150509295509295909350565b634e487b7160e01b600052602160045260246000fd5b6001600160a01b038a8116825289166020820152604081018890526060810187905267ffffffffffffffff8681166080830152851660a082015283151560c082015260ff831660e082015261012081016003831061143d57634e487b7160e01b600052602160045260246000fd5b826101008301529a9950505050505050505050565b60006020828403121561146457600080fd5b5051919050565b634e487b7160e01b600052601160045260246000fd5b818103818111156114945761149461146b565b92915050565b80820281158282048414176114945761149461146b565b6000826114ce57634e487b7160e01b600052601260045260246000fd5b500490565b808201808211156114945761149461146b565b6000602082840312156114f857600080fd5b81516113128161133256fea26469706673582212209f97f41e1133b5371c045527c5ed4b63e03415faed0d83f9451aefdd17923c6064736f6c63430008180033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
 }

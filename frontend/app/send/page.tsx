@@ -257,12 +257,12 @@ export default function SendPage() {
                   </div>
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <label className="text-sm text-white/60">Recipient Address</label>
-                      <Input placeholder="0x..." value={formData.recipient} onChange={(e) => setFormData({ ...formData, recipient: e.target.value })} />
+                      <label htmlFor="recipient" className="text-sm text-white/60">Recipient Address</label>
+                      <Input id="recipient" name="recipient" placeholder="0x..." value={formData.recipient} onChange={(e) => setFormData({ ...formData, recipient: e.target.value })} />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm text-white/60">Amount (HKD)</label>
-                      <Input type="number" placeholder="1000" value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: e.target.value })} />
+                      <label htmlFor="amount" className="text-sm text-white/60">Amount (HKD)</label>
+                      <Input id="amount" name="amount" type="number" placeholder="1000" value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: e.target.value })} />
                     </div>
                     {numericAmount > 0 && (
                       <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="rounded-xl bg-white/5 p-4 space-y-2">
