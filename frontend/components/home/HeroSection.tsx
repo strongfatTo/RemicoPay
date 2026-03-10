@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Shield, Zap, TrendingDown } from "lucide-react";
 import { HeroBeam } from "@/components/home/HeroBeam";
 
 const containerVariants = {

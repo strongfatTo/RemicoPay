@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   XCircle,
   ArrowRight,
-  ExternalLink,
   Package,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -58,6 +57,7 @@ export default function StatusPage() {
   // Fire confetti when remittance is completed
   useEffect(() => {
     if (remittance && !confettiFired) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const data = remittance as any;
       const status = Number(data.status ?? data[7] ?? 0);
       if (status === 1) {
@@ -88,18 +88,19 @@ export default function StatusPage() {
   // Parse remittance data
   const remitData = remittance
     ? (() => {
-        const d = remittance as any;
-        return {
-          sender: (d.sender ?? d[0]) as string,
-          recipient: (d.recipient ?? d[1]) as string,
-          hkdAmount: BigInt(d.hkdAmount ?? d[2] ?? 0),
-          phpAmount: BigInt(d.phpAmount ?? d[3] ?? 0),
-          fee: BigInt(d.fee ?? d[4] ?? 0),
-          lockedRate: BigInt(d.lockedRate ?? d[5] ?? 0),
-          createdAt: Number(d.createdAt ?? d[6] ?? 0),
-          status: Number(d.status ?? d[7] ?? 0),
-        };
-      })()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const d = remittance as any;
+      return {
+        sender: (d.sender ?? d[0]) as string,
+        recipient: (d.recipient ?? d[1]) as string,
+        hkdAmount: BigInt(d.hkdAmount ?? d[2] ?? 0),
+        phpAmount: BigInt(d.phpAmount ?? d[3] ?? 0),
+        fee: BigInt(d.fee ?? d[4] ?? 0),
+        lockedRate: BigInt(d.lockedRate ?? d[5] ?? 0),
+        createdAt: Number(d.createdAt ?? d[6] ?? 0),
+        status: Number(d.status ?? d[7] ?? 0),
+      };
+    })()
     : null;
 
   const activeStep = remitData ? getActiveStep(remitData.status) : 0;
@@ -217,8 +218,8 @@ export default function StatusPage() {
                         activeStep >= 3
                           ? "100%"
                           : activeStep === 1
-                          ? "33%"
-                          : "0%",
+                            ? "33%"
+                            : "0%",
                     }}
                     transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
                   />
@@ -243,8 +244,8 @@ export default function StatusPage() {
                               isActive
                                 ? "border-brand-mint bg-brand-mint/15 shadow-neon-mint"
                                 : isCurrent
-                                ? "border-brand-mint/60 bg-brand-mint/10 animate-pulse"
-                                : "border-white/10 bg-brand-deep"
+                                  ? "border-brand-mint/60 bg-brand-mint/10 animate-pulse"
+                                  : "border-white/10 bg-brand-deep"
                             )}
                           >
                             {isActive ? (
@@ -322,8 +323,8 @@ export default function StatusPage() {
                       remitData.status === 1
                         ? "text-green-400"
                         : remitData.status === 2
-                        ? "text-red-400"
-                        : "text-yellow-400"
+                          ? "text-red-400"
+                          : "text-yellow-400"
                     )}
                   >
                     {STATUS_MAP[remitData.status] ?? "Unknown"}

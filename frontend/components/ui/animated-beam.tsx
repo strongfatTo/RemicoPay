@@ -69,17 +69,14 @@ export const AnimatedBeam = ({
           rectB.top - containerRect.top + rectB.height / 2 + endYOffset;
 
         const controlY = startY - curvature;
-        const d = `M ${startX},${startY} Q ${
-          (startX + endX) / 2
-        },${controlY} ${endX},${endY}`;
+        const d = `M ${startX},${startY} Q ${(startX + endX) / 2
+          },${controlY} ${endX},${endY}`;
         setPathD(d);
       }
     };
 
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
-        updatePath();
-      }
+    const resizeObserver = new ResizeObserver(() => {
+      updatePath();
     });
 
     if (containerRef.current) {

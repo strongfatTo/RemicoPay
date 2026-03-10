@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
-  History,
   ArrowUpRight,
   ExternalLink,
   Loader2,
@@ -13,12 +12,11 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-import { formatTokenAmount, shortenAddress, formatTimestamp } from "@/lib/utils";
+import { formatTokenAmount, shortenAddress } from "@/lib/utils";
 import { useAccount } from "wagmi";
 import { usePublicClient } from "wagmi";
-import { ADDRESSES, RemicoPayABI, RATE_SCALE } from "@/lib/contracts";
-import { parseAbiItem, type Log } from "viem";
+import { ADDRESSES, RATE_SCALE } from "@/lib/contracts";
+import { parseAbiItem } from "viem";
 
 interface RemittanceEvent {
   remitId: bigint;
@@ -71,6 +69,7 @@ export default function HistoryPage() {
         toBlock: "latest",
       });
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const parsed: RemittanceEvent[] = logs.map((log: any) => ({
         remitId: log.args.remitId,
         sender: log.args.sender,
@@ -98,12 +97,12 @@ export default function HistoryPage() {
     if (isConnected && address) {
       fetchHistory();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected, address]);
 
   // Stats
   const totalSent = events.reduce((acc, e) => acc + e.hkdAmount, 0n);
   const totalPhp = events.reduce((acc, e) => acc + e.phpAmount, 0n);
-  const totalFees = events.reduce((acc, e) => acc + e.fee, 0n);
 
   return (
     <section className="relative min-h-screen">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 import ExchangeCalculator from "@/components/home/ExchangeCalculator";
@@ -111,8 +111,6 @@ function SectionLabel({ text }: { text: string }) {
 ───────────────────────────────────────────────────────────── */
 
 function HeroSection() {
-  const containerRef = useRef<HTMLDivElement>(null);
-
   return (
     <section
       id="hero"

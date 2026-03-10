@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { ArrowRightLeft, Clock, History, Home, CalendarClock } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 const navLinks = [
   { href: "/", label: "Home", icon: Home },
@@ -20,7 +20,6 @@ export default function Navbar() {
   const pathname = usePathname();
   const [activeTab, setActiveTab] = useState(pathname);
   const [scrolled, setScrolled] = useState(false);
-  const heroRef = useRef<Element | null>(null);
 
   useEffect(() => {
     setActiveTab(pathname);
